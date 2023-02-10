@@ -1,2 +1,2 @@
-# wix-thurman
-A set of React components to use as iframes for Thurman's Wix front-end.
+# thurman-web
+React front-end for v1 of Thurman's business line of credit protocol.

@@ -1,21 +1,32 @@
 import React from "react";
-import useWallet from "../hooks/useWallet";
+import {
+	AppBar,
+	Box,
+	Toolbar,
+	Typography,
+} from "@mui/material";
+import ConnectWalletButton from "./ConnectWalletButton";
+
+const styles = {
+	appBar: {
+		background: "white",
+	},
+	font: {
+		color: "black",
+	}
+}
 
 export default function Header() {
-	const { account, connect } = useWallet();
-
 	return (
-		<div>
-			{account ? 
-			  <button>
-			    {account.substring(0,4)}...{account.substring(account.length - 4, account.length)}
-			  </button> :
-			  <button
-			    onClick={connect}
-			  >
-			    Connect MetaMask
-			  </button>
-			}
-		</div>
+		<AppBar position="static" elevation={0} sx={styles.appBar}>
+			<Toolbar variant="dense">
+				<Box display="flex" flexGrow={1}>
+					<Typography variant="h6" sx={styles.font}>
+						Thurman
+					</Typography>
+				</Box>
+				<ConnectWalletButton />
+			</Toolbar>
+		</AppBar>
 	);
 }

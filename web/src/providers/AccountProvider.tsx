@@ -6,7 +6,10 @@ import React, {
 } from "react";
 import { 
 	ethers,
-	formatEther
+	formatEther,
+	formatUnits,
+	BigNumberish,
+	Contract
 } from "ethers";
 import {
 	IAccountContext,
@@ -17,6 +20,10 @@ import {
 	ACTION_TYPE, 
 	AccountReducer 
 } from "../reducers/AccountReducer";
+import { 
+	USDC_DECIMALS, 
+	NetworkContractMap 
+} from "../constants/constants";
 
 
 type ErrorWithCode = {
@@ -51,13 +58,20 @@ const synchronize = async (dispatch: (action: ACTION_TYPE) => void) => {
 	} else {
 		// may have to use shorthand if else when there's no balance
 		const ethBalance = await provider.getBalance(accounts[0]);
+		const usdc: Contract = new ethers.Contract(
+			NetworkContractMap[chainId]["USDC"].address,
+			NetworkContractMap[chainId]["USDC"].abi,
+			provider,
+		);
+		const usdcBalance = await usdc.balanceOf(accounts[0])
+			.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
 
 		dispatch({
 			type: "accountConnected",
 			payload: {
 				account: accounts[0],
 				ethBalance: ethBalance === undefined ? "0.00" : formatEther(ethBalance),
-				usdcBalance: "0.00", // placeholder
+				usdcBalance: usdcBalance, // placeholder
 				approvedUsdcBalance: "0.00", // placeholder
 				chainId: chainId
 			}
@@ -80,12 +94,19 @@ const requestAccounts = async (dispatch: (action: ACTION_TYPE) => void) => {
 		.then( async (accounts) => {
 			const chainId = await provider.send("eth_chainId", []);
 			const ethBalance = await provider.getBalance(accounts[0]);
+			const usdc: Contract = new ethers.Contract(
+				NetworkContractMap[chainId]["USDC"].address,
+				NetworkContractMap[chainId]["USDC"].abi,
+				provider,
+			);
+			const usdcBalance = await usdc.balanceOf(accounts[0])
+				.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
 			dispatch({
 				type: "accountConnected",
 				payload: {
 					account: accounts[0],
 					ethBalance: ethBalance === undefined ? "0.00" : formatEther(ethBalance),
-					usdcBalance: "0.00", // placeholder
+					usdcBalance: usdcBalance, // placeholder
 					approvedUsdcBalance: "0.00", // placeholder
 					chainId: chainId
 				}

@@ -1,69 +1,45 @@
 import React from "react";
+import { createTheme, responsiveFontSizes, ThemeProvider } from "@mui/material/styles";
 import "./App.css";
 import AccountProvider from "./providers/AccountProvider";
 import Header from "./components/Header";
+import Home from "./pages/Home";
 
-function App() {
-  // const [account, setAccount] = useState<string | undefined>();
+let theme = createTheme({
+  typography: {
+    fontFamily: [
+      "Space Grotesk", 
+      "sans-serif",
+    ].join(","),
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          boxSizing: "border-box",
+          borderRadius: "0",
+          textTransform: "none",
+          margin: "1.0em 1.5em 1.0em 0.0em",
+          padding: "0.5em 2.5em 0.5em 2.5em",
+        },
+      },
+    },
+  },
+});
 
-  //   useEffect(() => {
-  //   async function fetchAccounts() {
-  //     const { ethereum } = window;
-  //     if (!ethereum) {
-  //       return;
-  //     }
-  //     const provider = new ethers.BrowserProvider(
-  //       ethereum
-  //     );
+theme = responsiveFontSizes(theme);
 
-  //     try {
-  //       await provider.send("eth_accounts", []).then((accounts) => {
-  //         if (accounts.length > 0) {
-  //           setAccount(accounts[0]);
-  //         } else {
-  //           setAccount(undefined);
-  //         }
-  //       });
-  //     } catch (e) {
-  //       console.error(e);
-  //       setAccount(undefined);
-  //     }
-
-  //     ethereum.on('accountsChanged', (_accounts) => window.location.reload());
-  //   }
-
-  //   fetchAccounts();
-  // }, []);
-
-  // const handleClick = async () => {
-  //   const { ethereum } = window;
-  //   if (ethereum && ethereum.isMetaMask) {
-  //     const provider = new ethers.BrowserProvider(ethereum);
-  //     await provider
-  //       .send("eth_requestAccounts", [])
-  //       .then((accounts) => {
-  //         if (accounts.length > 0) {
-  //           setAccount(accounts[0]);
-  //         }
-  //       })
-  //       .catch((e) => console.log(e));
-  //     } else {
-  //       alert("You need to install MetaMask to connect a wallet");
-  //       window.open("https://metamask.io/", "_blank");
-  //       return;
-  //     }
-  // }
-
-  
+function App() {  
 
   return (
-    <AccountProvider>
-      <div className="App">
-        <header className="App-header">
+    <ThemeProvider theme={theme}>
+      <AccountProvider>
+        <div className="App">
           <Header />
-        </header>
-      </div>
-    </AccountProvider>
+          <Home />
+        </div>
+      </AccountProvider>
+    </ThemeProvider>
   );
 }
 

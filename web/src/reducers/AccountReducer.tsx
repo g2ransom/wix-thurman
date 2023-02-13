@@ -17,6 +17,7 @@ type AccountConnected = {
 		account: string;
 		ethBalance: string;
 		usdcBalance: string;
+		sUsdcBalance: string;
 		approvedUsdcBalance: string;
 		chainId: string;
 	}
@@ -39,6 +40,7 @@ type AccountChanged = {
 		account: string;
 		ethBalance: string;
 		usdcBalance: string;
+		sUsdcBalance: string;
 		approvedUsdcBalance: string;
 	}
 };
@@ -49,6 +51,7 @@ type ChainChanged = {
 		account: string;
 		ethBalance: string;
 		usdcBalance: string;
+		sUsdcBalance: string;
 		approvedUsdcBalance: string;
 		chainId: string;
 	}
@@ -70,6 +73,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				account: undefined,
 				ethBalance: undefined,
 				usdcBalance: undefined,
+				sUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
 				chainId: undefined,
 				status: "unavailable",
@@ -80,6 +84,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				account: undefined,
 				ethBalance: undefined,
 				usdcBalance: undefined,
+				sUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
 				chainId: action.payload.chainId,
 				status: "notConnected",
@@ -90,6 +95,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				account: action.payload.account,
 				ethBalance: action.payload.ethBalance,
 				usdcBalance: action.payload.usdcBalance,
+				sUsdcBalance: action.payload.sUsdcBalance,
 				approvedUsdcBalance: action.payload.approvedUsdcBalance,
 				chainId: action.payload.chainId,
 				status: "connected"
@@ -106,6 +112,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				account: undefined,
 				ethBalance: undefined,
 				usdcBalance: undefined,
+				sUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
 				chainId: action.payload.chainId,
 				status: "connecting",
@@ -123,6 +130,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				account: undefined,
 				ethBalance: undefined,
 				usdcBalance: undefined,
+				sUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
 				status: "notConnected",
 			};
@@ -140,6 +148,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 					account: undefined,
 					ethBalance: undefined,
 					usdcBalance: undefined,
+					sUsdcBalance: undefined,
 					approvedUsdcBalance: undefined,
 					status: "notConnected",
 				}
@@ -149,6 +158,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				account: action.payload.account,
 				ethBalance: action.payload.ethBalance,
 				usdcBalance: action.payload.usdcBalance,
+				sUsdcBalance: action.payload.sUsdcBalance,
 				approvedUsdcBalance: action.payload.approvedUsdcBalance,
 				status: "connected",
 			};
@@ -165,6 +175,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				account: action.payload.account,
 				ethBalance: action.payload.ethBalance,
 				usdcBalance: action.payload.usdcBalance,
+				sUsdcBalance: action.payload.sUsdcBalance,
 				approvedUsdcBalance: action.payload.approvedUsdcBalance,
 				chainId: action.payload.chainId,
 				status: "connected",

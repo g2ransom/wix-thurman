@@ -66,13 +66,27 @@ const synchronize = async (dispatch: (action: ACTION_TYPE) => void) => {
 		const usdcBalance = await usdc.balanceOf(accounts[0])
 			.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
 
+		const approvedUsdcBalance = await usdc.allowance(
+			accounts[0],
+			NetworkContractMap[chainId]["Polemarch"].address
+		).then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+
+		const sUsdc = new ethers.Contract(
+			NetworkContractMap[chainId]["sUSDC"].address,
+			NetworkContractMap[chainId]["sUSDC"].abi,
+			provider
+		);
+		const sUsdcBalance = await sUsdc.balanceOf(accounts[0])
+			.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+
 		dispatch({
 			type: "accountConnected",
 			payload: {
 				account: accounts[0],
 				ethBalance: ethBalance === undefined ? "0.00" : formatEther(ethBalance),
-				usdcBalance: usdcBalance, // placeholder
-				approvedUsdcBalance: "0.00", // placeholder
+				usdcBalance: usdcBalance,
+				sUsdcBalance: sUsdcBalance, // placeholder
+				approvedUsdcBalance: approvedUsdcBalance, 
 				chainId: chainId
 			}
 		})
@@ -101,13 +115,28 @@ const requestAccounts = async (dispatch: (action: ACTION_TYPE) => void) => {
 			);
 			const usdcBalance = await usdc.balanceOf(accounts[0])
 				.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+
+			const approvedUsdcBalance = await usdc.allowance(
+				accounts[0],
+				NetworkContractMap[chainId]["Polemarch"].address
+			).then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+
+			const sUsdc = new ethers.Contract(
+				NetworkContractMap[chainId]["sUSDC"].address,
+				NetworkContractMap[chainId]["sUSDC"].abi,
+				provider
+			);
+			const sUsdcBalance = await sUsdc.balanceOf(accounts[0])
+				.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+			
 			dispatch({
 				type: "accountConnected",
 				payload: {
 					account: accounts[0],
 					ethBalance: ethBalance === undefined ? "0.00" : formatEther(ethBalance),
-					usdcBalance: usdcBalance, // placeholder
-					approvedUsdcBalance: "0.00", // placeholder
+					usdcBalance: usdcBalance, 
+					sUsdcBalance: sUsdcBalance, // placeholder
+					approvedUsdcBalance: approvedUsdcBalance,
 					chainId: chainId
 				}
 			});
@@ -148,12 +177,22 @@ export default function AccountProvider(props: any) {
 	  requestAccounts(dispatch);
 	}, [dispatch, isAvailable]);
 
+	const update = useCallback(() => {
+		if (!isAvailable) {
+		  console.warn(
+		    "`enable` method has been called while MetaMask is not available or synchronising. Nothing will be done in this case."
+		  );
+		}
+		synchronize(dispatch);
+	}, [dispatch, isAvailable]);
+
 	const value: IAccountContext = useMemo(
 		() => ({
 			...state,
-			connect
+			connect,
+			update,
 		}),
-		[connect, state]
+		[connect, update, state]
 	);
 	return <AccountContext.Provider value={value} {...props} />
 }

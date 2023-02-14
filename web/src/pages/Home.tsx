@@ -21,11 +21,12 @@ const styles = {
     width: "1.25em",
     height: "1.25em",
   },
-  supplyButton: {
+  button: {
   	backgroundColor: "black",
   	"&:hover": {
   		backgroundColor: "#525252",
   	},
+  	fontWeight: "600"
   },
   sectionTypography: {
   	fontWeight: "600",
@@ -112,7 +113,7 @@ export default function Home() {
 					asset="sUSDC"
 					avatarIcon={usdcIcon}
 					balance={sUsdcBalance}
-					button={<Button variant="contained" sx={styles.supplyButton}>Withdraw </Button>}
+					button={<Button variant="contained" sx={styles.button}>Withdraw </Button>}
 				/>
 			</Grid>
 		</Box>

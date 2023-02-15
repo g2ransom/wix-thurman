@@ -17,7 +17,6 @@ import {
 	TextField,
 	Typography
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import { 
 	useForm,
 	Controller, 
@@ -28,11 +27,12 @@ import {
 	initialTransactionState,
 	TransactionReducer
 } from "../reducers/TransactionReducer";
-import InfoPopover from "./InfoPopover";
+import CloseButton from "./CloseButton";
+import ErrorMessage, { ErrorMessageProps } from "./ErrorMessage";
+import ApprovalButton from "./ApprovalButton";
 import usdcIcon from "../images/usdc.png"
 import { 
 	chainMap,
-	USDC_DECIMALS, 
 	NetworkContractMap 
 } from "../constants/constants";
 
@@ -43,9 +43,6 @@ const styles = {
 			backgroundColor: "#525252",
 		},
 		fontWeight: "600"
-	},
-	closeIcon: {
-		cursor: "pointer",
 	},
 	modal: {
 		display: "flex",
@@ -97,17 +94,13 @@ type ErrorWithCode = {
 };
 
 const ERROR_CODE_TX_REQUEST_REJECTED = 4001;
-const approvalContent = "To continue, you need to grant Thurman smart contracts permission to move your funds from your wallet."
 
-// if value is above approved balance, then the approve button comes and supply button is disabled
-// make buttons disabled when errors exist in the form
+
 export default function SupplyModalButton() {
 	let { approvedUsdcBalance, chainId, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
-	// const [approvalTxSuccess, setApprovalTxSuccess] = useState<boolean>(false);
 	const handleOpen = () => setOpen(true);
-	const handleClose = () => setOpen(false);
 	const networkChainId = !chainId ? "0x1" : chainId;
 	approvedUsdcBalance = !approvedUsdcBalance ? "0.0" : approvedUsdcBalance;
 
@@ -122,10 +115,32 @@ export default function SupplyModalButton() {
 			supplyValue: ""
 		}
 	});
+
+	const formErrors: ErrorMessageProps[] = [
+		{
+			condition: errors.supplyValue && errors.supplyValue.type === "required",
+			message: "You must enter a value",
+		},
+		{
+			condition: errors.supplyValue && errors.supplyValue.type === "pattern",
+			message: "Write a valid input like 1.02 or 0.479"
+		},
+		{
+			condition: errors.supplyValue && errors.supplyValue.type === "positive",
+			message: "Your number must be greater than zero"
+		}
+	]
 	
 	const watchSupplyValue = watch("supplyValue");
 
 	const isApproved = (watchSupplyValue <= approvedUsdcBalance) || state.approvalSuccess === true;
+
+	const handleClose = () => {
+		if (state.status === "finalSuccess") {
+			dispatch({type: "uninitiated"});
+		}
+		setOpen(false);
+	}
 
 	const onSubmit: SubmitHandler<IFormInput> = async (data) => {
 		const { ethereum } = window;
@@ -195,7 +210,7 @@ export default function SupplyModalButton() {
 		try {
 			const tx = await usdc.approve(
 				NetworkContractMap[networkChainId]["Polemarch"].address,
-				parseUnits(value, USDC_DECIMALS),
+				parseUnits(value, NetworkContractMap[networkChainId]["USDC"].decimals),
 			);
 			dispatch({
 				type: "inProgress",
@@ -251,11 +266,7 @@ export default function SupplyModalButton() {
 				<Box>
 					<Paper elevation={1} sx={styles.paper}>
 							<Grid container spacing={1}>
-								<Grid item xs={12}>
-									<Box display="flex" justifyContent="flex-end">
-										<CloseIcon onClick={handleClose} sx={styles.closeIcon} />
-									</Box>
-								</Grid>
+								<CloseButton handleClose={handleClose} />
 								<Grid item xs={12}>
 									<Typography variant="body1" sx={styles.modalHeaderTypography}>
 										Supply USDC
@@ -272,7 +283,10 @@ export default function SupplyModalButton() {
 										control={control}
 										rules={{
 											required: true,
-											pattern: /^\d{0,24}?(\.\d{0,24})?$/
+											pattern: /^\d{0,24}?(\.\d{0,24})?$/,
+											validate: {
+												positive: v => parseFloat(v) > 0,
+											}
 										}}
 										render={({ field }) => (																						
 											<TextField
@@ -293,57 +307,47 @@ export default function SupplyModalButton() {
 										)}
 									/>
 								</Grid>
-								{(approvedUsdcBalance 
-									&& watchSupplyValue > approvedUsdcBalance 
-									&& errors.supplyValue?.type !== "pattern"
-									) && (
-									<Grid item xs={12}>
+								<Grid item xs={12}>
+									<Box>
+										{(approvedUsdcBalance 
+											&& watchSupplyValue > approvedUsdcBalance 
+											&& errors.supplyValue?.type !== "pattern"
+											&& parseFloat(watchSupplyValue) > 0
+											) && (									
+											<ApprovalButton
+												isDirty={isDirty}
+												isValid={isValid}
+												state={state}
+												value={watchSupplyValue}
+												handleApproval={handleApproval}
+												asset="USDC"
+											/>									
+										)}
 										<Button
 											variant="contained"
+											onClick={handleSubmit(onSubmit)}
 											disabled={
 												!isDirty 
 												|| !isValid 
-												|| (state.transactionType === "approval" && state.status === "inProgress")
+												|| !isApproved
+												|| (state.transactionType === "supply" && state.status === "inProgress")
+												|| parseFloat(watchSupplyValue) <= 0
 											}
-											onClick={() => handleApproval(watchSupplyValue)}
-											endIcon={<InfoPopover content={approvalContent} />}
 											sx={styles.button}
 											fullWidth
 										>
-											Approve USDC to continue
-										</Button>	
-									</Grid>
-								)}
-								<Grid item xs={12}>
-									<Button
-										variant="contained"
-										onClick={handleSubmit(onSubmit)}
-										disabled={
-											!isDirty 
-											|| !isValid 
-											|| !isApproved
-											|| (state.transactionType === "supply" && state.status === "inProgress")
-										}
-										sx={styles.button}
-										fullWidth
-									>
-										Supply USDC
-									</Button>
+											Supply USDC
+										</Button>
+									</Box>
 								</Grid>
-								{errors.supplyValue && errors.supplyValue.type === "required" && (
-								  <Grid item xs={12}>
-							  		<Typography sx={styles.errorTypography}>
-							  			You must enter a value
-							  		</Typography>
-								  </Grid>	
-								)}
-								{errors.supplyValue && errors.supplyValue.type === "pattern" && (
-								  <Grid item xs={12}>
-							  		<Typography sx={styles.errorTypography}>
-							  			Write a valid input like 1.02 or 0.479
-							  		</Typography>
-								  </Grid>
-								)}
+								<>
+									{formErrors.map((formError) => (
+										<ErrorMessage
+											condition={formError.condition}
+											message={formError.message}
+										/>
+									))}
+								</>
 								{state.status === "inProgress" && (
 									<Grid item xs={12}>
 										<Typography variant="body2" sx={styles.typography}>

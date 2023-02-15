@@ -24,6 +24,14 @@ type TransactionSuccess = {
 	status: "success";
 };
 
+type TransactionFinalSuccess = {
+	transactionType: TransactionType;
+	error: undefined;
+	approvalSuccess: boolean;
+	txHash: string;
+	status: "finalSuccess";
+};
+
 type TransactionFailed = {
 	transactionType: TransactionType;
 	error: string;
@@ -44,6 +52,7 @@ export type TransactionState =
 	| TransactionUninitiated
 	| TransactionInProgress
 	| TransactionSuccess
+	| TransactionFinalSuccess
 	| TransactionFailed
 	| TransactionPermissionRejected;
 
@@ -53,6 +62,10 @@ export const initialTransactionState: TransactionState = {
 	approvalSuccess: false,
 	txHash: undefined,
 	status: "uninitiated",
+};
+
+type Uninitiated = {
+	type: "uninitiated";
 };
 
 type InProgress = {
@@ -101,6 +114,7 @@ type FinalSuccess = {
 };
 
 type ACTION_TYPE = 
+	| Uninitiated
 	| InProgress
 	| Success
 	| ApprovalSuccess
@@ -111,6 +125,8 @@ type ACTION_TYPE =
 
 export function TransactionReducer(state: TransactionState, action: ACTION_TYPE): TransactionState {
 	switch (action.type) {
+		case "uninitiated":
+			return initialTransactionState;
 		case "inProgress":
 			return {
 				...state,
@@ -156,7 +172,7 @@ export function TransactionReducer(state: TransactionState, action: ACTION_TYPE)
 				error: undefined,
 				approvalSuccess: false,
 				txHash: action.payload.txHash,
-				status: "success",
+				status: "finalSuccess",
 			};
 		default:
 			throw new Error();

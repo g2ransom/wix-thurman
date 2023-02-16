@@ -35,6 +35,8 @@ const ERROR_CODE_REQUEST_PENDING = -32002;
 
 const synchronize = async (dispatch: (action: ACTION_TYPE) => void) => {
 	const { ethereum } = window;
+	let approvedUsdcBalance: string = "0.00";
+	let sUsdcBalance: string = "0.00";
 	const isMetaMaskAvailable = Boolean(ethereum) && ethereum?.isMetaMask;
 	if (!isMetaMaskAvailable) {
 		dispatch({type: "providerUnavailable"});
@@ -66,18 +68,24 @@ const synchronize = async (dispatch: (action: ACTION_TYPE) => void) => {
 		const usdcBalance = await usdc.balanceOf(accounts[0])
 			.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
 
-		const approvedUsdcBalance = await usdc.allowance(
-			accounts[0],
-			NetworkContractMap[chainId]["Polemarch"].address
-		).then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+		if (NetworkContractMap[chainId]["Polemarch"].address) {
+			approvedUsdcBalance = await usdc.allowance(
+				accounts[0],
+				NetworkContractMap[chainId]["Polemarch"].address
+			).then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+		}
+		
 
-		const sUsdc = new ethers.Contract(
-			NetworkContractMap[chainId]["sUSDC"].address,
-			NetworkContractMap[chainId]["sUSDC"].abi,
-			provider
-		);
-		const sUsdcBalance = await sUsdc.balanceOf(accounts[0])
-			.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+		if (NetworkContractMap[chainId]["sUSDC"].address && NetworkContractMap[chainId]["sUSDC"].abi) {
+			const sUsdc = new ethers.Contract(
+				NetworkContractMap[chainId]["sUSDC"].address,
+				NetworkContractMap[chainId]["sUSDC"].abi,
+				provider
+			);
+			sUsdcBalance = await sUsdc.balanceOf(accounts[0])
+				.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+			}
+		
 
 		dispatch({
 			type: "accountConnected",
@@ -85,8 +93,8 @@ const synchronize = async (dispatch: (action: ACTION_TYPE) => void) => {
 				account: accounts[0],
 				ethBalance: ethBalance === undefined ? "0.00" : formatEther(ethBalance),
 				usdcBalance: usdcBalance,
-				sUsdcBalance: sUsdcBalance, // placeholder
-				approvedUsdcBalance: approvedUsdcBalance, 
+				sUsdcBalance: sUsdcBalance === undefined ? "0.00" : sUsdcBalance, // placeholder
+				approvedUsdcBalance: approvedUsdcBalance === undefined ? "0.00" : approvedUsdcBalance, 
 				chainId: chainId
 			}
 		})
@@ -95,6 +103,8 @@ const synchronize = async (dispatch: (action: ACTION_TYPE) => void) => {
 
 const requestAccounts = async (dispatch: (action: ACTION_TYPE) => void) => {
 	const { ethereum } = window;
+	let approvedUsdcBalance: string;
+	let sUsdcBalance: string;
 	const provider = new ethers.BrowserProvider(ethereum as any);
 	const chainId: string = await provider.send("eth_chainId", []);
 	dispatch({
@@ -116,18 +126,23 @@ const requestAccounts = async (dispatch: (action: ACTION_TYPE) => void) => {
 			const usdcBalance = await usdc.balanceOf(accounts[0])
 				.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
 
-			const approvedUsdcBalance = await usdc.allowance(
-				accounts[0],
-				NetworkContractMap[chainId]["Polemarch"].address
-			).then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+			if (NetworkContractMap[chainId]["Polemarch"].address) {
+				approvedUsdcBalance = await usdc.allowance(
+					accounts[0],
+					NetworkContractMap[chainId]["Polemarch"].address
+				).then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+			}
+		
 
+		if (NetworkContractMap[chainId]["sUSDC"].address && NetworkContractMap[chainId]["sUSDC"].abi) {
 			const sUsdc = new ethers.Contract(
 				NetworkContractMap[chainId]["sUSDC"].address,
 				NetworkContractMap[chainId]["sUSDC"].abi,
 				provider
 			);
-			const sUsdcBalance = await sUsdc.balanceOf(accounts[0])
+			sUsdcBalance = await sUsdc.balanceOf(accounts[0])
 				.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+		}
 			
 			dispatch({
 				type: "accountConnected",
@@ -135,8 +150,8 @@ const requestAccounts = async (dispatch: (action: ACTION_TYPE) => void) => {
 					account: accounts[0],
 					ethBalance: ethBalance === undefined ? "0.00" : formatEther(ethBalance),
 					usdcBalance: usdcBalance, 
-					sUsdcBalance: sUsdcBalance, // placeholder
-					approvedUsdcBalance: approvedUsdcBalance,
+					sUsdcBalance: sUsdcBalance === undefined ? "0.00" : sUsdcBalance, // placeholder
+					approvedUsdcBalance: approvedUsdcBalance === undefined ? "0.00" : approvedUsdcBalance,
 					chainId: chainId
 				}
 			});

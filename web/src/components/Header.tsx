@@ -1,18 +1,24 @@
 import React from "react";
 import {
 	AppBar,
+	Avatar,
 	Box,
 	Toolbar,
-	Typography,
 } from "@mui/material";
 import ConnectWalletButton from "./ConnectWalletButton";
+import thurmanLogo from "../images/thurman-logo.png";
 
 const styles = {
 	appBar: {
 		background: "white",
+		marginBottom: "1.25em"
 	},
 	font: {
 		color: "black",
+	},
+	thurmanIcon: {
+		width: "2.25em",
+    height: "2.25em",
 	}
 }
 
@@ -21,9 +27,7 @@ export default function Header() {
 		<AppBar position="static" elevation={0} sx={styles.appBar}>
 			<Toolbar variant="dense">
 				<Box display="flex" flexGrow={1}>
-					<Typography variant="h6" sx={styles.font}>
-						Thurman
-					</Typography>
+					<Avatar src={thurmanLogo} sx={styles.thurmanIcon} />
 				</Box>
 				<ConnectWalletButton />
 			</Toolbar>

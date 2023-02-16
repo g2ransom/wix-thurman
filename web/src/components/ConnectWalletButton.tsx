@@ -22,8 +22,12 @@ import ethIcon from "../images/eth.png";
 const styles = {
   connectButton: {
     marginLeft: "1.5em",
-    border:"1px solid black",
+    fontWeight: "600",
+  },
+  connectedButton: {
+  	marginLeft: "1.5em",
     color: "#484848",
+  	border:"1px solid black",
   },
   popperPaper: {
     padding: "0.75em 1.5em 1.5em 1.5em",
@@ -67,7 +71,7 @@ export default function ConnectWalletButton() {
 					<Button
 						variant="outlined"
 						disableRipple={true}
-						sx={styles.connectButton}
+						sx={styles.connectedButton}
 						onClick={handleClick}
 						startIcon={<Avatar src={metamaskIcon} sx={styles.metamask} />}
 						endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}

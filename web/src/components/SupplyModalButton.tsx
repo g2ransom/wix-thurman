@@ -5,21 +5,15 @@ import {
 	Contract,
 } from "ethers";
 import {
-	Avatar,
 	Box,
 	Button,
 	Grid,
-	InputAdornment,
-	LinearProgress,
-	Link,
 	Modal,
 	Paper,
-	TextField,
 	Typography
 } from "@mui/material";
 import { 
 	useForm,
-	Controller, 
 	SubmitHandler
 } from "react-hook-form";
 import useWallet from "../hooks/useWallet";
@@ -27,14 +21,14 @@ import {
 	initialTransactionState,
 	TransactionReducer
 } from "../reducers/TransactionReducer";
+import ApprovalButton from "./ApprovalButton";
 import CloseButton from "./CloseButton";
 import ErrorMessage, { ErrorMessageProps } from "./ErrorMessage";
-import ApprovalButton from "./ApprovalButton";
+import NumberInputField from "./NumberInputField";
+import PostApprovalButton from "./PostApprovalButton";
+import TransactionModalInfo from "./TransactionModalInfo";
 import usdcIcon from "../images/usdc.png"
-import { 
-	chainMap,
-	NetworkContractMap 
-} from "../constants/constants";
+import { NetworkContractMap } from "../constants/constants";
 
 const styles = {
 	button: {
@@ -69,19 +63,6 @@ const styles = {
 		fontWeight: "600",
 		color: "#484848",
 	},
-	errorTypography: {
-		fontSize: "0.75em",
-		fontWeight: "600",
-		color: "#A30000",
-	},
-	usdc: {
-		width: "0.75em",
-    height: "0.75em",
-	},
-	usdcTextField: {
-		width: "1.25em",
-		height: "1.25em",
-	},
 };
 
 type IFormInput = {
@@ -97,7 +78,7 @@ const ERROR_CODE_TX_REQUEST_REJECTED = 4001;
 
 
 export default function SupplyModalButton() {
-	let { approvedUsdcBalance, chainId, update } = useWallet();
+	let { approvedUsdcBalance, usdcBalance, chainId, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
 	const handleOpen = () => setOpen(true);
@@ -106,6 +87,7 @@ export default function SupplyModalButton() {
 
 	const { 
 		watch,
+		resetField,
 		formState: { isDirty, isValid, errors },
 		control, 
 		handleSubmit 
@@ -138,6 +120,7 @@ export default function SupplyModalButton() {
 	const handleClose = () => {
 		if (state.status === "finalSuccess") {
 			dispatch({type: "uninitiated"});
+			resetField("supplyValue");
 		}
 		setOpen(false);
 	}
@@ -180,7 +163,7 @@ export default function SupplyModalButton() {
 			  	dispatch({ 
 			  		type: "permissionRejected",
 			  		payload: {
-			  			error: "user rejected transaction",
+			  			error: "You rejected the transaction 🤷🏿‍♂️",
 			  		}
 			  	});
 			    return;
@@ -190,7 +173,7 @@ export default function SupplyModalButton() {
 				type: "failed",
 				payload: {
 					transactionType: "supply",
-					error: "The transaction failed :(",
+					error: "The transaction failed 🤦🏿‍♂️",
 				}
 			});
 		}
@@ -227,13 +210,13 @@ export default function SupplyModalButton() {
 			});
 			update();
 		} catch (e) {
-			console.error(e);
+			console.error(e);                         
 			if ("code" in (e as { [key: string]: any })) {
-			  if ((e as ErrorWithCode).code === ERROR_CODE_TX_REQUEST_REJECTED) {
+			  if ((e as ErrorWithCode).info.error.code === ERROR_CODE_TX_REQUEST_REJECTED) {
 			  	dispatch({ 
 			  		type: "permissionRejected",
 			  		payload: {
-			  			error: "user rejected transaction",
+			  			error: "You rejected the transaction 🤷🏿‍♂️",
 			  		}
 			  	});
 			    return;
@@ -243,12 +226,12 @@ export default function SupplyModalButton() {
 				type: "failed",
 				payload: {
 					transactionType: "approval",
-					error: "The transaction failed :(",
+					error: "The transaction failed 🤦🏿‍♂️",
 				}
 			});		
 		}
 	}
-
+           
 	return (
 		<div>
 			<Button
@@ -268,7 +251,7 @@ export default function SupplyModalButton() {
 							<Grid container spacing={1}>
 								<CloseButton handleClose={handleClose} />
 								<Grid item xs={12}>
-									<Typography variant="body1" sx={styles.modalHeaderTypography}>
+									<Typography variant="h6" sx={styles.modalHeaderTypography}>
 										Supply USDC
 									</Typography>
 								</Grid>
@@ -277,36 +260,13 @@ export default function SupplyModalButton() {
 										Approved Balance: {approvedUsdcBalance}
 									</Typography>									
 								</Grid>
-								<Grid item xs={12}>
-									<Controller
-										name="supplyValue"
-										control={control}
-										rules={{
-											required: true,
-											pattern: /^\d{0,24}?(\.\d{0,24})?$/,
-											validate: {
-												positive: v => parseFloat(v) > 0,
-											}
-										}}
-										render={({ field }) => (																						
-											<TextField
-												id="outlined-basic"
-												label="Amount"
-												variant="outlined"
-												size="small"
-												InputProps={
-													{endAdornment: 
-														<InputAdornment position="end">
-															{<Avatar src={usdcIcon} sx={styles.usdcTextField} />}
-														</InputAdornment>
-													}
-												}
-												fullWidth
-		 										{...field}
-											/>
-										)}
-									/>
-								</Grid>
+								<NumberInputField
+									control={control}
+									name="supplyValue"
+									avatarSrc={usdcIcon}
+									value={usdcBalance}
+									assetName="USDC"
+								/>
 								<Grid item xs={12}>
 									<Box>
 										{(approvedUsdcBalance 
@@ -323,64 +283,30 @@ export default function SupplyModalButton() {
 												asset="USDC"
 											/>									
 										)}
-										<Button
-											variant="contained"
+										<PostApprovalButton
+											isDirty={isDirty}
+											isValid={isValid}
+											isApproved={isApproved}
+											stateCondition={(state.transactionType === "supply" && state.status === "inProgress")}
+											notPositive={parseFloat(watchSupplyValue) <= 0}
+											buttonText="Supply USDC"
 											onClick={handleSubmit(onSubmit)}
-											disabled={
-												!isDirty 
-												|| !isValid 
-												|| !isApproved
-												|| (state.transactionType === "supply" && state.status === "inProgress")
-												|| parseFloat(watchSupplyValue) <= 0
-											}
-											sx={styles.button}
-											fullWidth
-										>
-											Supply USDC
-										</Button>
+										/>
 									</Box>
 								</Grid>
 								<>
-									{formErrors.map((formError) => (
+									{formErrors.map((formError, i) => (
 										<ErrorMessage
+											key={i}
 											condition={formError.condition}
 											message={formError.message}
 										/>
 									))}
 								</>
-								{state.status === "inProgress" && (
-									<Grid item xs={12}>
-										<Typography variant="body2" sx={styles.typography}>
-											Transaction is in progress! Wait a sec. Don't close the form, yet!
-										</Typography>
-										<LinearProgress />
-									</Grid>
-									)
-								}
-								{state.status === "success" && (
-									<Grid item xs={12}>
-										<Typography variant="body2" sx={styles.typography}>
-											Transaction was successful! Go ahead and press close.
-										</Typography>
-										<Typography variant="body2" sx={{...styles.typography, fontWeight: "bold"}}>
-											<Link
-											  href={`${chainMap[networkChainId].etherscanUrl}/tx/${state.txHash}`}
-											  target="_blank"
-											>
-											  Check out your transaction on Etherscan
-											</Link>
-										</Typography>
-									</Grid>
-									)
-								}
-								{state.status === "failed" && (
-									<Grid item xs={12}>
-										<Typography variant="body2" sx={styles.typography}>
-											{state.error}
-										</Typography>
-									</Grid>
-									)
-								}
+								<TransactionModalInfo 
+									state={state} 
+									networkChainId={networkChainId} 
+								/>
 							</Grid>
 					</Paper>
 				</Box>

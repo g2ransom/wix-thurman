@@ -6,10 +6,7 @@ import {
 } from "ethers";
 import {
 	Box,
-	Button,
 	Grid,
-	Modal,
-	Paper,
 	Typography
 } from "@mui/material";
 import { 
@@ -22,13 +19,14 @@ import {
 	TransactionReducer
 } from "../reducers/TransactionReducer";
 import ApprovalButton from "./ApprovalButton";
-import CloseButton from "./CloseButton";
 import ErrorMessage, { ErrorMessageProps } from "./ErrorMessage";
 import NumberInputField from "./NumberInputField";
 import PostApprovalButton from "./PostApprovalButton";
+import TransactionModal from "./TransactionModal";
 import TransactionModalInfo from "./TransactionModalInfo";
-import usdcIcon from "../images/usdc.png"
 import { NetworkContractMap } from "../constants/constants";
+import usdcIcon from "../images/usdc.png";
+
 
 const styles = {
 	button: {
@@ -75,6 +73,7 @@ type ErrorWithCode = {
 };
 
 const ERROR_CODE_TX_REQUEST_REJECTED = 4001;
+const infoPopoverContent = "When you supply funds to Thurman, you receive an interest accruing token (sUSDC) that can be withdrawn in exchange for your supplied asset (USDC) at a later date.";
 
 
 export default function SupplyModalButton() {
@@ -84,6 +83,7 @@ export default function SupplyModalButton() {
 	const handleOpen = () => setOpen(true);
 	const networkChainId = !chainId ? "0x1" : chainId;
 	approvedUsdcBalance = !approvedUsdcBalance ? "0.0" : approvedUsdcBalance;
+	usdcBalance = !usdcBalance ? "0.0" : usdcBalance;
 
 	const { 
 		watch,
@@ -105,11 +105,15 @@ export default function SupplyModalButton() {
 		},
 		{
 			condition: errors.supplyValue && errors.supplyValue.type === "pattern",
-			message: "Write a valid input like 1.02 or 0.479"
+			message: "Write a valid input like 1000.02 or 0.479"
 		},
 		{
 			condition: errors.supplyValue && errors.supplyValue.type === "positive",
 			message: "Your number must be greater than zero"
+		},
+		{
+			condition: errors.supplyValue && errors.supplyValue.type === "notGreater",
+			message: "Your number must be less than or equal to your balance"
 		}
 	]
 	
@@ -210,7 +214,7 @@ export default function SupplyModalButton() {
 			});
 			update();
 		} catch (e) {
-			console.error(e);                         
+			console.error(e);
 			if ("code" in (e as { [key: string]: any })) {
 			  if ((e as ErrorWithCode).info.error.code === ERROR_CODE_TX_REQUEST_REJECTED) {
 			  	dispatch({ 
@@ -233,84 +237,67 @@ export default function SupplyModalButton() {
 	}
            
 	return (
-		<div>
-			<Button
-				variant="contained"
-				sx={styles.button}
-				onClick={handleOpen}
-			>
-				Supply
-			</Button>
-			<Modal
-				open={open}
-				onClose={handleClose}
-				sx={styles.modal}
-			>
+		<TransactionModal
+			modalButtonName="Supply"
+			open={open}
+			handleOpen={handleOpen}
+			handleClose={handleClose}
+			modalHeaderText="Supply USDC"
+			infoPopoverContent={infoPopoverContent}
+		>
+			<Grid item xs={12}>
+				<Typography variant="body2" sx={styles.approvedBalanceTypography}>
+					Approved Balance: {approvedUsdcBalance}
+				</Typography>									
+			</Grid>
+			<NumberInputField
+				control={control}
+				name="supplyValue"
+				avatarSrc={usdcIcon}
+				value={usdcBalance}
+				assetName="USDC"
+			/>
+			<Grid item xs={12}>
 				<Box>
-					<Paper elevation={1} sx={styles.paper}>
-							<Grid container spacing={1}>
-								<CloseButton handleClose={handleClose} />
-								<Grid item xs={12}>
-									<Typography variant="h6" sx={styles.modalHeaderTypography}>
-										Supply USDC
-									</Typography>
-								</Grid>
-								<Grid item xs={12}>
-									<Typography variant="body2" sx={styles.approvedBalanceTypography}>
-										Approved Balance: {approvedUsdcBalance}
-									</Typography>									
-								</Grid>
-								<NumberInputField
-									control={control}
-									name="supplyValue"
-									avatarSrc={usdcIcon}
-									value={usdcBalance}
-									assetName="USDC"
-								/>
-								<Grid item xs={12}>
-									<Box>
-										{(approvedUsdcBalance 
-											&& watchSupplyValue > approvedUsdcBalance 
-											&& errors.supplyValue?.type !== "pattern"
-											&& parseFloat(watchSupplyValue) > 0
-											) && (									
-											<ApprovalButton
-												isDirty={isDirty}
-												isValid={isValid}
-												state={state}
-												value={watchSupplyValue}
-												handleApproval={handleApproval}
-												asset="USDC"
-											/>									
-										)}
-										<PostApprovalButton
-											isDirty={isDirty}
-											isValid={isValid}
-											isApproved={isApproved}
-											stateCondition={(state.transactionType === "supply" && state.status === "inProgress")}
-											notPositive={parseFloat(watchSupplyValue) <= 0}
-											buttonText="Supply USDC"
-											onClick={handleSubmit(onSubmit)}
-										/>
-									</Box>
-								</Grid>
-								<>
-									{formErrors.map((formError, i) => (
-										<ErrorMessage
-											key={i}
-											condition={formError.condition}
-											message={formError.message}
-										/>
-									))}
-								</>
-								<TransactionModalInfo 
-									state={state} 
-									networkChainId={networkChainId} 
-								/>
-							</Grid>
-					</Paper>
+					{(approvedUsdcBalance 
+						&& watchSupplyValue > approvedUsdcBalance 
+						&& errors.supplyValue?.type !== "pattern"
+						&& parseFloat(watchSupplyValue) > 0
+						&& parseFloat(watchSupplyValue) <= parseFloat(usdcBalance)
+						) && (									
+						<ApprovalButton
+							isDirty={isDirty}
+							isValid={isValid}
+							state={state}
+							value={watchSupplyValue}
+							handleApproval={handleApproval}
+							asset="USDC"
+						/>									
+					)}
+					<PostApprovalButton
+						isDirty={isDirty}
+						isValid={isValid}
+						isApproved={isApproved}
+						stateCondition={(state.transactionType === "supply" && state.status === "inProgress")}
+						notPositive={parseFloat(watchSupplyValue) <= 0}
+						buttonText="Supply USDC"
+						onClick={handleSubmit(onSubmit)}
+					/>
 				</Box>
-			</Modal>
-		</div>
+			</Grid>
+			<>
+				{formErrors.map((formError, i) => (
+					<ErrorMessage
+						key={i}
+						condition={formError.condition}
+						message={formError.message}
+					/>
+				))}
+			</>
+			<TransactionModalInfo 
+				state={state} 
+				networkChainId={networkChainId} 
+			/>
+		</TransactionModal>
 	);
 }

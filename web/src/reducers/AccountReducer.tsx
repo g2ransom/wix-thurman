@@ -19,6 +19,7 @@ type AccountConnected = {
 		usdcBalance: string;
 		sUsdcBalance: string;
 		approvedUsdcBalance: string;
+		approvedSusdcBalance: string;
 		chainId: string;
 	}
 };
@@ -42,6 +43,7 @@ type AccountChanged = {
 		usdcBalance: string;
 		sUsdcBalance: string;
 		approvedUsdcBalance: string;
+		approvedSusdcBalance: string;
 	}
 };
 
@@ -53,6 +55,7 @@ type ChainChanged = {
 		usdcBalance: string;
 		sUsdcBalance: string;
 		approvedUsdcBalance: string;
+		approvedSusdcBalance: string;
 		chainId: string;
 	}
 };
@@ -75,6 +78,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				usdcBalance: undefined,
 				sUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
+				approvedSusdcBalance: undefined,
 				chainId: undefined,
 				status: "unavailable",
 			};
@@ -86,6 +90,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				usdcBalance: undefined,
 				sUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
+				approvedSusdcBalance: undefined,
 				chainId: action.payload.chainId,
 				status: "notConnected",
 			};
@@ -97,6 +102,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				usdcBalance: action.payload.usdcBalance,
 				sUsdcBalance: action.payload.sUsdcBalance,
 				approvedUsdcBalance: action.payload.approvedUsdcBalance,
+				approvedSusdcBalance: action.payload.approvedSusdcBalance,
 				chainId: action.payload.chainId,
 				status: "connected"
 			};
@@ -114,6 +120,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				usdcBalance: undefined,
 				sUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
+				approvedSusdcBalance: undefined,
 				chainId: action.payload.chainId,
 				status: "connecting",
 			};
@@ -132,6 +139,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				usdcBalance: undefined,
 				sUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
+				approvedSusdcBalance: undefined,
 				status: "notConnected",
 			};
 		}
@@ -150,6 +158,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 					usdcBalance: undefined,
 					sUsdcBalance: undefined,
 					approvedUsdcBalance: undefined,
+					approvedSusdcBalance: undefined,
 					status: "notConnected",
 				}
 			}
@@ -160,6 +169,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				usdcBalance: action.payload.usdcBalance,
 				sUsdcBalance: action.payload.sUsdcBalance,
 				approvedUsdcBalance: action.payload.approvedUsdcBalance,
+				approvedSusdcBalance: action.payload.approvedSusdcBalance,
 				status: "connected",
 			};
 		}
@@ -177,6 +187,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				usdcBalance: action.payload.usdcBalance,
 				sUsdcBalance: action.payload.sUsdcBalance,
 				approvedUsdcBalance: action.payload.approvedUsdcBalance,
+				approvedSusdcBalance: action.payload.approvedSusdcBalance,
 				chainId: action.payload.chainId,
 				status: "connected",
 			};

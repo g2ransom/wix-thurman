@@ -13,12 +13,12 @@ import {
 	Controller 
 } from "react-hook-form";
 
-type NumberInputFieldProps = {
+export type NumberInputFieldProps = {
 	control: Control<any>;
 	name: string;
 	avatarSrc: string;
 	value: string | undefined;
-	assetName: string
+	assetName: string;
 }
 
 type EndAdornmentProps = {
@@ -75,6 +75,7 @@ export default function NumberInputField({
 	assetName
 } : NumberInputFieldProps
 ) {
+	let val = !value ? "0.00" : value;
 	return (
 		<Grid item xs={12}>
 			<Controller
@@ -85,6 +86,7 @@ export default function NumberInputField({
 					pattern: /^\d{0,24}?(\.\d{0,24})?$/,
 					validate: {
 						positive: v => parseFloat(v) > 0,
+						notGreater: v => parseFloat(v) <= parseFloat(val)
 					}
 				}}
 				render={({ field }) => (																						

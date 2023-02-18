@@ -40,15 +40,18 @@ export default function TransactionModalInfo({
 		{(state.status === "success" || state.status === "finalSuccess") && (
 			<Grid item xs={12}>
 				<Typography variant="body2" sx={styles.typography}>
-					Transaction was successful!
+					Your transaction was successful! 🎉
 				</Typography>
 				<Typography variant="body2" sx={styles.typography}>
 					<Link
 					  href={`${chainMap[networkChainId].etherscanUrl}/tx/${state.txHash}`}
 					  target="_blank"
 					>
-					  Check out your transaction on Etherscan
+					  Check out your transaction on Etherscan.
 					</Link>
+				</Typography>
+				<Typography variant="body2" sx={{...styles.typography, marginTop: "1.5em"}}>
+					“There is something in every one of you that waits, listens for the genuine in yourself—and if you can not hear it, you will never find whatever it is for which you are searching and if you hear it and then do not follow it, it was better that you had never been born.” - Dr. Howard Thurman
 				</Typography>
 			</Grid>
 			)

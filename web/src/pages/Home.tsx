@@ -2,11 +2,11 @@ import React from "react";
 import {
 	Box,
 	Container,
-	Button,
 	Grid,
 } from "@mui/material";
 import DashboardSection from "../components/DashboardSection";
 import SupplyModalButton from "../components/SupplyModalButton";
+import WithdrawModalButton from "../components/WithdrawModalButton";
 import useWallet from "../hooks/useWallet";
 import usdcIcon from "../images/usdc.png"
 
@@ -43,7 +43,7 @@ export default function Home() {
 					asset="sUSDC"
 					avatarIcon={usdcIcon}
 					balance={sUsdcBalance}
-					button={<Button variant="contained" sx={styles.button}>Withdraw </Button>}
+					button={<WithdrawModalButton />}
 				/>
 			</Grid>
 		</Box>

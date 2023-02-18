@@ -1,5 +1,10 @@
 import React from "react";
 import { createTheme, responsiveFontSizes, ThemeProvider } from "@mui/material/styles";
+import {
+  BrowserRouter,
+  Routes,
+  Route
+} from "react-router-dom";
 import "./App.css";
 import AccountProvider from "./providers/AccountProvider";
 import Header from "./components/Header";
@@ -36,7 +41,11 @@ function App() {
       <AccountProvider>
         <div className="App">
           <Header />
-          <Home />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Home />} />
+            </Routes>
+          </BrowserRouter>
         </div>
       </AccountProvider>
     </ThemeProvider>

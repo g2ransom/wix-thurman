@@ -5,6 +5,8 @@ import {
 	Grid,
 } from "@mui/material";
 import DashboardSection from "../components/DashboardSection";
+import ProposalSection from "../components/ProposalSection";
+import BorrowersSection from "../components/BorrowersSection";
 import SupplyModalButton from "../components/SupplyModalButton";
 import WithdrawModalButton from "../components/WithdrawModalButton";
 import useWallet from "../hooks/useWallet";
@@ -25,13 +27,14 @@ const styles = {
 }
 
 export default function Home() {
-	const { usdcBalance, sUsdcBalance } = useWallet();
+	const { account, usdcBalance, sUsdcBalance } = useWallet();
 
 	return (
 		<Container maxWidth={false} sx={styles.container}>
 		<Box>
 			<Grid container spacing={2}>
 				<DashboardSection
+					account={account}
 					title="Assets"
 					asset="USDC"
 					avatarIcon={usdcIcon}
@@ -39,12 +42,15 @@ export default function Home() {
 					button={<SupplyModalButton />}
 				/>
 				<DashboardSection
+					account={account}
 					title="Your Supplies"
 					asset="sUSDC"
 					avatarIcon={usdcIcon}
 					balance={sUsdcBalance}
 					button={<WithdrawModalButton />}
 				/>
+				<ProposalSection />
+				<BorrowersSection />
 			</Grid>
 		</Box>
 		</Container>

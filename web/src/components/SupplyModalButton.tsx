@@ -77,7 +77,7 @@ const infoPopoverContent = "When you supply funds to Thurman, you receive an int
 
 
 export default function SupplyModalButton() {
-	let { approvedUsdcBalance, usdcBalance, chainId, update } = useWallet();
+	let { account, approvedUsdcBalance, usdcBalance, chainId, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
 	const handleOpen = () => setOpen(true);
@@ -238,6 +238,8 @@ export default function SupplyModalButton() {
            
 	return (
 		<TransactionModal
+			account={account}
+			chainId={networkChainId}
 			modalButtonName="Supply"
 			open={open}
 			handleOpen={handleOpen}

@@ -10,8 +10,11 @@ import {
 } from "@mui/material";
 import CloseButton from "./CloseButton";
 import InfoPopover from "./InfoPopover";
+import { NetworkContractMap } from "../constants/constants";
 
 type TransactionModalProps = {
+	account: string | undefined;
+	chainId: string;
 	modalButtonName: string;
 	open: boolean;
 	handleOpen: () => void;
@@ -57,6 +60,8 @@ const styles = {
 };
 
 export default function TransactionModal({
+	account,
+	chainId,
 	modalButtonName,
 	open,
 	handleOpen,
@@ -71,6 +76,9 @@ export default function TransactionModal({
 				variant="contained"
 				sx={styles.button}
 				onClick={handleOpen}
+				disabled={!account
+				|| !NetworkContractMap[chainId]["Polemarch"]?.address
+				}
 			>
 				{modalButtonName}
 			</Button>

@@ -42,7 +42,7 @@ const ERROR_CODE_TX_REQUEST_REJECTED = 4001;
 const infoPopoverContent = "When you withdraw funds, you burn a specific amount of interest accruing token (sUSDC) and receive an equivalent amount of the underlying asset (USDC) in return.";
 
 export default function WithdrawModalButton() {
-	let { sUsdcBalance, chainId, update } = useWallet();
+	let { account, sUsdcBalance, chainId, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
 	const handleOpen = () => setOpen(true);
@@ -146,6 +146,8 @@ export default function WithdrawModalButton() {
 
 	return (
 		<TransactionModal
+			account={account}
+			chainId={networkChainId}
 			modalButtonName="Withdraw"
 			open={open}
 			handleOpen={handleOpen}

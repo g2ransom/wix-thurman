@@ -8,6 +8,7 @@ import {
 import "./App.css";
 import AccountProvider from "./providers/AccountProvider";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import Home from "./pages/Home";
 
 let theme = createTheme({
@@ -46,6 +47,7 @@ function App() {
               <Route path="/" element={<Home />} />
             </Routes>
           </BrowserRouter>
+          <Footer />
         </div>
       </AccountProvider>
     </ThemeProvider>

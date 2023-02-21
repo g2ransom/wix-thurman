@@ -25,7 +25,7 @@ import PostApprovalButton from "./PostApprovalButton";
 import TransactionModal from "./TransactionModal";
 import TransactionModalInfo from "./TransactionModalInfo";
 import { NetworkContractMap } from "../constants/constants";
-import usdcIcon from "../images/usdc.png";
+import usdcIcon from "../images/usd-coin-usdc-logo.png";
 
 
 const styles = {

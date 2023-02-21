@@ -59,7 +59,6 @@ const synchronize = async (dispatch: (action: ACTION_TYPE) => void) => {
 			}
 		});
 	} else {
-		// may have to use shorthand if else when there's no balance
 		const ethBalance = await provider.getBalance(accounts[0]);
 		const usdc: Contract = new ethers.Contract(
 			NetworkContractMap[chainId]["USDC"].address,
@@ -69,7 +68,7 @@ const synchronize = async (dispatch: (action: ACTION_TYPE) => void) => {
 		const usdcBalance = await usdc.balanceOf(accounts[0])
 			.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
 
-		if (NetworkContractMap[chainId]["Polemarch"].address) {
+		if (NetworkContractMap[chainId]["Polemarch"]?.address) {
 			approvedUsdcBalance = await usdc.allowance(
 				accounts[0],
 				NetworkContractMap[chainId]["Polemarch"].address
@@ -77,7 +76,7 @@ const synchronize = async (dispatch: (action: ACTION_TYPE) => void) => {
 		}
 		
 
-		if (NetworkContractMap[chainId]["sUSDC"].address && NetworkContractMap[chainId]["sUSDC"].abi) {
+		if (NetworkContractMap[chainId]["sUSDC"]?.address && NetworkContractMap[chainId]["sUSDC"]?.abi) {
 			const sUsdc = new ethers.Contract(
 				NetworkContractMap[chainId]["sUSDC"].address,
 				NetworkContractMap[chainId]["sUSDC"].abi,
@@ -136,7 +135,7 @@ const requestAccounts = async (dispatch: (action: ACTION_TYPE) => void) => {
 			const usdcBalance = await usdc.balanceOf(accounts[0])
 				.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
 
-			if (NetworkContractMap[chainId]["Polemarch"].address) {
+			if (NetworkContractMap[chainId]["Polemarch"]?.address) {
 				approvedUsdcBalance = await usdc.allowance(
 					accounts[0],
 					NetworkContractMap[chainId]["Polemarch"].address
@@ -144,7 +143,7 @@ const requestAccounts = async (dispatch: (action: ACTION_TYPE) => void) => {
 			}
 		
 
-		if (NetworkContractMap[chainId]["sUSDC"].address && NetworkContractMap[chainId]["sUSDC"].abi) {
+		if (NetworkContractMap[chainId]["sUSDC"]?.address && NetworkContractMap[chainId]["sUSDC"]?.abi) {
 			const sUsdc = new ethers.Contract(
 				NetworkContractMap[chainId]["sUSDC"].address,
 				NetworkContractMap[chainId]["sUSDC"].abi,

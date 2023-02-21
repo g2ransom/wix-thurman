@@ -8,7 +8,7 @@ import DashboardSection from "../components/DashboardSection";
 import SupplyModalButton from "../components/SupplyModalButton";
 import WithdrawModalButton from "../components/WithdrawModalButton";
 import useWallet from "../hooks/useWallet";
-import usdcIcon from "../images/usdc.png"
+import usdcIcon from "../images/usd-coin-usdc-logo.png"
 
 const styles = {
   container: {

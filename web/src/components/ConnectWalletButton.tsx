@@ -17,7 +17,7 @@ import {
 import useWallet from "../hooks/useWallet";
 import { chainMap } from "../constants/constants";
 import metamaskIcon from "../images/metamask-icon.png";
-import ethIcon from "../images/eth.png";
+import ethIcon from "../images/ethereum_icon.png";
 
 const styles = {
   connectButton: {

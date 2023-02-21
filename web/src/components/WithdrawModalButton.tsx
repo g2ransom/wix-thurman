@@ -16,7 +16,7 @@ import NumberInputField from "./NumberInputField";
 import TransactionModalInfo from "./TransactionModalInfo";
 import useWallet from "../hooks/useWallet";
 import { NetworkContractMap } from "../constants/constants";
-import usdcIcon from "../images/usdc.png";
+import usdcIcon from "../images/usd-coin-usdc-logo.png";
 
 type IFormInput = {
 	withdrawValue: string;

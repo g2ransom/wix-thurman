@@ -37,7 +37,9 @@ const synchronize = async (dispatch: (action: ACTION_TYPE) => void) => {
 	const { ethereum } = window;
 	let approvedUsdcBalance: string = "0.00";
 	let sUsdcBalance: string = "0.00";
+	let gUsdcBalance: string = "0.00";
 	let approvedSusdcBalance: string = "0.00";
+	let approvedGusdcBalance: string = "0.00";
 	const isMetaMaskAvailable = Boolean(ethereum) && ethereum?.isMetaMask;
 	if (!isMetaMaskAvailable) {
 		dispatch({type: "providerUnavailable"});
@@ -92,6 +94,23 @@ const synchronize = async (dispatch: (action: ACTION_TYPE) => void) => {
 				).then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
 			}
 		}
+
+		if (NetworkContractMap[chainId]["gUSDC"]?.address && NetworkContractMap[chainId]["gUSDC"]?.abi) {
+			const gUsdc = new ethers.Contract(
+				NetworkContractMap[chainId]["gUSDC"].address,
+				NetworkContractMap[chainId]["gUSDC"].abi,
+				provider
+			);
+			gUsdcBalance = await gUsdc.balanceOf(accounts[0])
+				.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+
+			if (NetworkContractMap[chainId]["Polemarch"].address) {
+				approvedGusdcBalance = await gUsdc.allowance(
+					accounts[0],
+					NetworkContractMap[chainId]["Polemarch"].address
+				).then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+			}
+		}
 		
 
 		dispatch({
@@ -101,8 +120,10 @@ const synchronize = async (dispatch: (action: ACTION_TYPE) => void) => {
 				ethBalance: ethBalance === undefined ? "0.00" : formatEther(ethBalance),
 				usdcBalance: usdcBalance,
 				sUsdcBalance: sUsdcBalance === undefined ? "0.00" : sUsdcBalance, // placeholder
+				gUsdcBalance: gUsdcBalance === undefined ? "0.00" : gUsdcBalance,
 				approvedUsdcBalance: approvedUsdcBalance === undefined ? "0.00" : approvedUsdcBalance,
 				approvedSusdcBalance: approvedSusdcBalance === undefined ? "0.00" : approvedSusdcBalance,
+				approvedGusdcBalance: approvedGusdcBalance === undefined ? "0.00" : approvedGusdcBalance,
 				chainId: chainId
 			}
 		})
@@ -113,7 +134,9 @@ const requestAccounts = async (dispatch: (action: ACTION_TYPE) => void) => {
 	const { ethereum } = window;
 	let approvedUsdcBalance: string;
 	let sUsdcBalance: string;
+	let gUsdcBalance: string;
 	let approvedSusdcBalance: string = "0.00";
+	let approvedGusdcBalance: string = "0.00";
 	const provider = new ethers.BrowserProvider(ethereum as any);
 	const chainId: string = await provider.send("eth_chainId", []);
 	dispatch({
@@ -159,6 +182,23 @@ const requestAccounts = async (dispatch: (action: ACTION_TYPE) => void) => {
 				).then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
 			}
 		}
+
+		if (NetworkContractMap[chainId]["gUSDC"]?.address && NetworkContractMap[chainId]["gUSDC"]?.abi) {
+			const gUsdc = new ethers.Contract(
+				NetworkContractMap[chainId]["gUSDC"].address,
+				NetworkContractMap[chainId]["gUSDC"].abi,
+				provider
+			);
+			gUsdcBalance = await gUsdc.balanceOf(accounts[0])
+				.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+
+			if (NetworkContractMap[chainId]["Polemarch"].address) {
+				approvedGusdcBalance = await gUsdc.allowance(
+					accounts[0],
+					NetworkContractMap[chainId]["Polemarch"].address
+				).then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+			}
+		}
 			
 			dispatch({
 				type: "accountConnected",
@@ -166,9 +206,11 @@ const requestAccounts = async (dispatch: (action: ACTION_TYPE) => void) => {
 					account: accounts[0],
 					ethBalance: ethBalance === undefined ? "0.00" : formatEther(ethBalance),
 					usdcBalance: usdcBalance, 
-					sUsdcBalance: sUsdcBalance === undefined ? "0.00" : sUsdcBalance, // placeholder
+					sUsdcBalance: sUsdcBalance === undefined ? "0.00" : sUsdcBalance,
+					gUsdcBalance: gUsdcBalance === undefined ? "0.00" : gUsdcBalance,
 					approvedUsdcBalance: approvedUsdcBalance === undefined ? "0.00" : approvedUsdcBalance,
 					approvedSusdcBalance: approvedSusdcBalance === undefined ? "0.00" : approvedSusdcBalance,
+					approvedGusdcBalance: approvedGusdcBalance === undefined ? "0.00" : approvedGusdcBalance,
 					chainId: chainId
 				}
 			});

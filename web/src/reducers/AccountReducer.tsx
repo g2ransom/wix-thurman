@@ -18,8 +18,10 @@ type AccountConnected = {
 		ethBalance: string;
 		usdcBalance: string;
 		sUsdcBalance: string;
+		gUsdcBalance: string;
 		approvedUsdcBalance: string;
 		approvedSusdcBalance: string;
+		approvedGusdcBalance: string;
 		chainId: string;
 	}
 };
@@ -42,8 +44,10 @@ type AccountChanged = {
 		ethBalance: string;
 		usdcBalance: string;
 		sUsdcBalance: string;
+		gUsdcBalance: string;
 		approvedUsdcBalance: string;
 		approvedSusdcBalance: string;
+		approvedGusdcBalance: string;
 	}
 };
 
@@ -54,8 +58,10 @@ type ChainChanged = {
 		ethBalance: string;
 		usdcBalance: string;
 		sUsdcBalance: string;
+		gUsdcBalance: string;
 		approvedUsdcBalance: string;
 		approvedSusdcBalance: string;
+		approvedGusdcBalance: string;
 		chainId: string;
 	}
 };
@@ -77,8 +83,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				ethBalance: undefined,
 				usdcBalance: undefined,
 				sUsdcBalance: undefined,
+				gUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
 				approvedSusdcBalance: undefined,
+				approvedGusdcBalance: undefined,
 				chainId: undefined,
 				status: "unavailable",
 			};
@@ -89,8 +97,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				ethBalance: undefined,
 				usdcBalance: undefined,
 				sUsdcBalance: undefined,
+				gUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
 				approvedSusdcBalance: undefined,
+				approvedGusdcBalance: undefined,
 				chainId: action.payload.chainId,
 				status: "notConnected",
 			};
@@ -101,8 +111,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				ethBalance: action.payload.ethBalance,
 				usdcBalance: action.payload.usdcBalance,
 				sUsdcBalance: action.payload.sUsdcBalance,
+				gUsdcBalance: action.payload.gUsdcBalance,
 				approvedUsdcBalance: action.payload.approvedUsdcBalance,
 				approvedSusdcBalance: action.payload.approvedSusdcBalance,
+				approvedGusdcBalance: action.payload.approvedGusdcBalance,
 				chainId: action.payload.chainId,
 				status: "connected"
 			};
@@ -119,8 +131,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				ethBalance: undefined,
 				usdcBalance: undefined,
 				sUsdcBalance: undefined,
+				gUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
 				approvedSusdcBalance: undefined,
+				approvedGusdcBalance: undefined,
 				chainId: action.payload.chainId,
 				status: "connecting",
 			};
@@ -138,8 +152,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				ethBalance: undefined,
 				usdcBalance: undefined,
 				sUsdcBalance: undefined,
+				gUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
 				approvedSusdcBalance: undefined,
+				approvedGusdcBalance: undefined,
 				status: "notConnected",
 			};
 		}
@@ -157,8 +173,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 					ethBalance: undefined,
 					usdcBalance: undefined,
 					sUsdcBalance: undefined,
+					gUsdcBalance: undefined,
 					approvedUsdcBalance: undefined,
 					approvedSusdcBalance: undefined,
+					approvedGusdcBalance: undefined,
 					status: "notConnected",
 				}
 			}
@@ -168,8 +186,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				ethBalance: action.payload.ethBalance,
 				usdcBalance: action.payload.usdcBalance,
 				sUsdcBalance: action.payload.sUsdcBalance,
+				gUsdcBalance: action.payload.gUsdcBalance,
 				approvedUsdcBalance: action.payload.approvedUsdcBalance,
 				approvedSusdcBalance: action.payload.approvedSusdcBalance,
+				approvedGusdcBalance: action.payload.approvedGusdcBalance,
 				status: "connected",
 			};
 		}
@@ -186,8 +206,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				ethBalance: action.payload.ethBalance,
 				usdcBalance: action.payload.usdcBalance,
 				sUsdcBalance: action.payload.sUsdcBalance,
+				gUsdcBalance: action.payload.gUsdcBalance,
 				approvedUsdcBalance: action.payload.approvedUsdcBalance,
 				approvedSusdcBalance: action.payload.approvedSusdcBalance,
+				approvedGusdcBalance: action.payload.approvedGusdcBalance,
 				chainId: action.payload.chainId,
 				status: "connected",
 			};

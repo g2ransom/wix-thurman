@@ -7,6 +7,7 @@ import {
 import DashboardSection from "../components/DashboardSection";
 import ProposalSection from "../components/ProposalSection";
 import BorrowersSection from "../components/BorrowersSection";
+import GrantSupplyModalButton from "../components/GrantSupplyModalButton";
 import SupplyModalButton from "../components/SupplyModalButton";
 import WithdrawModalButton from "../components/WithdrawModalButton";
 import useWallet from "../hooks/useWallet";
@@ -15,7 +16,7 @@ import usdcIcon from "../images/usd-coin-usdc-logo.png"
 const styles = {
   container: {
   	backgroundColor: "#F5F5F5",
-  	height: "100vh",
+  	height: "100%",
   },
   button: {
   	backgroundColor: "black",
@@ -27,7 +28,7 @@ const styles = {
 }
 
 export default function Home() {
-	const { account, usdcBalance, sUsdcBalance } = useWallet();
+	const { account, usdcBalance, gUsdcBalance, sUsdcBalance } = useWallet();
 
 	return (
 		<Container maxWidth={false} sx={styles.container}>
@@ -51,6 +52,14 @@ export default function Home() {
 				/>
 				<ProposalSection />
 				<BorrowersSection />
+				<DashboardSection
+					account={account}
+					title="Your Grants"
+					asset="gUSDC"
+					avatarIcon={usdcIcon}
+					balance={gUsdcBalance}
+					button={<GrantSupplyModalButton />}
+				/>
 			</Grid>
 		</Box>
 		</Container>

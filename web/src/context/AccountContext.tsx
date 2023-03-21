@@ -5,8 +5,10 @@ type AccountInitializing = {
 	ethBalance: undefined;
 	usdcBalance: undefined;
 	sUsdcBalance: undefined;
+	gUsdcBalance: undefined;
 	approvedUsdcBalance: undefined;
 	approvedSusdcBalance: undefined;
+	approvedGusdcBalance: undefined;
 	chainId: undefined;
 	status: "initializing";
 }
@@ -16,8 +18,10 @@ type ProviderUnavailable = {
 	ethBalance: undefined;
 	usdcBalance: undefined;
 	sUsdcBalance: undefined;
+	gUsdcBalance: undefined;
 	approvedUsdcBalance: undefined;
 	approvedSusdcBalance: undefined;
+	approvedGusdcBalance: undefined;
 	chainId: undefined;
 	status: "unavailable";
 };
@@ -27,8 +31,10 @@ type AccountNotConnected = {
 	ethBalance: undefined;
 	usdcBalance: undefined;
 	sUsdcBalance: undefined;
+	gUsdcBalance: undefined;
 	approvedUsdcBalance: undefined;
 	approvedSusdcBalance: undefined;
+	approvedGusdcBalance: undefined;
 	chainId: string;
 	status: "notConnected";
 };
@@ -38,8 +44,10 @@ type AccountConnected = {
 	ethBalance: string;
 	usdcBalance: string;
 	sUsdcBalance: string;
+	gUsdcBalance: string;
 	approvedUsdcBalance: string;
 	approvedSusdcBalance: string;
+	approvedGusdcBalance: string;
 	chainId: string;
 	status: "connected";
 };
@@ -49,8 +57,10 @@ type AccountConnecting = {
 	ethBalance: undefined;
 	usdcBalance: undefined;
 	sUsdcBalance: undefined;
+	gUsdcBalance: undefined;
 	approvedUsdcBalance: undefined;
 	approvedSusdcBalance: undefined;
+	approvedGusdcBalance: undefined;
 	chainId: string;
 	status: "connecting";
 };
@@ -67,8 +77,10 @@ export const initialState: AccountState = {
 	ethBalance: undefined,
 	usdcBalance: undefined,
 	sUsdcBalance: undefined,
+	gUsdcBalance: undefined,
 	approvedUsdcBalance: undefined,
 	approvedSusdcBalance: undefined,
+	approvedGusdcBalance: undefined,
 	chainId: undefined,
 	status: "initializing",
 }

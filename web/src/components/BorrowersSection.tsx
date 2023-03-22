@@ -9,10 +9,13 @@ import ComingSoonSection from "./ComingSoonSection";
 const styles = {
 	gridHeader: {
 		margin: "0.5em 0.5em 0.5em 0em",
-		padding: "0.5em 1em 0.5em 0em"
+		padding: "0.5em 1em 0.5em 0em",
+		display: "flex",
+		justifyContent: "space-between",
 	},
 	headerTypography: {
 		fontWeight: "600",
+		marginRight: "1em", 
 	},
 }
 
@@ -21,12 +24,12 @@ function BorrowersGridHeader() {
 		<Grid container spacing={1} sx={styles.gridHeader}>
 			<Grid item xs={2}>
 				<Typography variant="body1" align="left" sx={styles.headerTypography}>
-					Borrower
+					Acct
 				</Typography>
 			</Grid>
 			<Grid item xs={2}>
 				<Typography variant="body1" align="left" sx={styles.headerTypography}>
-					Max Limit
+					Max
 				</Typography>
 			</Grid>
 			<Grid item xs={2}>
@@ -36,17 +39,12 @@ function BorrowersGridHeader() {
 			</Grid>
 			<Grid item xs={2}>
 				<Typography variant="body1" align="left" sx={styles.headerTypography}>
-					Balance
+					Bal
 				</Typography>
 			</Grid>
 			<Grid item xs={2}>
 				<Typography variant="body1" align="left" sx={styles.headerTypography}>
-					Start Date
-				</Typography>
-			</Grid>
-			<Grid item xs={2}>
-				<Typography variant="body1" align="left" sx={styles.headerTypography}>
-					End Date
+					End
 				</Typography>
 			</Grid>
 			<Grid item xs={12}>
@@ -61,7 +59,6 @@ type BorrowersGridItemProps = {
 	maxLimit: string;
 	apr: string;
 	balance: string;
-	startDate: string;
 	endDate: string;
 };
 
@@ -70,7 +67,6 @@ function BorrowersGridItem({
 	maxLimit, 
 	apr, 
 	balance, 
-	startDate, 
 	endDate 
 }: BorrowersGridItemProps
 ) {
@@ -102,11 +98,6 @@ function BorrowersGridItem({
 			</Grid>
 			<Grid item xs={2}>
 				<Typography variant="body2" align="left" sx={styles.headerTypography}>
-					{startDate}
-				</Typography>
-			</Grid>
-			<Grid item xs={2}>
-				<Typography variant="body2" align="left" sx={styles.headerTypography}>
 					{endDate}
 				</Typography>
 			</Grid>
@@ -122,28 +113,25 @@ export default function BorrowersSection() {
 		<ComingSoonSection title="Current Borrowers">
 			<BorrowersGridHeader />
 			<BorrowersGridItem
-				borrower="0xfe...ac9d"
-				maxLimit="20000"
+				borrower="0xfa..."
+				maxLimit="20k"
 				apr="20.0%"
-				balance="17650"
-				startDate="01/03/23"
-				endDate="04/03/23"
+				balance="17.6k"
+				endDate="04/23"
 			/>
 			<BorrowersGridItem
-				borrower="0xd1...bf3f"
-				maxLimit="15000"
+				borrower="0xdf..."
+				maxLimit="15k"
 				apr="24.0%"
-				balance="11240"
-				startDate="01/15/23"
-				endDate="04/15/23"
+				balance="11.2k"
+				endDate="04/23"
 			/>
 			<BorrowersGridItem
-				borrower="0xe5...c7cb"
-				maxLimit="22500"
+				borrower="0xe7..."
+				maxLimit="22.5k"
 				apr="25.0%"
-				balance="16240"
-				startDate="01/25/23"
-				endDate="04/25/23"
+				balance="16.2k"
+				endDate="04/23"
 			/>
 		</ComingSoonSection>
 	);

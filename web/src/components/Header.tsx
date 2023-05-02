@@ -1,8 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
 	AppBar,
 	Avatar,
 	Box,
+	Button,
+	IconButton,
 	Toolbar,
 } from "@mui/material";
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -24,6 +27,7 @@ const styles = {
 		},
 		width: "1.25em",
 		height: "1.25em",
+		marginRight: "1.5em",
 	},
 	thurmanIcon: {
 		width: "2.25em",
@@ -40,9 +44,22 @@ export default function Header() {
 		<AppBar position="static" elevation={0} sx={styles.appBar}>
 			<Toolbar variant="dense">
 				<Box display="flex" flexGrow={1}>
-					<Avatar src={thurmanLogo} sx={styles.thurmanIcon} />
+					<IconButton 
+						component={Link} 
+						to="/" 
+						key="home"
+					>
+						<Avatar src={thurmanLogo} sx={styles.thurmanIcon} />
+					</IconButton>
 				</Box>
 				<GitHubIcon onClick={onClick} sx={styles.githubIcon} />
+				<Button 
+					component={Link} 
+					to="/governance" 
+					key="governance"
+				>
+					Governance
+				</Button>
 				<ConnectWalletButton  />
 			</Toolbar>
 		</AppBar>

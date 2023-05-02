@@ -9,7 +9,10 @@ import "./App.css";
 import AccountProvider from "./providers/AccountProvider";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Governance from "./pages/Governance";
 import Home from "./pages/Home";
+import Proposal from "./pages/Proposal";
+
 
 let theme = createTheme({
   typography: {
@@ -40,11 +43,13 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <AccountProvider>
-        <div className="App">
-          <Header />
+        <div className="App">        
           <BrowserRouter>
+            <Header />
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/governance" element={<Governance />} />
+              <Route path="/governance/proposal" element={<Proposal />} />
             </Routes>
           </BrowserRouter>
           <Footer />

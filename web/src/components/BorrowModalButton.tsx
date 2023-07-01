@@ -5,27 +5,23 @@ import {
 	Contract,
 } from "ethers";
 import {
+	Box,
 	Button,
 	Grid,
+	Typography
 } from "@mui/material";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { 
+	useForm,
+	SubmitHandler
+} from "react-hook-form";
 import { TransactionReducer, initialTransactionState } from "../reducers/TransactionReducer";
 import TransactionModal from "./TransactionModal";
-import ErrorMessage, { ErrorMessageProps } from "./ErrorMessage";
-import NumberInputField from "./NumberInputField";
 import TransactionModalInfo from "./TransactionModalInfo";
 import useWallet from "../hooks/useWallet";
+import ErrorMessage, { ErrorMessageProps } from "./ErrorMessage";
+import NumberInputField from "./NumberInputField";
 import { NetworkContractMap } from "../constants/constants";
 import usdcIcon from "../images/usd-coin-usdc-logo.png";
-
-type IFormInput = {
-	withdrawValue: string;
-};
-
-type ErrorWithCode = {
-	code: number;
-	[key: string]: any;
-};
 
 const styles = {
 	button: {
@@ -35,20 +31,56 @@ const styles = {
 		},
 		fontWeight: "600"
 	},
+	modal: {
+		display: "flex",
+		alignItems: "center", 
+		justifyContent: "center",
+	},
+	paper: {
+    position: "absolute",
+    maxWidth: 450,
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "50%",
+    padding: "1em 1em 1em 1em",
+	},
+  modalHeaderTypography: {
+  	fontWeight: "800",
+  },
+	typography: {
+		marginBottom: "0.15em",
+	},
+	approvedBalanceTypography: {
+		fontSize: "0.75em",
+		fontWeight: "600",
+		color: "#484848",
+	},
+};
+
+type IFormInput = {
+	borrowValue: string;
+};
+
+type ErrorWithCode = {
+	code: number;
+	[key: string]: any;
 };
 
 const ERROR_CODE_TX_REQUEST_REJECTED = 4001;
+const infoPopoverContent = "When you supply funds to Thurman, you receive an interest accruing token (dUSDC) must be repayed using (USDC) at by your debt's maturity date.";
 
-const infoPopoverContent = "When you withdraw funds, you burn a specific amount of interest accruing token (sUSDC) and receive an equivalent amount of the underlying asset (USDC) in return.";
-
-export default function WithdrawModalButton() {
-	let { account, sUsdcBalance, chainId, lineOfCredit, update } = useWallet();
+export default function BorrowModalButton() {
+	let { account, approvedUsdcBalance, usdcBalance, dUsdcBalance, chainId, lineOfCredit, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
 	const handleOpen = () => setOpen(true);
 	const networkChainId = !chainId ? "0x1" : chainId;
+	approvedUsdcBalance = !approvedUsdcBalance ? "0.0" : approvedUsdcBalance;
+	usdcBalance = !usdcBalance ? "0.0" : usdcBalance;
+	dUsdcBalance = !dUsdcBalance ? "0.0" : dUsdcBalance;
 	const borrowMax = !lineOfCredit?.borrowMax ? "0.0" : lineOfCredit?.borrowMax
-	const hasLineOfCredit: boolean = parseFloat(borrowMax) > 0 ? true : false; 
+	const hasLineOfCredit: boolean = parseFloat(borrowMax) > 0 ? true : false;
 
 	const { 
 		watch,
@@ -59,35 +91,35 @@ export default function WithdrawModalButton() {
 	} = useForm({
 		mode: "onChange",
 		defaultValues: {
-			withdrawValue: ""
+			borrowValue: ""
 		}
 	});
 
 	const formErrors: ErrorMessageProps[] = [
 		{
-			condition: errors.withdrawValue && errors.withdrawValue.type === "required",
+			condition: errors.borrowValue && errors.borrowValue.type === "required",
 			message: "You must enter a value",
 		},
 		{
-			condition: errors.withdrawValue && errors.withdrawValue.type === "pattern",
-			message: "Write a valid input like 1.02 or 0.479"
+			condition: errors.borrowValue && errors.borrowValue.type === "pattern",
+			message: "Write a valid input like 1000.02 or 0.479"
 		},
 		{
-			condition: errors.withdrawValue && errors.withdrawValue.type === "positive",
+			condition: errors.borrowValue && errors.borrowValue.type === "positive",
 			message: "Your number must be greater than zero"
 		},
 		{
-			condition: errors.withdrawValue && errors.withdrawValue.type === "notGreater",
-			message: "Your number must be less than or equal to your balance"
+			condition: errors.borrowValue && errors.borrowValue.type === "notGreater",
+			message: "Your number must put your total balance below your borrowMax"
 		}
 	]
-	
-	const watchWithdrawValue = watch("withdrawValue");
+
+	const watchBorrowValue = watch("borrowValue");
 
 	const handleClose = () => {
 		if (state.status === "finalSuccess") {
 			dispatch({type: "uninitiated"});
-			resetField("withdrawValue");
+			resetField("borrowValue");
 		}
 		setOpen(false);
 	};
@@ -104,21 +136,21 @@ export default function WithdrawModalButton() {
 		);
 
 		try {
-			const tx = await polemarch.withdraw(
+			const tx = await polemarch.borrow(
 				NetworkContractMap[networkChainId]["USDC"].address,
-				parseUnits(data.withdrawValue, NetworkContractMap[networkChainId]["sUSDC"].decimals),
+				parseUnits(data.borrowValue, NetworkContractMap[networkChainId]["sUSDC"].decimals),
 			)
 			dispatch({
 				type: "inProgress",
 				payload: {
-					transactionType: "withdraw",
+					transactionType: "borrow",
 				}
 			});
 			await tx.wait();
 			dispatch({
 				type: "finalSuccess",
 				payload: {
-					transactionType: "withdraw",
+					transactionType: "borrow",
 					txHash: tx.hash,
 				}
 			});
@@ -139,28 +171,34 @@ export default function WithdrawModalButton() {
 			dispatch({
 				type: "failed",
 				payload: {
-					transactionType: "withdraw",
+					transactionType: "borrow",
 					error: "The transaction failed 🤦🏿‍♂️",
 				}
 			});
 		}
 	};
 
+
 	return (
 		<TransactionModal
-			modalButtonName="Withdraw"
+			modalButtonName="Borrow"
 			open={open}
 			handleOpen={handleOpen}
 			handleClose={handleClose}
-			modalHeaderText="Withdraw USDC"
+			modalHeaderText="Borrow USDC"
 			infoPopoverContent={infoPopoverContent}
 		>
+			<Grid item xs={12}>
+				<Typography variant="body2" sx={styles.approvedBalanceTypography}>
+					Approved Balance: {approvedUsdcBalance}
+				</Typography>									
+			</Grid>
 			<NumberInputField
 				control={control}
-				name="withdrawValue"
+				name="borrowValue"
 				avatarSrc={usdcIcon}
-				value={sUsdcBalance}
-				assetName="sUSDC"
+				value={(parseFloat(borrowMax) - parseFloat(dUsdcBalance)).toString()}
+				assetName="USDC"
 			/>
 			<Grid item xs={12}>
 				<Button
@@ -169,13 +207,13 @@ export default function WithdrawModalButton() {
 					disabled={
 						!isDirty 
 						|| !isValid 
-						|| (state.transactionType === "withdraw" && state.status === "inProgress")
-						|| parseFloat(watchWithdrawValue) <= 0
+						|| (state.transactionType === "borrow" && state.status === "inProgress")
+						|| parseFloat(watchBorrowValue) <= 0
 					}
 					sx={styles.button}
 					fullWidth
 				>
-					Withdraw USDC
+					Borrow USDC
 				</Button>
 			</Grid>
 			<>

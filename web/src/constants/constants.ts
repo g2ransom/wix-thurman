@@ -2,6 +2,7 @@ import USDC from "./USDC.json";
 import Polemarch from "./Polemarch.json";
 import SToken from "./SToken.json";
 import GToken from "./GToken.json";
+import DToken from "./DToken.json"
 
 interface IChainMap {
   [key: string]: {
@@ -67,6 +68,11 @@ export const NetworkContractMap: INetworkContractMap = {
       abi: GToken.abi,
       decimals: USDC_DECIMALS,
     },
+    "dUSDC": {
+      address: DUSDC_ADDRESS_MAINNET,
+      abi: DToken.abi,
+      decimals: USDC_DECIMALS,
+    }
   },
   "0x5": {
     "USDC": {
@@ -88,6 +94,11 @@ export const NetworkContractMap: INetworkContractMap = {
       address: GUSDC_ADDRESS_GOERLI,
       abi: GToken.abi,
       decimals: USDC_DECIMALS
+    },
+    "dUSDC": {
+      address: DUSDC_ADDRESS_GOERLI,
+      abi: DToken.abi,
+      decimals: USDC_DECIMALS,
     }
   }
 }

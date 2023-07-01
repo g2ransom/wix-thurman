@@ -24,10 +24,14 @@ import NumberInputField from "./NumberInputField";
 import PostApprovalButton from "./PostApprovalButton";
 import TransactionModal from "./TransactionModal";
 import TransactionModalInfo from "./TransactionModalInfo";
+import { 
+	handleApproval, 
+	ApprovalFuncParams,
+	ErrorWithCode,
+	ERROR_CODE_TX_REQUEST_REJECTED 
+} from "../utils/ethersUtils";
 import { NetworkContractMap } from "../constants/constants";
-import { handleApproval, ApprovalFuncParams } from "../utils/ethersUtils";
-import usdcIcon from "../images/usd-coin-usdc-logo.png";
-
+import usdcIcon from "../images/usd-coin-usdc-logo.png"
 
 const styles = {
 	button: {
@@ -64,28 +68,25 @@ const styles = {
 	},
 };
 
+
 type IFormInput = {
-	grantSupplyValue: string;
+	repayValue: string;
 };
 
-type ErrorWithCode = {
-	code: number;
-	[key: string]: any;
-};
+// type ErrorWithCode = {
+// 	code: number;
+// 	[key: string]: any;
+// };
 
-const ERROR_CODE_TX_REQUEST_REJECTED = 4001;
-const infoPopoverContent = "When you supply grant funds to Thurman, you receive gUSDC that can be used to access rewards later.";
-
-export default function GrantSupplyModalButton() {
-	let { account, usdcBalance, approvedUsdcBalance, chainId, lineOfCredit, update } = useWallet();
+const infoPopoverContent = "When you repay USDC to Thurman, you burn an interest accruing token (dUSDC), which must have a zero balance by the maturity date.";
+export default function RepayModalButton() {
+	let { approvedUsdcBalance, usdcBalance, update, chainId } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
-	const handleOpen = () => setOpen(true);
 	const networkChainId = !chainId ? "0x1" : chainId;
 	approvedUsdcBalance = !approvedUsdcBalance ? "0.0" : approvedUsdcBalance;
 	usdcBalance = !usdcBalance ? "0.0" : usdcBalance;
-	const borrowMax = !lineOfCredit?.borrowMax ? "0.0" : lineOfCredit?.borrowMax
-	const hasLineOfCredit: boolean = parseFloat(borrowMax) > 0 ? true : false; 
+	const handleOpen = () => setOpen(true);
 
 	const { 
 		watch,
@@ -96,44 +97,44 @@ export default function GrantSupplyModalButton() {
 	} = useForm({
 		mode: "onChange",
 		defaultValues: {
-			grantSupplyValue: ""
+			repayValue: ""
 		}
 	});
 
 	const formErrors: ErrorMessageProps[] = [
 		{
-			condition: errors.grantSupplyValue && errors.grantSupplyValue.type === "required",
+			condition: errors.repayValue && errors.repayValue.type === "required",
 			message: "You must enter a value",
 		},
 		{
-			condition: errors.grantSupplyValue && errors.grantSupplyValue.type === "pattern",
+			condition: errors.repayValue && errors.repayValue.type === "pattern",
 			message: "Write a valid input like 1000.02 or 0.479"
 		},
 		{
-			condition: errors.grantSupplyValue && errors.grantSupplyValue.type === "positive",
+			condition: errors.repayValue && errors.repayValue.type === "positive",
 			message: "Your number must be greater than zero"
 		},
 		{
-			condition: errors.grantSupplyValue && errors.grantSupplyValue.type === "notGreater",
+			condition: errors.repayValue && errors.repayValue.type === "notGreater",
 			message: "Your number must be less than or equal to your balance"
 		}
 	]
 
-	const watchGrantSupplyValue = watch("grantSupplyValue");
+	const watchRepayValue = watch("repayValue");
 
-	const isApproved = (watchGrantSupplyValue <= approvedUsdcBalance) || state.approvalSuccess === true;
+	const isApproved = (watchRepayValue <= approvedUsdcBalance) || state.approvalSuccess === true;
 
 	let params: ApprovalFuncParams = {
 		dispatch: dispatch,
 		update: update,
-		value: watchGrantSupplyValue,
+		value: watchRepayValue,
 		networkChainId: networkChainId
 	};
 
 	const handleClose = () => {
 		if (state.status === "finalSuccess") {
 			dispatch({type: "uninitiated"});
-			resetField("grantSupplyValue");
+			resetField("repayValue");
 		}
 		setOpen(false);
 	}
@@ -150,21 +151,21 @@ export default function GrantSupplyModalButton() {
 		);
 
 		try {
-			const tx = await polemarch.grantSupply(
+			const tx = await polemarch.repay(
 				NetworkContractMap[networkChainId]["USDC"].address,
-				parseUnits(data.grantSupplyValue, NetworkContractMap[networkChainId]["USDC"].decimals),
+				parseUnits(data.repayValue, NetworkContractMap[networkChainId]["USDC"].decimals),
 			)
 			dispatch({
 				type: "inProgress",
 				payload: {
-					transactionType: "supply",
+					transactionType: "repay",
 				}
 			});
 			await tx.wait();
 			dispatch({
 				type: "finalSuccess",
 				payload: {
-					transactionType: "supply",
+					transactionType: "repay",
 					txHash: tx.hash,
 				}
 			});
@@ -185,73 +186,20 @@ export default function GrantSupplyModalButton() {
 			dispatch({
 				type: "failed",
 				payload: {
-					transactionType: "supply",
+					transactionType: "repay",
 					error: "The transaction failed 🤦🏿‍♂️",
 				}
 			});
 		}
 	};
 
-	// const handleApproval = async (value: string) => {
-	// 	const { ethereum } = window;
-	// 	const provider = new ethers.BrowserProvider(ethereum as any);
-	// 	const signer = await provider.getSigner();
-
-	// 	const usdc: Contract = new ethers.Contract(
-	// 		NetworkContractMap[networkChainId]["USDC"].address,
-	// 		NetworkContractMap[networkChainId]["USDC"].abi,
-	// 		signer,
-	// 	);
-
-	// 	try {
-	// 		const tx = await usdc.approve(
-	// 			NetworkContractMap[networkChainId]["Polemarch"].address,
-	// 			parseUnits(value, NetworkContractMap[networkChainId]["USDC"].decimals),
-	// 		);
-	// 		dispatch({
-	// 			type: "inProgress",
-	// 			payload: {
-	// 				transactionType: "approval",
-	// 			}
-	// 		});
-	// 		await tx.wait();
-	// 		dispatch({
-	// 			type: "approvalSuccess",
-	// 			payload: {
-	// 				txHash: tx.hash,
-	// 			}
-	// 		});
-	// 		update();
-	// 	} catch (e) {
-	// 		console.error(e);
-	// 		if ("code" in (e as { [key: string]: any })) {
-	// 		  if ((e as ErrorWithCode).info.error.code === ERROR_CODE_TX_REQUEST_REJECTED) {
-	// 		  	dispatch({ 
-	// 		  		type: "permissionRejected",
-	// 		  		payload: {
-	// 		  			error: "You rejected the transaction 🤷🏿‍♂️",
-	// 		  		}
-	// 		  	});
-	// 		    return;
-	// 		  }
-	// 		}
-	// 		dispatch({
-	// 			type: "failed",
-	// 			payload: {
-	// 				transactionType: "approval",
-	// 				error: "The transaction failed 🤦🏿‍♂️",
-	// 			}
-	// 		});		
-	// 	}
-	// }
-
 	return (
 		<TransactionModal
-			modalButtonName="Supply"
+			modalButtonName="Repay"
 			open={open}
 			handleOpen={handleOpen}
 			handleClose={handleClose}
-			modalHeaderText="Grant Supply USDC"
+			modalHeaderText="Repay USDC"
 			infoPopoverContent={infoPopoverContent}
 		>
 			<Grid item xs={12}>
@@ -261,7 +209,7 @@ export default function GrantSupplyModalButton() {
 			</Grid>
 			<NumberInputField
 				control={control}
-				name="grantSupplyValue"
+				name="repayValue"
 				avatarSrc={usdcIcon}
 				value={usdcBalance}
 				assetName="USDC"
@@ -269,10 +217,10 @@ export default function GrantSupplyModalButton() {
 			<Grid item xs={12}>
 				<Box>
 					{(approvedUsdcBalance 
-						&& watchGrantSupplyValue > approvedUsdcBalance 
-						&& errors.grantSupplyValue?.type !== "pattern"
-						&& parseFloat(watchGrantSupplyValue) > 0
-						&& parseFloat(watchGrantSupplyValue) <= parseFloat(usdcBalance)
+						&& watchRepayValue > approvedUsdcBalance 
+						&& errors.repayValue?.type !== "pattern"
+						&& parseFloat(watchRepayValue) > 0
+						&& parseFloat(watchRepayValue) <= parseFloat(usdcBalance)
 						) && (									
 						<ApprovalButton
 							isDirty={isDirty}
@@ -287,9 +235,9 @@ export default function GrantSupplyModalButton() {
 						isDirty={isDirty}
 						isValid={isValid}
 						isApproved={isApproved}
-						stateCondition={(state.transactionType === "supply" && state.status === "inProgress")}
-						notPositive={parseFloat(watchGrantSupplyValue) <= 0}
-						buttonText="Supply USDC"
+						stateCondition={(state.transactionType === "repay" && state.status === "inProgress")}
+						notPositive={parseFloat(watchRepayValue) <= 0}
+						buttonText="Repay USDC"
 						onClick={handleSubmit(onSubmit)}
 					/>
 				</Box>

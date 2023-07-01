@@ -1,4 +1,4 @@
-type TransactionType = "approval" | "supply" | "withdraw" | undefined;
+type TransactionType = "approval" | "supply" | "withdraw" | "borrow" | "repay" | undefined;
 
 type TransactionUninitiated = {
 	transactionType: undefined;
@@ -113,7 +113,7 @@ type FinalSuccess = {
 	}
 };
 
-type ACTION_TYPE = 
+export type ACTION_TYPE = 
 	| Uninitiated
 	| InProgress
 	| Success

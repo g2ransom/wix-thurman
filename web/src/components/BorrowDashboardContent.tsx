@@ -2,13 +2,22 @@ import React from "react";
 import { 
 	Box,
 	Chip,
-	Stack,
-	Typography,
+	Stack
 } from "@mui/material";
 import SimpleDashboardContent, { ContentProps } from "./SimpleDashboardContent";
 import BorrowModalButton from "./BorrowModalButton";
 import useWallet from "../hooks/useWallet";
-import usdcIcon from "../images/usd-coin-usdc-logo.png"
+import usdcIcon from "../images/usd-coin-usdc-logo.png";
+
+const styles = {
+	box: {
+		marginTop: "0.5em",
+	},
+	stack: {
+		flexWrap: "wrap", 
+		gap : 1.25
+	}
+};
 
 const formatDate = (date: Date): string => {
 	let date_str: string = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
@@ -28,13 +37,13 @@ export default function BorrowDashboardContent() {
 		? 0 : lineOfCredit?.expirationTimestamp * 1000;
 	const maturityDate = new Date(expirationTimestamp);
 	const creationDate = new Date(creationTimestamp);
-	const borrowMaxTemplate = `Borrow Max: ${remainingBalance}`;
+	const borrowMaxTemplate = `Borrow Max: ${borrowMax}`;
 	const creationTemplate = `Creation Date: ${formatDate(creationDate)}`;
 	const maturityTemplate = `Maturity Date: ${formatDate(maturityDate)}`;
 	const rateTemplate = `APR: ${rate}`;
 	
 	const contentProps: ContentProps = {
-		asset: "Remaining",
+		balanceType: "Remaining",
 		avatarIcon: usdcIcon,
 		balance: balance.toString(),
 		button: <BorrowModalButton />
@@ -50,27 +59,31 @@ export default function BorrowDashboardContent() {
 	return (
 		<>
 		{parseFloat(borrowMax) > 0 ?
-			<Box display="flex" justifyContent="start">
+			<Box display="flex" justifyContent="start" sx={styles.box}>
 				<Stack 
 					direction="row" 
 					spacing={1}
-					sx={{ flexWrap: "wrap", gap : 1.25 }}
+					sx={styles.stack}
 				>
 					<>
-					{stringTemplates.map((template) => {
+					{stringTemplates.map((template, i) => {
 						return (
-							<Chip label={template} variant="outlined" />
+							<Chip 
+								key={i} 
+								label={template} 
+								variant="outlined" 
+							/>
 						)
 					})}
 					</>
 				</Stack>
 			</Box>
-				: <Box display="flex" justifyContent="start">
+				: <Box display="flex" justifyContent="start" sx={styles.box}>
 						<Chip label="Reach out to us to apply to become a borrower" />
 					</Box>
 		}
 		<SimpleDashboardContent
-			asset={contentProps.asset}
+			balanceType={contentProps.balanceType}
 			avatarIcon={contentProps.avatarIcon}
 			balance={contentProps.balance}
 			button={contentProps.button}

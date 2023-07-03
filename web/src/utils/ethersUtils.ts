@@ -11,7 +11,8 @@ import { LineOfCredit } from "../context/AccountContext";
 import { ACTION_TYPE } from "../reducers/TransactionReducer";
 import { 
   USDC_DECIMALS, 
-  NetworkContractMap 
+  NetworkContractMap,
+  RAY
 } from "../constants/constants";
 
 export type ErrorWithCode = {
@@ -149,7 +150,7 @@ export async function getAccountState(
       .then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
 
     rate = await dUSDC.userRate(account)
-      .then((num: BigNumberish) => formatUnits(num, 27));
+      .then((num: BigNumberish) => formatUnits(num, RAY));
   }
 
   if (NetworkContractMap[chainId]["Polemarch"]?.address) {

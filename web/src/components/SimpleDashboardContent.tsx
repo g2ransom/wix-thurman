@@ -8,7 +8,7 @@ import {
 import useWallet from "../hooks/useWallet";
 
 export type ContentProps = {
-	asset: string;
+	balanceType: string;
 	avatarIcon: string;
 	balance: string | undefined;
 	button: React.ReactElement<any, any>;
@@ -28,7 +28,7 @@ const styles = {
 }
 
 export default function SimpleDashboardContent({
-	asset,
+	balanceType,
 	avatarIcon,
 	balance,
 	button
@@ -45,10 +45,10 @@ export default function SimpleDashboardContent({
 		    })}} />
 		    {balance ? 
 		    	(<Typography variant="body1" sx={styles.sectionTypography}>
-		      	{asset} Balance: {parseFloat(balance).toFixed(3)}
+		      	{balanceType} Balance: {parseFloat(balance).toFixed(3)}
 		    	</Typography>) : (
 		    	<Typography variant="body1" sx={styles.sectionTypography}>
-		    		{asset} Balance: {parseFloat("0").toFixed(3)}
+		    		{balanceType} Balance: {parseFloat("0").toFixed(3)}
 		    	</Typography>
 		    )}
 		  </Stack>

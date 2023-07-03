@@ -2,14 +2,7 @@ import React from "react";
 import { Button } from "@mui/material";
 import { TransactionState } from "../reducers/TransactionReducer";
 import InfoPopover from "./InfoPopover";
-import { handleApproval, ApprovalFuncParams } from "../utils/ethersUtils";
-
-// export type ApprovalFuncParams = {
-// 	dispatch: (action: ACTION_TYPE) => void;
-// 	update: () => void;
-// 	value: string;
-// 	networkChainId: string;
-// }
+import { ApprovalFuncParams } from "../utils/ethersUtils";
 
 type ApprovalButtonProps = {
 	isDirty: boolean;

@@ -73,11 +73,6 @@ type IFormInput = {
 	repayValue: string;
 };
 
-// type ErrorWithCode = {
-// 	code: number;
-// 	[key: string]: any;
-// };
-
 const infoPopoverContent = "When you repay USDC to Thurman, you burn an interest accruing token (dUSDC), which must have a zero balance by the maturity date.";
 export default function RepayModalButton() {
 	let { approvedUsdcBalance, usdcBalance, update, chainId } = useWallet();

@@ -32,7 +32,8 @@ const styles = {
 		"&:hover": {
 			backgroundColor: "#525252",
 		},
-		fontWeight: "600"
+		fontWeight: "600",
+		width: "10.5em",
 	},
 	modal: {
 		display: "flex",

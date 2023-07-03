@@ -73,25 +73,16 @@ type IFormInput = {
 	supplyValue: string;
 };
 
-// type ErrorWithCode = {
-// 	code: number;
-// 	[key: string]: any;
-// };
-
-// const ERROR_CODE_TX_REQUEST_REJECTED = 4001;
 const infoPopoverContent = "When you supply funds to Thurman, you receive an interest accruing token (sUSDC) that can be withdrawn in exchange for your supplied asset (USDC) at a later date.";
 
-
 export default function SupplyModalButton() {
-	let { account, approvedUsdcBalance, usdcBalance, chainId, lineOfCredit, update } = useWallet();
+	let { approvedUsdcBalance, usdcBalance, chainId, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
 	const handleOpen = () => setOpen(true);
 	const networkChainId = !chainId ? "0x1" : chainId;
 	approvedUsdcBalance = !approvedUsdcBalance ? "0.0" : approvedUsdcBalance;
 	usdcBalance = !usdcBalance ? "0.0" : usdcBalance;
-	const borrowMax = !lineOfCredit?.borrowMax ? "0.0" : lineOfCredit?.borrowMax
-	const hasLineOfCredit: boolean = parseFloat(borrowMax) > 0 ? true : false;
 
 	const { 
 		watch,
@@ -197,59 +188,6 @@ export default function SupplyModalButton() {
 			});
 		}
 	};
-
-	// const handleApproval = async (value: string) => {
-	// 	const { ethereum } = window;
-	// 	const provider = new ethers.BrowserProvider(ethereum as any);
-	// 	const signer = await provider.getSigner();
-
-	// 	const usdc: Contract = new ethers.Contract(
-	// 		NetworkContractMap[networkChainId]["USDC"].address,
-	// 		NetworkContractMap[networkChainId]["USDC"].abi,
-	// 		signer,
-	// 	);
-
-	// 	try {
-	// 		const tx = await usdc.approve(
-	// 			NetworkContractMap[networkChainId]["Polemarch"].address,
-	// 			parseUnits(value, NetworkContractMap[networkChainId]["USDC"].decimals),
-	// 		);
-	// 		dispatch({
-	// 			type: "inProgress",
-	// 			payload: {
-	// 				transactionType: "approval",
-	// 			}
-	// 		});
-	// 		await tx.wait();
-	// 		dispatch({
-	// 			type: "approvalSuccess",
-	// 			payload: {
-	// 				txHash: tx.hash,
-	// 			}
-	// 		});
-	// 		update();
-	// 	} catch (e) {
-	// 		console.error(e);
-	// 		if ("code" in (e as { [key: string]: any })) {
-	// 		  if ((e as ErrorWithCode).info.error.code === ERROR_CODE_TX_REQUEST_REJECTED) {
-	// 		  	dispatch({ 
-	// 		  		type: "permissionRejected",
-	// 		  		payload: {
-	// 		  			error: "You rejected the transaction 🤷🏿‍♂️",
-	// 		  		}
-	// 		  	});
-	// 		    return;
-	// 		  }
-	// 		}
-	// 		dispatch({
-	// 			type: "failed",
-	// 			payload: {
-	// 				transactionType: "approval",
-	// 				error: "The transaction failed 🤦🏿‍♂️",
-	// 			}
-	// 		});		
-	// 	}
-	// }
            
 	return (
 		<TransactionModal

@@ -16,15 +16,14 @@ import NumberInputField from "./NumberInputField";
 import TransactionModalInfo from "./TransactionModalInfo";
 import useWallet from "../hooks/useWallet";
 import { NetworkContractMap } from "../constants/constants";
+import { 
+	ErrorWithCode, 
+	ERROR_CODE_TX_REQUEST_REJECTED
+} from "../utils/ethersUtils";
 import usdcIcon from "../images/usd-coin-usdc-logo.png";
 
 type IFormInput = {
 	withdrawValue: string;
-};
-
-type ErrorWithCode = {
-	code: number;
-	[key: string]: any;
 };
 
 const styles = {
@@ -37,18 +36,16 @@ const styles = {
 	},
 };
 
-const ERROR_CODE_TX_REQUEST_REJECTED = 4001;
-
 const infoPopoverContent = "When you withdraw funds, you burn a specific amount of interest accruing token (sUSDC) and receive an equivalent amount of the underlying asset (USDC) in return.";
 
 export default function WithdrawModalButton() {
-	let { account, sUsdcBalance, chainId, lineOfCredit, update } = useWallet();
+	let { sUsdcBalance, chainId, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
 	const handleOpen = () => setOpen(true);
 	const networkChainId = !chainId ? "0x1" : chainId;
-	const borrowMax = !lineOfCredit?.borrowMax ? "0.0" : lineOfCredit?.borrowMax
-	const hasLineOfCredit: boolean = parseFloat(borrowMax) > 0 ? true : false; 
+	// const borrowMax = !lineOfCredit?.borrowMax ? "0.0" : lineOfCredit?.borrowMax;
+	// const hasLineOfCredit: boolean = parseFloat(borrowMax) > 0 ? true : false; 
 
 	const { 
 		watch,

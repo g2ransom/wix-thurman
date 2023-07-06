@@ -6,7 +6,7 @@ import {
 
 const styles = {
 	box: {
-		backgroundColor: "#C5C5C5",
+		backgroundColor: "white",
 		position: "fixed",
 		bottom: 0,
 		width: "100%"

@@ -16,10 +16,15 @@ import useWallet from "../hooks/useWallet";
 import usdcIcon from "../images/usd-coin-usdc-logo.png"
 
 const styles = {
+  // box: {
+  // 	backgroundColor: "#E8E8E8",
+  // 	minHeight: "100vh",
+  // 	paddingBottom: "5em",
+  // },
   container: {
   	backgroundColor: "#E8E8E8",
-  	position: "fixed",
-  	height: "100%",
+  	minHeight: "100vh",
+  	paddingBottom: "5em",
   },
   button: {
   	backgroundColor: "black",
@@ -74,28 +79,28 @@ export default function Home() {
 
 	return (
 		<Container maxWidth={false} sx={styles.container}>
-		<Box>
-			<Grid container spacing={2}>
-				<>
-				{dashboardProps.map((section, i) => {
-					return (
-						<DashboardSection title={section.title} key={i}>
-							<SimpleDashboardContent
-								balanceType={section.balanceType}
-								avatarIcon={section.icon}
-								balance={section.balance}
-								button={section.button}
-							/>
-						</DashboardSection>
-					);
-				})}
-				</>
-				<DashboardSection title="Assets to Borrow">
-					<BorrowDashboardContent />
-				</DashboardSection>
-				<BorrowersSection />				
-			</Grid>
-		</Box>
+			<Box>
+				<Grid container spacing={2}>
+					<>
+					{dashboardProps.map((section, i) => {
+						return (
+							<DashboardSection title={section.title} key={i}>
+								<SimpleDashboardContent
+									balanceType={section.balanceType}
+									avatarIcon={section.icon}
+									balance={section.balance}
+									button={section.button}
+								/>
+							</DashboardSection>
+						);
+					})}
+					</>
+					<DashboardSection title="Assets to Borrow">
+						<BorrowDashboardContent />
+					</DashboardSection>
+					<BorrowersSection />				
+				</Grid>
+			</Box>
 		</Container>
 	);
 }

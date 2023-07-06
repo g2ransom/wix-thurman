@@ -9,7 +9,8 @@ const styles = {
 		backgroundColor: "white",
 		position: "fixed",
 		bottom: 0,
-		width: "100%"
+		width: "100%",
+		height: "3em",
 	},
 	typography: {
 		margin: "1em 0em 1em 0em",
@@ -20,11 +21,9 @@ const styles = {
 export default function Footer() {
 	return (
 		<Box 
-			display="flex" 
-			justifyContent="center"
 			sx={styles.box}
 		>
-			<Typography variant="body1" sx={styles.typography}>
+			<Typography variant="body1" align="center" sx={styles.typography}>
 				© 2023 Thurman Labs
 			</Typography>
 		</Box>

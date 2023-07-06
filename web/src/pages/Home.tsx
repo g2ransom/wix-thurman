@@ -16,11 +16,6 @@ import useWallet from "../hooks/useWallet";
 import usdcIcon from "../images/usd-coin-usdc-logo.png"
 
 const styles = {
-  // box: {
-  // 	backgroundColor: "#E8E8E8",
-  // 	minHeight: "100vh",
-  // 	paddingBottom: "5em",
-  // },
   container: {
   	backgroundColor: "#E8E8E8",
   	minHeight: "100vh",

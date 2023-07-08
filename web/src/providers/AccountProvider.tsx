@@ -4,27 +4,16 @@ import React, {
 	useCallback,
 	useMemo 
 } from "react";
-import { 
-	ethers,
-	formatEther,
-	formatUnits,
-	BigNumberish,
-	Contract
-} from "ethers";
+import { ethers } from "ethers";
 import {
 	IAccountContext,
 	AccountContext,
-	initialState,
-	LineOfCredit
+	initialState
 } from "../context/AccountContext";
 import { 
 	ACTION_TYPE, 
 	AccountReducer 
 } from "../reducers/AccountReducer";
-import { 
-	USDC_DECIMALS, 
-	NetworkContractMap 
-} from "../constants/constants";
 
 import { getAccountState } from "../utils/ethersUtils";
 

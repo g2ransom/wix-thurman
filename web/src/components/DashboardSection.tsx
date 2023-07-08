@@ -1,10 +1,8 @@
 import React from "react";
 import {
-	Avatar,
 	Box,
 	Grid,
 	Paper,
-	Stack,
 	Typography,
 } from "@mui/material";
 import useWallet from "../hooks/useWallet";

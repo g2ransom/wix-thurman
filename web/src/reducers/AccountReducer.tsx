@@ -1,4 +1,7 @@
-import { AccountState } from "../context/AccountContext";
+import { 
+	AccountState,
+	LineOfCredit
+ } from "../context/AccountContext";
 
 type ProviderUnavailable = {
 	type: "providerUnavailable";
@@ -19,9 +22,10 @@ type AccountConnected = {
 		usdcBalance: string;
 		sUsdcBalance: string;
 		gUsdcBalance: string;
+		dUsdcBalance: string;
 		approvedUsdcBalance: string;
-		approvedSusdcBalance: string;
-		approvedGusdcBalance: string;
+		lineOfCredit: LineOfCredit;
+		rate: string;
 		chainId: string;
 	}
 };
@@ -45,9 +49,10 @@ type AccountChanged = {
 		usdcBalance: string;
 		sUsdcBalance: string;
 		gUsdcBalance: string;
+		dUsdcBalance: string;
 		approvedUsdcBalance: string;
-		approvedSusdcBalance: string;
-		approvedGusdcBalance: string;
+		lineOfCredit: LineOfCredit;
+		rate: string;
 	}
 };
 
@@ -59,9 +64,10 @@ type ChainChanged = {
 		usdcBalance: string;
 		sUsdcBalance: string;
 		gUsdcBalance: string;
+		dUsdcBalance: string;
 		approvedUsdcBalance: string;
-		approvedSusdcBalance: string;
-		approvedGusdcBalance: string;
+		lineOfCredit: LineOfCredit;
+		rate: string;
 		chainId: string;
 	}
 };
@@ -84,9 +90,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				usdcBalance: undefined,
 				sUsdcBalance: undefined,
 				gUsdcBalance: undefined,
+				dUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
-				approvedSusdcBalance: undefined,
-				approvedGusdcBalance: undefined,
+				lineOfCredit: undefined,
+				rate: undefined,
 				chainId: undefined,
 				status: "unavailable",
 			};
@@ -98,9 +105,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				usdcBalance: undefined,
 				sUsdcBalance: undefined,
 				gUsdcBalance: undefined,
+				dUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
-				approvedSusdcBalance: undefined,
-				approvedGusdcBalance: undefined,
+				lineOfCredit: undefined,
+				rate: undefined,
 				chainId: action.payload.chainId,
 				status: "notConnected",
 			};
@@ -112,9 +120,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				usdcBalance: action.payload.usdcBalance,
 				sUsdcBalance: action.payload.sUsdcBalance,
 				gUsdcBalance: action.payload.gUsdcBalance,
+				dUsdcBalance: action.payload.dUsdcBalance,
 				approvedUsdcBalance: action.payload.approvedUsdcBalance,
-				approvedSusdcBalance: action.payload.approvedSusdcBalance,
-				approvedGusdcBalance: action.payload.approvedGusdcBalance,
+				lineOfCredit: action.payload.lineOfCredit,
+				rate: action.payload.rate,
 				chainId: action.payload.chainId,
 				status: "connected"
 			};
@@ -132,9 +141,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				usdcBalance: undefined,
 				sUsdcBalance: undefined,
 				gUsdcBalance: undefined,
+				dUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
-				approvedSusdcBalance: undefined,
-				approvedGusdcBalance: undefined,
+				lineOfCredit: undefined,
+				rate: undefined,
 				chainId: action.payload.chainId,
 				status: "connecting",
 			};
@@ -153,9 +163,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				usdcBalance: undefined,
 				sUsdcBalance: undefined,
 				gUsdcBalance: undefined,
+				dUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
-				approvedSusdcBalance: undefined,
-				approvedGusdcBalance: undefined,
+				lineOfCredit: undefined,
+				rate: undefined,
 				status: "notConnected",
 			};
 		}
@@ -174,9 +185,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 					usdcBalance: undefined,
 					sUsdcBalance: undefined,
 					gUsdcBalance: undefined,
+					dUsdcBalance: undefined,
 					approvedUsdcBalance: undefined,
-					approvedSusdcBalance: undefined,
-					approvedGusdcBalance: undefined,
+					lineOfCredit: undefined,
+					rate: undefined,
 					status: "notConnected",
 				}
 			}
@@ -187,9 +199,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				usdcBalance: action.payload.usdcBalance,
 				sUsdcBalance: action.payload.sUsdcBalance,
 				gUsdcBalance: action.payload.gUsdcBalance,
+				dUsdcBalance: action.payload.dUsdcBalance,
 				approvedUsdcBalance: action.payload.approvedUsdcBalance,
-				approvedSusdcBalance: action.payload.approvedSusdcBalance,
-				approvedGusdcBalance: action.payload.approvedGusdcBalance,
+				lineOfCredit: action.payload.lineOfCredit,
+				rate: action.payload.rate,
 				status: "connected",
 			};
 		}
@@ -207,9 +220,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				usdcBalance: action.payload.usdcBalance,
 				sUsdcBalance: action.payload.sUsdcBalance,
 				gUsdcBalance: action.payload.gUsdcBalance,
+				dUsdcBalance: action.payload.dUsdcBalance,
 				approvedUsdcBalance: action.payload.approvedUsdcBalance,
-				approvedSusdcBalance: action.payload.approvedSusdcBalance,
-				approvedGusdcBalance: action.payload.approvedGusdcBalance,
+				lineOfCredit: action.payload.lineOfCredit,
+				rate: action.payload.rate,
 				chainId: action.payload.chainId,
 				status: "connected",
 			};

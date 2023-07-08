@@ -3,7 +3,7 @@ import {
 	AppBar,
 	Avatar,
 	Box,
-	Toolbar,
+	Toolbar
 } from "@mui/material";
 import GitHubIcon from '@mui/icons-material/GitHub';
 import ConnectWalletButton from "./ConnectWalletButton";
@@ -28,21 +28,30 @@ const styles = {
 	thurmanIcon: {
 		width: "2.25em",
     height: "2.25em",
+	},
+	typography: {
+		color: "black",
+		fontWeight: "bold",
+		marginRight: "1.25em",
+		"&:hover": {
+			cursor: "pointer",
+		}
 	}
 }
 
-const onClick = () => {
-	window.open("https://github.com/thurmanlabs/thurman-v1", "_blank")
+const handleGithubClick = () => {
+	window.open("https://github.com/thurmanlabs/thurman-v1", "_blank");
 }
 
 export default function Header() {
+
 	return (
 		<AppBar position="static" elevation={0} sx={styles.appBar}>
 			<Toolbar variant="dense">
 				<Box display="flex" flexGrow={1}>
 					<Avatar src={thurmanLogo} sx={styles.thurmanIcon} />
 				</Box>
-				<GitHubIcon onClick={onClick} sx={styles.githubIcon} />
+				<GitHubIcon onClick={handleGithubClick} sx={styles.githubIcon} />
 				<ConnectWalletButton  />
 			</Toolbar>
 		</AppBar>

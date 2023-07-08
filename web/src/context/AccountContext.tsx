@@ -1,14 +1,23 @@
 import { createContext } from "react";
 
+export type LineOfCredit = {
+	borrowMax: string;
+	lastRepaymentTimestamp: number;
+	creationTimestamp: number;
+	expirationTimestamp: number;
+	delinquent: boolean;
+} | undefined;
+
 type AccountInitializing = {
 	account: undefined;
 	ethBalance: undefined;
 	usdcBalance: undefined;
 	sUsdcBalance: undefined;
 	gUsdcBalance: undefined;
+	dUsdcBalance: undefined;
 	approvedUsdcBalance: undefined;
-	approvedSusdcBalance: undefined;
-	approvedGusdcBalance: undefined;
+	lineOfCredit: undefined;
+	rate: undefined;
 	chainId: undefined;
 	status: "initializing";
 }
@@ -19,9 +28,10 @@ type ProviderUnavailable = {
 	usdcBalance: undefined;
 	sUsdcBalance: undefined;
 	gUsdcBalance: undefined;
+	dUsdcBalance: undefined;
 	approvedUsdcBalance: undefined;
-	approvedSusdcBalance: undefined;
-	approvedGusdcBalance: undefined;
+	lineOfCredit: undefined;
+	rate: undefined;
 	chainId: undefined;
 	status: "unavailable";
 };
@@ -32,9 +42,10 @@ type AccountNotConnected = {
 	usdcBalance: undefined;
 	sUsdcBalance: undefined;
 	gUsdcBalance: undefined;
+	dUsdcBalance: undefined;
 	approvedUsdcBalance: undefined;
-	approvedSusdcBalance: undefined;
-	approvedGusdcBalance: undefined;
+	lineOfCredit: undefined;
+	rate: undefined;
 	chainId: string;
 	status: "notConnected";
 };
@@ -45,9 +56,10 @@ type AccountConnected = {
 	usdcBalance: string;
 	sUsdcBalance: string;
 	gUsdcBalance: string;
+	dUsdcBalance: string;
 	approvedUsdcBalance: string;
-	approvedSusdcBalance: string;
-	approvedGusdcBalance: string;
+	lineOfCredit: LineOfCredit;
+	rate: string;
 	chainId: string;
 	status: "connected";
 };
@@ -58,9 +70,10 @@ type AccountConnecting = {
 	usdcBalance: undefined;
 	sUsdcBalance: undefined;
 	gUsdcBalance: undefined;
+	dUsdcBalance: undefined;
 	approvedUsdcBalance: undefined;
-	approvedSusdcBalance: undefined;
-	approvedGusdcBalance: undefined;
+	lineOfCredit: undefined;
+	rate: undefined;
 	chainId: string;
 	status: "connecting";
 };
@@ -78,9 +91,10 @@ export const initialState: AccountState = {
 	usdcBalance: undefined,
 	sUsdcBalance: undefined,
 	gUsdcBalance: undefined,
+	dUsdcBalance: undefined,
 	approvedUsdcBalance: undefined,
-	approvedSusdcBalance: undefined,
-	approvedGusdcBalance: undefined,
+	lineOfCredit: undefined,
+	rate: undefined,
 	chainId: undefined,
 	status: "initializing",
 }

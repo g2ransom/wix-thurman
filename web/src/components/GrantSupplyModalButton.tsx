@@ -25,6 +25,12 @@ import PostApprovalButton from "./PostApprovalButton";
 import TransactionModal from "./TransactionModal";
 import TransactionModalInfo from "./TransactionModalInfo";
 import { NetworkContractMap } from "../constants/constants";
+import { 
+	handleApproval, 
+	ApprovalFuncParams,
+	ErrorWithCode,
+	ERROR_CODE_TX_REQUEST_REJECTED
+} from "../utils/ethersUtils";
 import usdcIcon from "../images/usd-coin-usdc-logo.png";
 
 
@@ -67,22 +73,18 @@ type IFormInput = {
 	grantSupplyValue: string;
 };
 
-type ErrorWithCode = {
-	code: number;
-	[key: string]: any;
-};
-
-const ERROR_CODE_TX_REQUEST_REJECTED = 4001;
 const infoPopoverContent = "When you supply grant funds to Thurman, you receive gUSDC that can be used to access rewards later.";
 
 export default function GrantSupplyModalButton() {
-	let { account, usdcBalance, approvedUsdcBalance, chainId, update } = useWallet();
+	let { usdcBalance, approvedUsdcBalance, chainId, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
 	const handleOpen = () => setOpen(true);
 	const networkChainId = !chainId ? "0x1" : chainId;
 	approvedUsdcBalance = !approvedUsdcBalance ? "0.0" : approvedUsdcBalance;
 	usdcBalance = !usdcBalance ? "0.0" : usdcBalance;
+	// const borrowMax = !lineOfCredit?.borrowMax ? "0.0" : lineOfCredit?.borrowMax
+	// const hasLineOfCredit: boolean = parseFloat(borrowMax) > 0 ? true : false; 
 
 	const { 
 		watch,
@@ -119,6 +121,13 @@ export default function GrantSupplyModalButton() {
 	const watchGrantSupplyValue = watch("grantSupplyValue");
 
 	const isApproved = (watchGrantSupplyValue <= approvedUsdcBalance) || state.approvalSuccess === true;
+
+	let params: ApprovalFuncParams = {
+		dispatch: dispatch,
+		update: update,
+		value: watchGrantSupplyValue,
+		networkChainId: networkChainId
+	};
 
 	const handleClose = () => {
 		if (state.status === "finalSuccess") {
@@ -182,63 +191,8 @@ export default function GrantSupplyModalButton() {
 		}
 	};
 
-	const handleApproval = async (value: string) => {
-		const { ethereum } = window;
-		const provider = new ethers.BrowserProvider(ethereum as any);
-		const signer = await provider.getSigner();
-
-		const usdc: Contract = new ethers.Contract(
-			NetworkContractMap[networkChainId]["USDC"].address,
-			NetworkContractMap[networkChainId]["USDC"].abi,
-			signer,
-		);
-
-		try {
-			const tx = await usdc.approve(
-				NetworkContractMap[networkChainId]["Polemarch"].address,
-				parseUnits(value, NetworkContractMap[networkChainId]["USDC"].decimals),
-			);
-			dispatch({
-				type: "inProgress",
-				payload: {
-					transactionType: "approval",
-				}
-			});
-			await tx.wait();
-			dispatch({
-				type: "approvalSuccess",
-				payload: {
-					txHash: tx.hash,
-				}
-			});
-			update();
-		} catch (e) {
-			console.error(e);
-			if ("code" in (e as { [key: string]: any })) {
-			  if ((e as ErrorWithCode).info.error.code === ERROR_CODE_TX_REQUEST_REJECTED) {
-			  	dispatch({ 
-			  		type: "permissionRejected",
-			  		payload: {
-			  			error: "You rejected the transaction 🤷🏿‍♂️",
-			  		}
-			  	});
-			    return;
-			  }
-			}
-			dispatch({
-				type: "failed",
-				payload: {
-					transactionType: "approval",
-					error: "The transaction failed 🤦🏿‍♂️",
-				}
-			});		
-		}
-	}
-
 	return (
 		<TransactionModal
-			account={account}
-			chainId={networkChainId}
 			modalButtonName="Supply"
 			open={open}
 			handleOpen={handleOpen}
@@ -270,7 +224,7 @@ export default function GrantSupplyModalButton() {
 							isDirty={isDirty}
 							isValid={isValid}
 							state={state}
-							value={watchGrantSupplyValue}
+							params={params}
 							handleApproval={handleApproval}
 							asset="USDC"
 						/>									

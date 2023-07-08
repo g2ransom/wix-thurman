@@ -126,13 +126,6 @@ export default function BorrowersSection() {
 				balance="11.2k"
 				endDate="04/23"
 			/>
-			<BorrowersGridItem
-				borrower="0xe7..."
-				maxLimit="22.5k"
-				apr="25.0%"
-				balance="16.2k"
-				endDate="04/23"
-			/>
 		</ComingSoonSection>
 	);
 }

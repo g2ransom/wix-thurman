@@ -4,26 +4,18 @@ import React, {
 	useCallback,
 	useMemo 
 } from "react";
-import { 
-	ethers,
-	formatEther,
-	formatUnits,
-	BigNumberish,
-	Contract
-} from "ethers";
+import { ethers } from "ethers";
 import {
 	IAccountContext,
 	AccountContext,
-	initialState,
+	initialState
 } from "../context/AccountContext";
 import { 
 	ACTION_TYPE, 
 	AccountReducer 
 } from "../reducers/AccountReducer";
-import { 
-	USDC_DECIMALS, 
-	NetworkContractMap 
-} from "../constants/constants";
+
+import { getAccountState } from "../utils/ethersUtils";
 
 
 type ErrorWithCode = {
@@ -35,11 +27,6 @@ const ERROR_CODE_REQUEST_PENDING = -32002;
 
 const synchronize = async (dispatch: (action: ACTION_TYPE) => void) => {
 	const { ethereum } = window;
-	let approvedUsdcBalance: string = "0.00";
-	let sUsdcBalance: string = "0.00";
-	let gUsdcBalance: string = "0.00";
-	let approvedSusdcBalance: string = "0.00";
-	let approvedGusdcBalance: string = "0.00";
 	const isMetaMaskAvailable = Boolean(ethereum) && ethereum?.isMetaMask;
 	if (!isMetaMaskAvailable) {
 		dispatch({type: "providerUnavailable"});
@@ -61,69 +48,29 @@ const synchronize = async (dispatch: (action: ACTION_TYPE) => void) => {
 			}
 		});
 	} else {
-		const ethBalance = await provider.getBalance(accounts[0]);
-		const usdc: Contract = new ethers.Contract(
-			NetworkContractMap[chainId]["USDC"].address,
-			NetworkContractMap[chainId]["USDC"].abi,
-			provider,
-		);
-		const usdcBalance = await usdc.balanceOf(accounts[0])
-			.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
-
-		if (NetworkContractMap[chainId]["Polemarch"]?.address) {
-			approvedUsdcBalance = await usdc.allowance(
-				accounts[0],
-				NetworkContractMap[chainId]["Polemarch"].address
-			).then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
-		}
-		
-
-		if (NetworkContractMap[chainId]["sUSDC"]?.address && NetworkContractMap[chainId]["sUSDC"]?.abi) {
-			const sUsdc = new ethers.Contract(
-				NetworkContractMap[chainId]["sUSDC"].address,
-				NetworkContractMap[chainId]["sUSDC"].abi,
-				provider
-			);
-			sUsdcBalance = await sUsdc.balanceOf(accounts[0])
-				.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
-			
-			if (NetworkContractMap[chainId]["Polemarch"].address) {
-				approvedSusdcBalance = await sUsdc.allowance(
-					accounts[0],
-					NetworkContractMap[chainId]["Polemarch"].address
-				).then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
-			}
-		}
-
-		if (NetworkContractMap[chainId]["gUSDC"]?.address && NetworkContractMap[chainId]["gUSDC"]?.abi) {
-			const gUsdc = new ethers.Contract(
-				NetworkContractMap[chainId]["gUSDC"].address,
-				NetworkContractMap[chainId]["gUSDC"].abi,
-				provider
-			);
-			gUsdcBalance = await gUsdc.balanceOf(accounts[0])
-				.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
-
-			if (NetworkContractMap[chainId]["Polemarch"].address) {
-				approvedGusdcBalance = await gUsdc.allowance(
-					accounts[0],
-					NetworkContractMap[chainId]["Polemarch"].address
-				).then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
-			}
-		}
-		
+		const { 
+			ethBalance, 
+			usdcBalance,
+			approvedUsdcBalance,
+			sUsdcBalance, 
+			gUsdcBalance, 
+			dUsdcBalance, 
+			lineOfCredit,
+			rate
+		} = await getAccountState(accounts[0], chainId, provider);
 
 		dispatch({
 			type: "accountConnected",
 			payload: {
 				account: accounts[0],
-				ethBalance: ethBalance === undefined ? "0.00" : formatEther(ethBalance),
+				ethBalance: ethBalance,
 				usdcBalance: usdcBalance,
-				sUsdcBalance: sUsdcBalance === undefined ? "0.00" : sUsdcBalance, // placeholder
-				gUsdcBalance: gUsdcBalance === undefined ? "0.00" : gUsdcBalance,
-				approvedUsdcBalance: approvedUsdcBalance === undefined ? "0.00" : approvedUsdcBalance,
-				approvedSusdcBalance: approvedSusdcBalance === undefined ? "0.00" : approvedSusdcBalance,
-				approvedGusdcBalance: approvedGusdcBalance === undefined ? "0.00" : approvedGusdcBalance,
+				sUsdcBalance: sUsdcBalance,
+				gUsdcBalance: gUsdcBalance,
+				dUsdcBalance: dUsdcBalance,
+				approvedUsdcBalance: approvedUsdcBalance,
+				lineOfCredit: lineOfCredit,
+				rate: rate,
 				chainId: chainId
 			}
 		})
@@ -132,11 +79,6 @@ const synchronize = async (dispatch: (action: ACTION_TYPE) => void) => {
 
 const requestAccounts = async (dispatch: (action: ACTION_TYPE) => void) => {
 	const { ethereum } = window;
-	let approvedUsdcBalance: string;
-	let sUsdcBalance: string;
-	let gUsdcBalance: string;
-	let approvedSusdcBalance: string = "0.00";
-	let approvedGusdcBalance: string = "0.00";
 	const provider = new ethers.BrowserProvider(ethereum as any);
 	const chainId: string = await provider.send("eth_chainId", []);
 	dispatch({
@@ -147,70 +89,30 @@ const requestAccounts = async (dispatch: (action: ACTION_TYPE) => void) => {
 	});
 
 	await provider.send("eth_requestAccounts", [])
-		.then( async (accounts) => {
-			const chainId = await provider.send("eth_chainId", []);
-			const ethBalance = await provider.getBalance(accounts[0]);
-			const usdc: Contract = new ethers.Contract(
-				NetworkContractMap[chainId]["USDC"].address,
-				NetworkContractMap[chainId]["USDC"].abi,
-				provider,
-			);
-			const usdcBalance = await usdc.balanceOf(accounts[0])
-				.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+		.then(async (accounts) => {
+			const { 
+				ethBalance, 
+				usdcBalance,
+				approvedUsdcBalance,
+				sUsdcBalance, 
+				gUsdcBalance, 
+				dUsdcBalance, 
+				lineOfCredit,
+				rate,
+			} = await getAccountState(accounts[0], chainId, provider);
 
-			if (NetworkContractMap[chainId]["Polemarch"]?.address) {
-				approvedUsdcBalance = await usdc.allowance(
-					accounts[0],
-					NetworkContractMap[chainId]["Polemarch"].address
-				).then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
-			}
-		
-
-		if (NetworkContractMap[chainId]["sUSDC"]?.address && NetworkContractMap[chainId]["sUSDC"]?.abi) {
-			const sUsdc = new ethers.Contract(
-				NetworkContractMap[chainId]["sUSDC"].address,
-				NetworkContractMap[chainId]["sUSDC"].abi,
-				provider
-			);
-			sUsdcBalance = await sUsdc.balanceOf(accounts[0])
-				.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
-
-			if (NetworkContractMap[chainId]["Polemarch"].address) {
-				approvedSusdcBalance = await sUsdc.allowance(
-					accounts[0],
-					NetworkContractMap[chainId]["Polemarch"].address
-				).then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
-			}
-		}
-
-		if (NetworkContractMap[chainId]["gUSDC"]?.address && NetworkContractMap[chainId]["gUSDC"]?.abi) {
-			const gUsdc = new ethers.Contract(
-				NetworkContractMap[chainId]["gUSDC"].address,
-				NetworkContractMap[chainId]["gUSDC"].abi,
-				provider
-			);
-			gUsdcBalance = await gUsdc.balanceOf(accounts[0])
-				.then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
-
-			if (NetworkContractMap[chainId]["Polemarch"].address) {
-				approvedGusdcBalance = await gUsdc.allowance(
-					accounts[0],
-					NetworkContractMap[chainId]["Polemarch"].address
-				).then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
-			}
-		}
-			
 			dispatch({
 				type: "accountConnected",
 				payload: {
 					account: accounts[0],
-					ethBalance: ethBalance === undefined ? "0.00" : formatEther(ethBalance),
+					ethBalance: ethBalance,
 					usdcBalance: usdcBalance, 
-					sUsdcBalance: sUsdcBalance === undefined ? "0.00" : sUsdcBalance,
-					gUsdcBalance: gUsdcBalance === undefined ? "0.00" : gUsdcBalance,
-					approvedUsdcBalance: approvedUsdcBalance === undefined ? "0.00" : approvedUsdcBalance,
-					approvedSusdcBalance: approvedSusdcBalance === undefined ? "0.00" : approvedSusdcBalance,
-					approvedGusdcBalance: approvedGusdcBalance === undefined ? "0.00" : approvedGusdcBalance,
+					sUsdcBalance: sUsdcBalance,
+					gUsdcBalance: gUsdcBalance,
+					dUsdcBalance: dUsdcBalance,
+					approvedUsdcBalance: approvedUsdcBalance,
+					lineOfCredit: lineOfCredit,
+					rate: rate,
 					chainId: chainId
 				}
 			});

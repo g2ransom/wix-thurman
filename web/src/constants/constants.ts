@@ -2,6 +2,7 @@ import USDC from "./USDC.json";
 import Polemarch from "./Polemarch.json";
 import SToken from "./SToken.json";
 import GToken from "./GToken.json";
+import DToken from "./DToken.json"
 
 interface IChainMap {
   [key: string]: {
@@ -21,6 +22,21 @@ export const chainMap: IChainMap = {
   }
 }
 
+interface IGovChainUrlMap {
+  [key: string]: {
+    url: string;
+  }
+}
+
+export const govChainUrlMap: IGovChainUrlMap = {
+  "0x1": {
+    url: "https://www.tally.xyz/gov/thurman"
+  },
+  "0x5": {
+    url: "https://www.tally.xyz/gov/goerli-thurmandao"
+  }
+};
+
 export const USDC_ADDRESS_GOERLI = "0x07865c6e87b9f70255377e024ace6630c1eaa37f";
 export const USDC_ADDRESS_MAINNET = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
 export const POLEMARCH_ADDRESS_GOERLI = "0x1De9cAFFc75013501c794cfd8fb82aD6FfE2517f";
@@ -34,6 +50,8 @@ export const DUSDC_ADDRESS_MAINNET = "0x0360fDD5550C2831097B674eC15B003D4621ed11
 
 export const USDC_DECIMALS = 6;
 export const DECIMALS = 18;
+export const WAD = 18;
+export const RAY = 27;
 
 interface INetworkContractMap {
   [key: string]: {
@@ -67,6 +85,11 @@ export const NetworkContractMap: INetworkContractMap = {
       abi: GToken.abi,
       decimals: USDC_DECIMALS,
     },
+    "dUSDC": {
+      address: DUSDC_ADDRESS_MAINNET,
+      abi: DToken.abi,
+      decimals: USDC_DECIMALS,
+    }
   },
   "0x5": {
     "USDC": {
@@ -88,6 +111,11 @@ export const NetworkContractMap: INetworkContractMap = {
       address: GUSDC_ADDRESS_GOERLI,
       abi: GToken.abi,
       decimals: USDC_DECIMALS
+    },
+    "dUSDC": {
+      address: DUSDC_ADDRESS_GOERLI,
+      abi: DToken.abi,
+      decimals: USDC_DECIMALS,
     }
   }
 }

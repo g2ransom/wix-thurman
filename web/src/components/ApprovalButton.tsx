@@ -2,14 +2,14 @@ import React from "react";
 import { Button } from "@mui/material";
 import { TransactionState } from "../reducers/TransactionReducer";
 import InfoPopover from "./InfoPopover";
-
+import { ApprovalFuncParams } from "../utils/ethersUtils";
 
 type ApprovalButtonProps = {
 	isDirty: boolean;
 	isValid: boolean;
 	state: TransactionState;
-	value: string;
-	handleApproval: (value: string) => Promise<void>;
+	params: ApprovalFuncParams;
+	handleApproval: (params: ApprovalFuncParams) => Promise<void>;
 	asset: string;
 };
 
@@ -29,7 +29,7 @@ export default function ApprovalButton({
 	isDirty,
 	isValid,
 	state,
-	value,
+	params,
 	handleApproval,
 	asset
 }: ApprovalButtonProps) {
@@ -40,9 +40,9 @@ export default function ApprovalButton({
 				!isDirty 
 				|| !isValid 
 				|| (state.transactionType === "approval" && state.status === "inProgress")
-				|| parseFloat(value) <= 0
+				|| parseFloat(params.value) <= 0
 			}
-			onClick={() => handleApproval(value)}
+			onClick={() => handleApproval(params)}
 			endIcon={<InfoPopover content={CONTENT} />}
 			sx={styles.button}
 			fullWidth

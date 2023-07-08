@@ -24,15 +24,14 @@ import NumberInputField from "./NumberInputField";
 import PostApprovalButton from "./PostApprovalButton";
 import TransactionModal from "./TransactionModal";
 import TransactionModalInfo from "./TransactionModalInfo";
-import { NetworkContractMap } from "../constants/constants";
 import { 
 	handleApproval, 
 	ApprovalFuncParams,
 	ErrorWithCode,
 	ERROR_CODE_TX_REQUEST_REJECTED 
 } from "../utils/ethersUtils";
-import usdcIcon from "../images/usd-coin-usdc-logo.png";
-
+import { NetworkContractMap } from "../constants/constants";
+import usdcIcon from "../images/usd-coin-usdc-logo.png"
 
 const styles = {
 	button: {
@@ -69,20 +68,20 @@ const styles = {
 	},
 };
 
+
 type IFormInput = {
-	supplyValue: string;
+	repayValue: string;
 };
 
-const infoPopoverContent = "When you supply funds to Thurman, you receive an interest accruing token (sUSDC) that can be withdrawn in exchange for your supplied asset (USDC) at a later date.";
-
-export default function SupplyModalButton() {
-	let { approvedUsdcBalance, usdcBalance, chainId, update } = useWallet();
+const infoPopoverContent = "When you repay USDC to Thurman, you burn an interest accruing token (dUSDC), which must have a zero balance by the maturity date.";
+export default function RepayModalButton() {
+	let { approvedUsdcBalance, usdcBalance, update, chainId } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
-	const handleOpen = () => setOpen(true);
 	const networkChainId = !chainId ? "0x1" : chainId;
 	approvedUsdcBalance = !approvedUsdcBalance ? "0.0" : approvedUsdcBalance;
 	usdcBalance = !usdcBalance ? "0.0" : usdcBalance;
+	const handleOpen = () => setOpen(true);
 
 	const { 
 		watch,
@@ -93,44 +92,44 @@ export default function SupplyModalButton() {
 	} = useForm({
 		mode: "onChange",
 		defaultValues: {
-			supplyValue: ""
+			repayValue: ""
 		}
 	});
 
 	const formErrors: ErrorMessageProps[] = [
 		{
-			condition: errors.supplyValue && errors.supplyValue.type === "required",
+			condition: errors.repayValue && errors.repayValue.type === "required",
 			message: "You must enter a value",
 		},
 		{
-			condition: errors.supplyValue && errors.supplyValue.type === "pattern",
+			condition: errors.repayValue && errors.repayValue.type === "pattern",
 			message: "Write a valid input like 1000.02 or 0.479"
 		},
 		{
-			condition: errors.supplyValue && errors.supplyValue.type === "positive",
+			condition: errors.repayValue && errors.repayValue.type === "positive",
 			message: "Your number must be greater than zero"
 		},
 		{
-			condition: errors.supplyValue && errors.supplyValue.type === "notGreater",
+			condition: errors.repayValue && errors.repayValue.type === "notGreater",
 			message: "Your number must be less than or equal to your balance"
 		}
 	]
-	
-	const watchSupplyValue = watch("supplyValue");
 
-	const isApproved = (watchSupplyValue <= approvedUsdcBalance) || state.approvalSuccess === true;
+	const watchRepayValue = watch("repayValue");
+
+	const isApproved = (watchRepayValue <= approvedUsdcBalance) || state.approvalSuccess === true;
 
 	let params: ApprovalFuncParams = {
 		dispatch: dispatch,
 		update: update,
-		value: watchSupplyValue,
+		value: watchRepayValue,
 		networkChainId: networkChainId
 	};
 
 	const handleClose = () => {
 		if (state.status === "finalSuccess") {
 			dispatch({type: "uninitiated"});
-			resetField("supplyValue");
+			resetField("repayValue");
 		}
 		setOpen(false);
 	}
@@ -147,21 +146,21 @@ export default function SupplyModalButton() {
 		);
 
 		try {
-			const tx = await polemarch.supply(
+			const tx = await polemarch.repay(
 				NetworkContractMap[networkChainId]["USDC"].address,
-				parseUnits(data.supplyValue, NetworkContractMap[networkChainId]["USDC"].decimals),
+				parseUnits(data.repayValue, NetworkContractMap[networkChainId]["USDC"].decimals),
 			)
 			dispatch({
 				type: "inProgress",
 				payload: {
-					transactionType: "supply",
+					transactionType: "repay",
 				}
 			});
 			await tx.wait();
 			dispatch({
 				type: "finalSuccess",
 				payload: {
-					transactionType: "supply",
+					transactionType: "repay",
 					txHash: tx.hash,
 				}
 			});
@@ -182,20 +181,20 @@ export default function SupplyModalButton() {
 			dispatch({
 				type: "failed",
 				payload: {
-					transactionType: "supply",
+					transactionType: "repay",
 					error: "The transaction failed 🤦🏿‍♂️",
 				}
 			});
 		}
 	};
-           
+
 	return (
 		<TransactionModal
-			modalButtonName="Supply"
+			modalButtonName="Repay"
 			open={open}
 			handleOpen={handleOpen}
 			handleClose={handleClose}
-			modalHeaderText="Supply USDC"
+			modalHeaderText="Repay USDC"
 			infoPopoverContent={infoPopoverContent}
 		>
 			<Grid item xs={12}>
@@ -205,7 +204,7 @@ export default function SupplyModalButton() {
 			</Grid>
 			<NumberInputField
 				control={control}
-				name="supplyValue"
+				name="repayValue"
 				avatarSrc={usdcIcon}
 				value={usdcBalance}
 				assetName="USDC"
@@ -213,10 +212,10 @@ export default function SupplyModalButton() {
 			<Grid item xs={12}>
 				<Box>
 					{(approvedUsdcBalance 
-						&& watchSupplyValue > approvedUsdcBalance 
-						&& errors.supplyValue?.type !== "pattern"
-						&& parseFloat(watchSupplyValue) > 0
-						&& parseFloat(watchSupplyValue) <= parseFloat(usdcBalance)
+						&& watchRepayValue > approvedUsdcBalance 
+						&& errors.repayValue?.type !== "pattern"
+						&& parseFloat(watchRepayValue) > 0
+						&& parseFloat(watchRepayValue) <= parseFloat(usdcBalance)
 						) && (									
 						<ApprovalButton
 							isDirty={isDirty}
@@ -231,9 +230,9 @@ export default function SupplyModalButton() {
 						isDirty={isDirty}
 						isValid={isValid}
 						isApproved={isApproved}
-						stateCondition={(state.transactionType === "supply" && state.status === "inProgress")}
-						notPositive={parseFloat(watchSupplyValue) <= 0}
-						buttonText="Supply USDC"
+						stateCondition={(state.transactionType === "repay" && state.status === "inProgress")}
+						notPositive={parseFloat(watchRepayValue) <= 0}
+						buttonText="Repay USDC"
 						onClick={handleSubmit(onSubmit)}
 					/>
 				</Box>

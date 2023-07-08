@@ -15,7 +15,10 @@ import {
   KeyboardArrowUp,
 } from "@mui/icons-material";
 import useWallet from "../hooks/useWallet";
-import { chainMap } from "../constants/constants";
+import { 
+	chainMap, 
+	govChainUrlMap 
+} from "../constants/constants";
 import metamaskIcon from "../images/metamask-icon.png";
 import ethIcon from "../images/ethereum_icon.png";
 
@@ -29,6 +32,9 @@ const styles = {
     color: "#484848",
   	border:"1px solid black",
   },
+  divider: {
+  	margin: "0.5em 0em 0.5em 0em"
+  },
   popperPaper: {
     padding: "0.75em 1.5em 1.5em 1.5em",
   },
@@ -36,7 +42,7 @@ const styles = {
     margin: "0.75em 0 0.75em 0",
   },
   typography: {
-    margin: "0.75em 0 0.75em 0",
+    margin: "0em 0em 0.75em 0em",
   },
   metamask: {
     width: "1.15em",
@@ -46,7 +52,7 @@ const styles = {
     width: "0.75em",
     height: "0.75em",
   },
-  etherscan: {
+  link: {
     color: "black",
   },
 };
@@ -86,13 +92,13 @@ export default function ConnectWalletButton() {
 						<Paper variant="outlined" sx={styles.popperPaper}>
 							  {networkChainId && (
 							    <Box>
-							      <Typography variant="body2" sx={{...styles.typography, fontWeight: "bold"}}>
+							      <Typography variant="body1" sx={{...styles.typography, fontWeight: "bold"}}>
 							        Network
 							      </Typography>
 							      <Typography variant="body2" sx={styles.typography}>
 							        {chainMap[networkChainId]?.name}
 							      </Typography>
-							      <Divider />
+							      <Divider sx={styles.divider} />
 							    </Box>
 							  )
 							}
@@ -104,7 +110,7 @@ export default function ConnectWalletButton() {
 								      ETH Balance: {parseFloat(ethBalance).toFixed(3)}
 								    </Typography>
 								  </Stack>
-								  <Divider />
+								  <Divider sx={styles.divider}/>
 								</Box>
 							)}
 							{account && (
@@ -113,9 +119,22 @@ export default function ConnectWalletButton() {
 							    <Link
 							      href={`${chainMap[networkChainId]?.etherscanUrl}/address/${account}`}
 							      target="_blank"
-							      sx={styles.etherscan}
+							      sx={styles.link}
 							    >
 							      Etherscan
+							    </Link>
+							    </Typography>
+							  </Box>
+							)}
+							{networkChainId && (
+							  <Box display="flex" flexDirection="row">
+							    <Typography variant="body2" sx={{...styles.typography, fontWeight: "bold"}}>
+							    <Link
+							      href={govChainUrlMap[networkChainId].url}
+							      target="_blank"
+							      sx={styles.link}
+							    >
+							      Governance
 							    </Link>
 							    </Typography>
 							  </Box>

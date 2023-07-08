@@ -19,6 +19,14 @@ let theme = createTheme({
     ].join(","),
   },
   components: {
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          borderRadius: "0.5em",
+          fontWeight: "bold",
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
@@ -36,7 +44,6 @@ let theme = createTheme({
 theme = responsiveFontSizes(theme);
 
 function App() {  
-
   return (
     <ThemeProvider theme={theme}>
       <AccountProvider>

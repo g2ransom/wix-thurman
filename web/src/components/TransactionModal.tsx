@@ -8,13 +8,13 @@ import {
 	Typography,
 	Stack,
 } from "@mui/material";
+import useWallet from "../hooks/useWallet";
 import CloseButton from "./CloseButton";
 import InfoPopover from "./InfoPopover";
 import { NetworkContractMap } from "../constants/constants";
 
+
 type TransactionModalProps = {
-	account: string | undefined;
-	chainId: string;
 	modalButtonName: string;
 	open: boolean;
 	handleOpen: () => void;
@@ -32,7 +32,8 @@ const styles = {
 		"&:hover": {
 			backgroundColor: "#525252",
 		},
-		fontWeight: "600"
+		fontWeight: "600",
+		width: "10.5em",
 	},
 	modal: {
 		display: "flex",
@@ -60,8 +61,6 @@ const styles = {
 };
 
 export default function TransactionModal({
-	account,
-	chainId,
 	modalButtonName,
 	open,
 	handleOpen,
@@ -70,6 +69,10 @@ export default function TransactionModal({
 	infoPopoverContent,
 	children
 }: TransactionModalProps) {
+	const { account, chainId, lineOfCredit } = useWallet();
+	const borrowMax = !lineOfCredit?.borrowMax ? "0.0" : lineOfCredit?.borrowMax;
+	const hasLineOfCredit: boolean = parseFloat(borrowMax) > 0 ? true : false;
+
 	return (
 		<div>
 			<Button
@@ -78,6 +81,7 @@ export default function TransactionModal({
 				onClick={handleOpen}
 				disabled={!account
 				|| !NetworkContractMap[chainId]["Polemarch"]?.address
+				|| (modalButtonName === "Borrow" && !hasLineOfCredit)
 				}
 			>
 				{modalButtonName}

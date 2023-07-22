@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import AccountProvider from "./providers/AccountProvider";
+import { Web3ContextProvider } from "./providers/Web3ContextProvider";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -47,6 +48,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <AccountProvider>
+      <Web3ContextProvider>
         <div className="App">
           <Header />
           <BrowserRouter>
@@ -56,6 +58,7 @@ function App() {
           </BrowserRouter>
           <Footer />
         </div>
+      </Web3ContextProvider>
       </AccountProvider>
     </ThemeProvider>
   );

@@ -116,6 +116,7 @@ const requestAccounts = async (dispatch: (action: ACTION_TYPE) => void) => {
 					chainId: chainId
 				}
 			});
+			
 		})
 		.catch((err: unknown) => {
 			if ("code" in (err as { [key: string]: any })) {
@@ -139,8 +140,8 @@ export default function AccountProvider(props: any) {
 		}
 	}, [dispatch, isInitializing]);
 
-	ethereum?.on("accountsChanged", (_accounts) => window.location.reload());
-	ethereum?.on("chainChanged", (_accounts) => window.location.reload());
+	// ethereum?.on("accountsChanged", (_accounts) => window.location.reload());
+	// ethereum?.on("chainChanged", (_accounts) => window.location.reload());
 
 	const isAvailable = status !== "unavailable" && status !== "initializing";
 

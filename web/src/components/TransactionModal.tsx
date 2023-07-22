@@ -80,8 +80,9 @@ export default function TransactionModal({
 				sx={styles.button}
 				onClick={handleOpen}
 				disabled={!account
-				|| !NetworkContractMap[chainId]["Polemarch"]?.address
-				|| (modalButtonName === "Borrow" && !hasLineOfCredit)
+					|| !NetworkContractMap[chainId]["Polemarch"]?.address
+					|| (modalButtonName === "Borrow" && !hasLineOfCredit)
+					|| (modalButtonName === "Repay" && !hasLineOfCredit)
 				}
 			>
 				{modalButtonName}

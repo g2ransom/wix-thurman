@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Box,
 	Button,
@@ -16,6 +16,9 @@ type ConnectWalletModalProps = {
 }
 
 const styles = {
+	button: {
+		fontWeight: "800"
+	},
 	modal: {
 		display: "flex",
 		alignItems: "center", 
@@ -33,7 +36,7 @@ const styles = {
 };
 
 export default function ConnectWalletModal({ children }: ConnectWalletModalProps) {
-	const { account } = useWeb3React();
+	const { account, provider } = useWeb3React();
 	const [open, setOpen] = useState<boolean>(false);
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
@@ -43,6 +46,7 @@ export default function ConnectWalletModal({ children }: ConnectWalletModalProps
 			<Button
 				variant="contained"
 				onClick={handleOpen}
+				sx={styles.button}
 			>
 				{account ? "Disconnect Wallet" : "Connect Wallet"}
 			</Button>

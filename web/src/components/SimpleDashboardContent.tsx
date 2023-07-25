@@ -5,7 +5,8 @@ import {
 	Typography,
 	Stack
 } from "@mui/material";
-import useWallet from "../hooks/useWallet";
+// import useWallet from "../hooks/useWallet";
+import { useWeb3React } from "@web3-react/core";
 
 export type ContentProps = {
 	balanceType: string;
@@ -33,7 +34,7 @@ export default function SimpleDashboardContent({
 	balance,
 	button
 }: ContentProps) {
-	const { account } = useWallet();
+	const { account } = useWeb3React();
 
 	return (
 		<Box display="flex" justifyContent="space-between">

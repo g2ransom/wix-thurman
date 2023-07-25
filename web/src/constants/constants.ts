@@ -11,12 +11,30 @@ interface IChainMap {
   };
 } 
 
+interface INetworkMap {
+  [key: number]: {
+    name: string;
+    etherscanUrl: string;
+  }
+};
+
 export const chainMap: IChainMap = {
   "0x1": {
     name: "Ethereum Mainnet",
     etherscanUrl: "https://etherscan.io"
   },
   "0x5": {
+    name: "Goerli Testnet",
+    etherscanUrl: "https://goerli.etherscan.io"
+  }
+}
+
+export const networkMap: INetworkMap = {
+  1: {
+    name: "Ethereum Mainnet",
+    etherscanUrl: "https://etherscan.io"
+  },
+  5: {
     name: "Goerli Testnet",
     etherscanUrl: "https://goerli.etherscan.io"
   }
@@ -54,7 +72,7 @@ export const WAD = 18;
 export const RAY = 27;
 
 interface INetworkContractMap {
-  [key: string]: {
+  [key: number]: {
     [contract: string]: {
       address: string;
       abi: any;
@@ -64,7 +82,7 @@ interface INetworkContractMap {
 };
 
 export const NetworkContractMap: INetworkContractMap = {
-  "0x1": {
+  1: {
     "USDC": {
       address: USDC_ADDRESS_MAINNET,
       abi: USDC.abi,
@@ -91,7 +109,7 @@ export const NetworkContractMap: INetworkContractMap = {
       decimals: USDC_DECIMALS,
     }
   },
-  "0x5": {
+  5: {
     "USDC": {
       address: USDC_ADDRESS_GOERLI,
       abi: USDC.abi,

@@ -1,4 +1,5 @@
 import React, { useState, useReducer } from "react";
+import { useWeb3React } from "@web3-react/core";
 import { 
 	ethers,
 	parseUnits,
@@ -39,11 +40,12 @@ const styles = {
 const infoPopoverContent = "When you withdraw funds, you burn a specific amount of interest accruing token (sUSDC) and receive an equivalent amount of the underlying asset (USDC) in return.";
 
 export default function WithdrawModalButton() {
-	let { sUsdcBalance, chainId, update } = useWallet();
+	let { chainId } = useWeb3React();
+	let { sUsdcBalance, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
 	const handleOpen = () => setOpen(true);
-	const networkChainId = !chainId ? "0x1" : chainId;
+	const networkChainId = !chainId ? 1 : chainId;
 	// const borrowMax = !lineOfCredit?.borrowMax ? "0.0" : lineOfCredit?.borrowMax;
 	// const hasLineOfCredit: boolean = parseFloat(borrowMax) > 0 ? true : false; 
 

@@ -47,19 +47,19 @@ theme = responsiveFontSizes(theme);
 function App() {  
   return (
     <ThemeProvider theme={theme}>
-      <AccountProvider>
       <Web3ContextProvider>
-        <div className="App">
-          <Header />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Home />} />
-            </Routes>
-          </BrowserRouter>
-          <Footer />
-        </div>
+        <AccountProvider>
+          <div className="App">
+            <Header />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Home />} />
+              </Routes>
+            </BrowserRouter>
+            <Footer />
+          </div>      
+        </AccountProvider>
       </Web3ContextProvider>
-      </AccountProvider>
     </ThemeProvider>
   );
 }

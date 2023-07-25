@@ -58,101 +58,103 @@ const styles = {
 };
 
 export default function ConnectWalletButton() {
-	const { account, ethBalance, connect, chainId, status } = useWallet();
+	// const { account, ethBalance, connect, chainId, status } = useWallet();
 
-	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const networkChainId = !chainId ? "0x1" : chainId;
+	// const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  // const networkChainId = !chainId ? "0x1" : chainId;
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(anchorEl ? null : event.currentTarget);
-  };
+  // const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  //   setAnchorEl(anchorEl ? null : event.currentTarget);
+  // };
 
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popper" : undefined;
+  // const open = Boolean(anchorEl);
+  // const id = open ? "simple-popper" : undefined;
 
 	return (
-		<Box>
-			{status === "connected" ? (
-				<Box>
-					<Button
-						variant="outlined"
-						disableRipple={true}
-						sx={styles.connectedButton}
-						onClick={handleClick}
-						startIcon={<Avatar src={metamaskIcon} sx={styles.metamask} />}
-						endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-					>
-						{account.substring(0,4)}...{account.substring(account.length - 4, account.length)}
-					</Button>
-					<Popper 
-						id={id}
-						open={open}
-						anchorEl={anchorEl}
-					>
-						<Paper variant="outlined" sx={styles.popperPaper}>
-							  {networkChainId && (
-							    <Box>
-							      <Typography variant="body1" sx={{...styles.typography, fontWeight: "bold"}}>
-							        Network
-							      </Typography>
-							      <Typography variant="body2" sx={styles.typography}>
-							        {chainMap[networkChainId]?.name}
-							      </Typography>
-							      <Divider sx={styles.divider} />
-							    </Box>
-							  )
-							}
-							{ethBalance && (
-								<Box>
-								  <Stack direction="row" spacing={1} alignItems="center" sx={styles.stack}>
-								    <Avatar src={ethIcon} sx={styles.ethIcon} />
-								    <Typography variant="body2">
-								      ETH Balance: {parseFloat(ethBalance).toFixed(3)}
-								    </Typography>
-								  </Stack>
-								  <Divider sx={styles.divider}/>
-								</Box>
-							)}
-							{account && (
-							  <Box display="flex" flexDirection="row">
-							    <Typography variant="body2" sx={{...styles.typography, fontWeight: "bold"}}>
-							    <Link
-							      href={`${chainMap[networkChainId]?.etherscanUrl}/address/${account}`}
-							      target="_blank"
-							      sx={styles.link}
-							    >
-							      Etherscan
-							    </Link>
-							    </Typography>
-							  </Box>
-							)}
-							{networkChainId && (
-							  <Box display="flex" flexDirection="row">
-							    <Typography variant="body2" sx={{...styles.typography, fontWeight: "bold"}}>
-							    <Link
-							      href={govChainUrlMap[networkChainId].url}
-							      target="_blank"
-							      sx={styles.link}
-							    >
-							      Governance
-							    </Link>
-							    </Typography>
-							  </Box>
-							)}
-						</Paper>
-					</Popper>
-				</Box>
-			) : (
-			<Button
-				variant="contained"
-				startIcon={<Avatar src={metamaskIcon} sx={styles.metamask} />}
-				sx={styles.connectButton}
-				onClick={connect}
-			>
-				Connect Wallet
-			</Button>
-			)}
-		</Box>
+		<div>
+		</div>
+		// <Box>
+		// 	{status === "connected" ? (
+		// 		<Box>
+		// 			<Button
+		// 				variant="outlined"
+		// 				disableRipple={true}
+		// 				sx={styles.connectedButton}
+		// 				onClick={handleClick}
+		// 				startIcon={<Avatar src={metamaskIcon} sx={styles.metamask} />}
+		// 				endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+		// 			>
+		// 				{account.substring(0,4)}...{account.substring(account.length - 4, account.length)}
+		// 			</Button>
+		// 			<Popper 
+		// 				id={id}
+		// 				open={open}
+		// 				anchorEl={anchorEl}
+		// 			>
+		// 				<Paper variant="outlined" sx={styles.popperPaper}>
+		// 					  {networkChainId && (
+		// 					    <Box>
+		// 					      <Typography variant="body1" sx={{...styles.typography, fontWeight: "bold"}}>
+		// 					        Network
+		// 					      </Typography>
+		// 					      <Typography variant="body2" sx={styles.typography}>
+		// 					        {chainMap[networkChainId]?.name}
+		// 					      </Typography>
+		// 					      <Divider sx={styles.divider} />
+		// 					    </Box>
+		// 					  )
+		// 					}
+		// 					{ethBalance && (
+		// 						<Box>
+		// 						  <Stack direction="row" spacing={1} alignItems="center" sx={styles.stack}>
+		// 						    <Avatar src={ethIcon} sx={styles.ethIcon} />
+		// 						    <Typography variant="body2">
+		// 						      ETH Balance: {parseFloat(ethBalance).toFixed(3)}
+		// 						    </Typography>
+		// 						  </Stack>
+		// 						  <Divider sx={styles.divider}/>
+		// 						</Box>
+		// 					)}
+		// 					{account && (
+		// 					  <Box display="flex" flexDirection="row">
+		// 					    <Typography variant="body2" sx={{...styles.typography, fontWeight: "bold"}}>
+		// 					    <Link
+		// 					      href={`${chainMap[networkChainId]?.etherscanUrl}/address/${account}`}
+		// 					      target="_blank"
+		// 					      sx={styles.link}
+		// 					    >
+		// 					      Etherscan
+		// 					    </Link>
+		// 					    </Typography>
+		// 					  </Box>
+		// 					)}
+		// 					{networkChainId && (
+		// 					  <Box display="flex" flexDirection="row">
+		// 					    <Typography variant="body2" sx={{...styles.typography, fontWeight: "bold"}}>
+		// 					    <Link
+		// 					      href={govChainUrlMap[networkChainId].url}
+		// 					      target="_blank"
+		// 					      sx={styles.link}
+		// 					    >
+		// 					      Governance
+		// 					    </Link>
+		// 					    </Typography>
+		// 					  </Box>
+		// 					)}
+		// 				</Paper>
+		// 			</Popper>
+		// 		</Box>
+		// 	) : (
+		// 	<Button
+		// 		variant="contained"
+		// 		startIcon={<Avatar src={metamaskIcon} sx={styles.metamask} />}
+		// 		sx={styles.connectButton}
+		// 		onClick={connect}
+		// 	>
+		// 		Connect Wallet
+		// 	</Button>
+		// 	)}
+		// </Box>
 	);
 
 }

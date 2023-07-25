@@ -4,7 +4,7 @@ import React, {
 } from "react";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Connector } from "@web3-react/types";
-import { ConnectionType, getConnection, PRIORITIZED_CONNECTORS } from "../components/walletConnect/connections";
+import { ConnectionType, getConnection, PRIORITIZED_CONNECTORS } from "../components/connectWallet/connections";
 
 // const connect = async (connector: Connector) => {
 //   try {
@@ -26,6 +26,9 @@ import { ConnectionType, getConnection, PRIORITIZED_CONNECTORS } from "../compon
 
 export const Web3ContextProvider = ({ children }: { children: ReactNode }) => {
   // useEffect(() => {
+  //   const connectEagerly = async () => {
+  //     await connector.connectEagerly();
+  //   }
   //   connectEagerly()
   // }, []);
 

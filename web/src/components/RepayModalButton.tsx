@@ -1,4 +1,5 @@
 import React, { useState, useReducer } from "react";
+import { useWeb3React } from "@web3-react/core";
 import { 
 	ethers,
 	parseUnits,
@@ -75,10 +76,11 @@ type IFormInput = {
 
 const infoPopoverContent = "When you repay USDC to Thurman, you burn an interest accruing token (dUSDC), which must have a zero balance by the maturity date.";
 export default function RepayModalButton() {
-	let { approvedUsdcBalance, usdcBalance, update, chainId } = useWallet();
+	let { chainId } = useWeb3React();
+	let { approvedUsdcBalance, usdcBalance, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
-	const networkChainId = !chainId ? "0x1" : chainId;
+	const networkChainId = !chainId ? 1 : chainId;
 	approvedUsdcBalance = !approvedUsdcBalance ? "0.0" : approvedUsdcBalance;
 	usdcBalance = !usdcBalance ? "0.0" : usdcBalance;
 	const handleOpen = () => setOpen(true);

@@ -1,4 +1,5 @@
 import React, { useState, useReducer } from "react";
+import { useWeb3React } from "@web3-react/core";
 import { 
 	ethers,
 	parseUnits,
@@ -70,11 +71,12 @@ const ERROR_CODE_TX_REQUEST_REJECTED = 4001;
 const infoPopoverContent = "When you supply funds to Thurman, you receive an interest accruing token (dUSDC) must be repayed using (USDC) at by your debt's maturity date.";
 
 export default function BorrowModalButton() {
-	let { approvedUsdcBalance, dUsdcBalance, chainId, lineOfCredit, update } = useWallet();
+	let { chainId } = useWeb3React();
+	let { approvedUsdcBalance, dUsdcBalance, lineOfCredit, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
 	const handleOpen = () => setOpen(true);
-	const networkChainId = !chainId ? "0x1" : chainId;
+	const networkChainId = !chainId ? 1 : chainId;
 	approvedUsdcBalance = !approvedUsdcBalance ? "0.0" : approvedUsdcBalance;
 	dUsdcBalance = !dUsdcBalance ? "0.0" : dUsdcBalance;
 	const borrowMax = !lineOfCredit?.borrowMax ? "0.0" : lineOfCredit?.borrowMax

@@ -46,7 +46,7 @@ type AccountNotConnected = {
 	approvedUsdcBalance: undefined;
 	lineOfCredit: undefined;
 	rate: undefined;
-	chainId: string;
+	chainId: number;
 	status: "notConnected";
 };
 
@@ -60,7 +60,7 @@ type AccountConnected = {
 	approvedUsdcBalance: string;
 	lineOfCredit: LineOfCredit;
 	rate: string;
-	chainId: string;
+	chainId: number;
 	status: "connected";
 };
 
@@ -74,7 +74,7 @@ type AccountConnecting = {
 	approvedUsdcBalance: undefined;
 	lineOfCredit: undefined;
 	rate: undefined;
-	chainId: string;
+	chainId: number;
 	status: "connecting";
 };
 
@@ -100,7 +100,7 @@ export const initialState: AccountState = {
 }
 
 export type IAccountContext = AccountState & {
-	connect: () => void;
+	// connect: () => void;
 	update: () => void;
 };
 

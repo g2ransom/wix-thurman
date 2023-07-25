@@ -5,6 +5,8 @@ import {
 	Grid,
 	Modal,
 	Paper,
+	Stack,
+	Typography
 } from "@mui/material";
 import { useWeb3React } from "@web3-react/core";
 import CloseButton from "../CloseButton";
@@ -17,7 +19,12 @@ type ConnectWalletModalProps = {
 
 const styles = {
 	button: {
-		fontWeight: "800"
+		backgroundColor: "#36454F",
+		"&:hover": {
+			backgroundColor: "#495D6A",
+		},
+		fontWeight: "800",
+		marginLeft: "1.5em",
 	},
 	modal: {
 		display: "flex",
@@ -32,6 +39,9 @@ const styles = {
     transform: "translate(-50%, -50%)",
     width: "50%",
     padding: "1em 1em 1em 1em",
+	},
+	typography: {
+		fontWeight: "800"
 	}
 };
 

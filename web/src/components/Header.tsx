@@ -6,8 +6,8 @@ import {
 	Toolbar
 } from "@mui/material";
 import GitHubIcon from '@mui/icons-material/GitHub';
-import ConnectWalletButton from "./ConnectWalletButton";
-import ConnectWallet from "./walletConnect/ConnectWallet";
+// import ConnectWalletButton from "./ConnectWalletButton";
+import ConnectWallet from "./connectWallet/ConnectWallet";
 import thurmanLogo from "../images/thurman-logo.png";
 
 const styles = {
@@ -54,7 +54,6 @@ export default function Header() {
 				</Box>
 				<GitHubIcon onClick={handleGithubClick} sx={styles.githubIcon} />
 				<ConnectWallet />
-				<ConnectWalletButton  />
 			</Toolbar>
 		</AppBar>
 	);

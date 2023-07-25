@@ -35,7 +35,7 @@ export type ApprovalFuncParams = {
   dispatch: (action: ACTION_TYPE) => void;
   update: () => void;
   value: string;
-  networkChainId: string;
+  networkChainId: number;
 }
 
 export const ERROR_CODE_TX_REQUEST_REJECTED = 4001;
@@ -96,8 +96,8 @@ export const handleApproval = async (params: ApprovalFuncParams) => {
 
 export async function getAccountState(
   account: string, 
-  chainId: string, 
-  provider: Provider
+  chainId: number,
+  provider: any
 ): Promise<AccountState> {
   let ethBalance: string;
   let usdcBalance: string;
@@ -108,7 +108,7 @@ export async function getAccountState(
   let lineOfCredit: LineOfCredit = undefined;
   let rate: string = "0.00";
 
-  const etherBalance: BigNumberish = await provider.getBalance(account);
+  const etherBalance = (await provider.getBalance(account)).toString();
   ethBalance = formatEther(etherBalance);
 
   const usdc: Contract = new ethers.Contract(

@@ -51,23 +51,31 @@ export default function Option({
 	const { update } = useWallet();
 
 	const handleDeactivation = async () => {
-		const deactivation = await tryDeactivateConnector(getConnection(connectionType).connector);
-		if (deactivation === undefined) {
-			return
+		try {
+			const deactivation = await tryDeactivateConnector(getConnection(connectionType).connector);
+			if (deactivation === undefined) {
+				return;
+			}
+			onDeactivate(deactivation);
+			update();
+			return;
+		} catch (err) {
+			console.warn(err);
 		}
-		onDeactivate(deactivation);
-		update();
-		return
 	}
 
 	const handleActivation = async () => {
-		const activation = await tryActivateConnector(getConnection(connectionType).connector);
-		if (!activation) {
+		try {
+			const activation = await tryActivateConnector(getConnection(connectionType).connector);
+			if (!activation) {
+				return;
+			}
+			onActivate(activation);
+			update();
 			return;
+		} catch (err) {
+			console.warn(err);
 		}
-		onActivate(activation);
-		update();
-		return;
 	}
 
 	return (
@@ -87,7 +95,7 @@ export default function Option({
 				onClick={handleActivation}
 				sx={styles.button}
 			>
-				Connect {name}
+				{name}
 			</Button>}
 		</Box>
 	);

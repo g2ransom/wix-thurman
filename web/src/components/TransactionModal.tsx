@@ -1,4 +1,5 @@
 import React from "react";
+import { useWeb3React } from "@web3-react/core";
 import {
 	Box,
 	Button,
@@ -69,7 +70,9 @@ export default function TransactionModal({
 	infoPopoverContent,
 	children
 }: TransactionModalProps) {
-	const { account, chainId, lineOfCredit } = useWallet();
+	let { account, chainId } = useWeb3React();
+	const { lineOfCredit } = useWallet();
+	chainId = !chainId ? 1 : chainId;
 	const borrowMax = !lineOfCredit?.borrowMax ? "0.0" : lineOfCredit?.borrowMax;
 	const hasLineOfCredit: boolean = parseFloat(borrowMax) > 0 ? true : false;
 

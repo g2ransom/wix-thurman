@@ -8,8 +8,3 @@ declare global {
     ethereum?: ExternalProvider;
   }
 }
-
-// interface EthereumProvider extends ExternalProvider {
-//   _state: any
-//   sendAsync: AbstractProvider['sendAsync']
-// }

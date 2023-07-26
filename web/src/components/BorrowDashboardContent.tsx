@@ -1,4 +1,5 @@
 import React from "react";
+import { useWeb3React } from "@web3-react/core";
 import { 
 	Box,
 	Chip,
@@ -25,6 +26,7 @@ const formatDate = (date: Date): string => {
 }
 
 export default function BorrowDashboardContent() {
+	let { account } = useWeb3React();
 	let { dUsdcBalance, lineOfCredit, rate } = useWallet();
 	const borrowMax = !lineOfCredit?.borrowMax ? "0.0" : lineOfCredit?.borrowMax;
 	dUsdcBalance = !dUsdcBalance ? "0.0" : dUsdcBalance;
@@ -58,7 +60,7 @@ export default function BorrowDashboardContent() {
 
 	return (
 		<>
-		{parseFloat(borrowMax) > 0 ?
+		{(parseFloat(borrowMax) > 0 && account) ?
 			<Box display="flex" justifyContent="start" sx={styles.box}>
 				<Stack 
 					direction="row" 

@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
 	Box,
 	Button,
 	Grid,
 	Modal,
-	Paper,
-	Stack,
-	Typography
+	Paper
 } from "@mui/material";
 import { useWeb3React } from "@web3-react/core";
 import CloseButton from "../CloseButton";
@@ -33,12 +31,12 @@ const styles = {
 	},
 	paper: {
     position: "absolute",
-    maxWidth: 450,
+    maxWidth: 325,
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: "50%",
-    padding: "1em 1em 1em 1em",
+    padding: "1em 1em 1.85em 1.85em",
 	},
 	typography: {
 		fontWeight: "800"
@@ -46,7 +44,7 @@ const styles = {
 };
 
 export default function ConnectWalletModal({ children }: ConnectWalletModalProps) {
-	const { account, provider } = useWeb3React();
+	const { account } = useWeb3React();
 	const [open, setOpen] = useState<boolean>(false);
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);

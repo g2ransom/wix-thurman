@@ -4,8 +4,7 @@ import {
   formatUnits,
   parseUnits,
   BigNumberish,
-  Contract,
-  Provider
+  Contract
 } from "ethers";
 import { LineOfCredit } from "../context/AccountContext";
 import { ACTION_TYPE } from "../reducers/TransactionReducer";
@@ -32,6 +31,7 @@ export interface AccountState {
 }
 
 export type ApprovalFuncParams = {
+  // provider: any;
   dispatch: (action: ACTION_TYPE) => void;
   update: () => void;
   value: string;
@@ -43,8 +43,9 @@ export const ERROR_CODE_TX_REQUEST_REJECTED = 4001;
 export const handleApproval = async (params: ApprovalFuncParams) => {
     const { ethereum } = window;
     const provider = new ethers.BrowserProvider(ethereum as any);
-    const signer = await provider.getSigner();
     const { dispatch, update, value, networkChainId } = params;
+    const signer = await provider.getSigner();
+    
 
     const usdc: Contract = new ethers.Contract(
       NetworkContractMap[networkChainId]["USDC"].address,

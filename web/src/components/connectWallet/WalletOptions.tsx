@@ -1,8 +1,8 @@
 import React from "react";
-import { 
-	Box,
+import {
 	Button,
-	Stack
+	Stack,
+	Typography
 } from "@mui/material";
 import {
 	ConnectionType,
@@ -20,6 +20,12 @@ type WalletOptionsProps = {
 	onDeactivate: (connectionType: null) => void;
 };
 
+const styles = {
+	typography: {
+		fontWeight: "800"
+	}
+};
+
 export default function WalletOptions({
 	activeConnectionType,
 	isConnectionActive,
@@ -31,6 +37,12 @@ export default function WalletOptions({
 
 	return (
 		<Stack spacing={0}>
+			<Typography 
+				variant="h6"
+				sx={styles.typography}
+			>
+				Connect to a wallet
+			</Typography>
 			{hasMetaMask ? (
 				<Option
 					name="MetaMask"

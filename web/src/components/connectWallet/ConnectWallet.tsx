@@ -43,7 +43,7 @@ const styles = {
 		border:"1px solid black",
 	},
 	disconnectButton: {
-		backgroundColor: "#808080",
+		backgroundColor: "black",
 		fontWeight: "800",
 		"&:hover": {
 			backgroundColor: "#525252",
@@ -52,11 +52,14 @@ const styles = {
 	divider: {
 		margin: "0.5em 0em 0.5em 0em"
 	},
+	explorerButton: {
+		color: "black"
+	},
 	popperPaper: {
-	  padding: "0.75em 1.5em 1.5em 1.5em",
+	  padding: "0.75em 0.5em 1.5em 0.5em",
 	},
 	typography: {
-	  margin: "0em 0em 0.75em 0em",
+	  margin: "0em 0em 0.4em 0em",
 	},
 
 }
@@ -78,20 +81,22 @@ function WalletDropdown({ id, open, anchorEl, account, chainId, connectionType, 
 			open={open}
 			anchorEl={anchorEl}
 		>
-			<Paper variant="outlined" sx={styles.popperPaper}>
+			<Paper variant="outlined" square={true} sx={styles.popperPaper}>
 				<Stack spacing={1}>
 				  {chainId && (
 			      <Box>
-				      <Typography variant="body1" sx={{...styles.typography, fontWeight: "bold"}}>
+				      <Typography variant="body2" sx={{...styles.typography, color: "gray"}}>
 				        Network
 				      </Typography>
-				      <Typography variant="body2" sx={styles.typography}>
+				      <Typography variant="body1" sx={{...styles.typography, fontWeight: "bolder"}}>
 				        { networkMap[chainId].name }
 				      </Typography>
+				      <Divider sx={styles.divider}/>
 			      </Box>
 				  )}
 					{connectionType && (						
-						<Box>
+						<>
+						<Box display="flex" justifyContent="center">
 							<Button
 								variant="contained"
 								size="small"
@@ -100,14 +105,17 @@ function WalletDropdown({ id, open, anchorEl, account, chainId, connectionType, 
 							>
 								Disconnect
 							</Button>
-							<Divider sx={styles.divider}/>
-						</Box>				
+						</Box>
+						<Divider sx={styles.divider}/>
+						</>
 					)}
 					{(account && chainId) && (
 				    <Button 
 				    	href={`${networkMap[chainId]?.etherscanUrl}/address/${account}`}
+				    	target="_blank"
 				    	size="small"
 				    	startIcon={<OpenInNew />}
+				    	sx={styles.explorerButton}
 				    >
 				    	View on Explorer
 				    </Button>
@@ -119,29 +127,16 @@ function WalletDropdown({ id, open, anchorEl, account, chainId, connectionType, 
 }
 
 export default function ConnectWallet() {
-	const { chainId, account, isActive } = useWeb3React();
+	const { connector, chainId, account, isActive } = useWeb3React();
 	const { update } = useWallet();
 	const [connectionType, setConnectionType] = useState<ConnectionType | null>(null);
 	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-	// useEffect(() => {
-	// 	if (!connectionType) {
-	// 		return;
-	// 	}
-	// 	let connector = getConnection(connectionType).connector;
-	// 	const connectEagerly = async () => {
-	// 		try {
-	// 			if (connector?.connectEagerly) {
-	// 				await connector.connectEagerly();
-	// 			} else {
-	// 				await connector.activate();
-	// 			}
-	// 		} catch (err) {
-	// 			console.debug(`web3-react eager connection error: ${err}`);
-	// 		}
-	// 	};
-	// 	connectEagerly();
-	// }, [connectionType])
+	useEffect(() => {
+		if (connector && isActive) {
+			setConnectionType(getConnection(connector).type);
+		}
+	}, [connector, isActive]);
 
 	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
 	  setAnchorEl(anchorEl ? null : event.currentTarget);

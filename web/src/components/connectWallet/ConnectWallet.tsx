@@ -148,8 +148,8 @@ export default function ConnectWallet() {
 			return;
 		}
 		setAnchorEl(anchorEl ? null : event.currentTarget);
-		setConnectionType(deactivation);
 		update();
+		setConnectionType(deactivation);
 
 		return;
 	}

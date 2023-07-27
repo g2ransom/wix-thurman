@@ -19,8 +19,6 @@ const connect = async (connector: Connector) => {
 }
 
 const connectEagerly = async () => {
-  // await connect(getConnection(ConnectionType.NETWORK).connector);
-  // await connect(getConnection(ConnectionType.GNOSIS_SAFE).connector);
   await connect(getConnection(ConnectionType.INJECTED).connector);
 }
 

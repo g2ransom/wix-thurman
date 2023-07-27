@@ -1,5 +1,6 @@
 import React from "react";
 import {
+	Avatar,
 	Button,
 	Stack,
 	Typography
@@ -23,6 +24,20 @@ type WalletOptionsProps = {
 const styles = {
 	typography: {
 		fontWeight: "800"
+	},
+	button: {
+		backgroundColor: "#E9EAEC",
+		"&:hover": {
+			border:"1px solid #3B3B3B",
+			backgroundColor: "#E9EAEC",
+		},
+		color: "#3B3B3B",
+		fontWeight: "600",
+		width: "20em",
+	},
+	icon: {
+	  width: "1em",
+	  height: "1em",
 	}
 };
 
@@ -55,9 +70,11 @@ export default function WalletOptions({
 				/>
 			) : (
 				<Button 
+					variant="contained"
 					href="https://metamask.io/" 
-					target="_blank" 
-					variant="outlined"
+					target="_blank"
+					endIcon={<Avatar src={metamaskIcon} sx={styles.icon} />}
+					sx={styles.button}
 				>
 					Install MetaMask
 				</Button>

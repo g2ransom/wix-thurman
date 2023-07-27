@@ -100,8 +100,8 @@ export async function getAccountState(
   chainId: number,
   provider: any
 ): Promise<AccountState> {
-  let ethBalance: string;
-  let usdcBalance: string;
+  let ethBalance: string = "0.00";
+  let usdcBalance: string = "0.00";
   let approvedUsdcBalance: string = "0.00";
   let sUsdcBalance: string = "0.00";
   let gUsdcBalance: string = "0.00";
@@ -117,6 +117,7 @@ export async function getAccountState(
     NetworkContractMap[chainId]["USDC"].abi,
     provider,
   );
+  
   usdcBalance = await usdc.balanceOf(account)
     .then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
   

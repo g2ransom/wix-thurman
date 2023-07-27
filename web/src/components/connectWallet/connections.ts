@@ -17,13 +17,12 @@ export type Connection = {
   type: ConnectionType;
 };
 
-// const getIsBraveWallet = (): boolean => {
-//   return window.ethereum?.isBraveWallet ?? false;
-// } 
+const getIsBraveWallet = (): boolean => {
+  return window.ethereum?.isBraveWallet ?? false;
+} 
 
 export const getIsMetaMaskInstalled = (): boolean => {
-  // return (window.ethereum?.isMetaMask ?? false) && !getIsBraveWallet();
-  return window.ethereum?.isMetaMask ?? false
+  return (window.ethereum?.isMetaMask ?? false) && !getIsBraveWallet();
 }
 
 export const onConnectionError = (err: Error) => {

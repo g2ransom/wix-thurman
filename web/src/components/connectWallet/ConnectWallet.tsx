@@ -71,7 +71,7 @@ type WalletDropdownProps = {
 	account: string | undefined;
 	chainId: number | undefined;
 	connectionType: ConnectionType | null;
-	disconnect: (c: ConnectionType) => Promise<void>
+	disconnect: (event: React.MouseEvent<HTMLElement>, c: ConnectionType) => Promise<void>
 }
 
 function WalletDropdown({ id, open, anchorEl, account, chainId, connectionType, disconnect }: WalletDropdownProps) {
@@ -100,7 +100,7 @@ function WalletDropdown({ id, open, anchorEl, account, chainId, connectionType, 
 							<Button
 								variant="contained"
 								size="small"
-								onClick={() => disconnect(connectionType)}
+								onClick={(event) => disconnect(event, connectionType)}
 								sx={styles.disconnectButton}
 							>
 								Disconnect
@@ -142,11 +142,12 @@ export default function ConnectWallet() {
 	  setAnchorEl(anchorEl ? null : event.currentTarget);
 	};
 
-	const handleDeactivation = async (connectionType: ConnectionType) => {
+	const handleDeactivation = async (event: React.MouseEvent<HTMLElement>, connectionType: ConnectionType) => {
 		const deactivation = await tryDeactivateConnector(getConnection(connectionType).connector);
 		if (deactivation === undefined) {
 			return;
 		}
+		setAnchorEl(anchorEl ? null : event.currentTarget);
 		setConnectionType(deactivation);
 		update();
 

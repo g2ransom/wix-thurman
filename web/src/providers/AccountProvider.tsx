@@ -1,10 +1,11 @@
 import React, { 
 	useEffect, 
 	useReducer,
+	useRef,
 	useCallback,
 	useMemo 
 } from "react";
-import { ethers } from "ethers";
+import { useWeb3React } from "@web3-react/core";
 import {
 	IAccountContext,
 	AccountContext,
@@ -14,82 +15,28 @@ import {
 	ACTION_TYPE, 
 	AccountReducer 
 } from "../reducers/AccountReducer";
-
 import { getAccountState } from "../utils/ethersUtils";
 
-
-type ErrorWithCode = {
-	code: number;
-	[key: string]: any;
+type ProviderParams = {
+	account: string | undefined;
+	chainId: number
+	provider: any;
+	dispatch: (action: ACTION_TYPE) => void;
 };
 
-const ERROR_CODE_REQUEST_PENDING = -32002;
-
-const synchronize = async (dispatch: (action: ACTION_TYPE) => void) => {
-	const { ethereum } = window;
-	const isMetaMaskAvailable = Boolean(ethereum) && ethereum?.isMetaMask;
-	if (!isMetaMaskAvailable) {
-		dispatch({type: "providerUnavailable"});
-		alert("You need to install MetaMask to connect a wallet");
-		window.open("https://metamask.io/", "_blank");
-		return;
-	}
-
-	const provider = new ethers.BrowserProvider(ethereum as any);
-	const chainId: string = await provider.send("eth_chainId", []);
-
-	const accounts: string[] = await provider.send("eth_accounts", []);
-
-	if (accounts.length === 0) {
-		dispatch({
-			type: "accountNotConnected",
-			payload: {
-				chainId
+const synchronize = async ({ account, chainId, provider, dispatch }: ProviderParams) => {
+	try {
+		if (!account) {
+			if (!chainId) {
+				chainId = 1;
 			}
-		});
-	} else {
-		const { 
-			ethBalance, 
-			usdcBalance,
-			approvedUsdcBalance,
-			sUsdcBalance, 
-			gUsdcBalance, 
-			dUsdcBalance, 
-			lineOfCredit,
-			rate
-		} = await getAccountState(accounts[0], chainId, provider);
-
-		dispatch({
-			type: "accountConnected",
-			payload: {
-				account: accounts[0],
-				ethBalance: ethBalance,
-				usdcBalance: usdcBalance,
-				sUsdcBalance: sUsdcBalance,
-				gUsdcBalance: gUsdcBalance,
-				dUsdcBalance: dUsdcBalance,
-				approvedUsdcBalance: approvedUsdcBalance,
-				lineOfCredit: lineOfCredit,
-				rate: rate,
-				chainId: chainId
-			}
-		})
-	}
-};
-
-const requestAccounts = async (dispatch: (action: ACTION_TYPE) => void) => {
-	const { ethereum } = window;
-	const provider = new ethers.BrowserProvider(ethereum as any);
-	const chainId: string = await provider.send("eth_chainId", []);
-	dispatch({
-		type: "accountConnecting",
-		payload: { 
-			chainId
-		}
-	});
-
-	await provider.send("eth_requestAccounts", [])
-		.then(async (accounts) => {
+			dispatch({
+				type: "accountNotConnected",
+				payload: {
+					chainId
+				}
+			});
+		} else {
 			const { 
 				ethBalance, 
 				usdcBalance,
@@ -98,15 +45,15 @@ const requestAccounts = async (dispatch: (action: ACTION_TYPE) => void) => {
 				gUsdcBalance, 
 				dUsdcBalance, 
 				lineOfCredit,
-				rate,
-			} = await getAccountState(accounts[0], chainId, provider);
+				rate
+			} = await getAccountState(account, chainId, provider);
 
 			dispatch({
 				type: "accountConnected",
 				payload: {
-					account: accounts[0],
+					account: account,
 					ethBalance: ethBalance,
-					usdcBalance: usdcBalance, 
+					usdcBalance: usdcBalance,
 					sUsdcBalance: sUsdcBalance,
 					gUsdcBalance: gUsdcBalance,
 					dUsdcBalance: dUsdcBalance,
@@ -115,43 +62,50 @@ const requestAccounts = async (dispatch: (action: ACTION_TYPE) => void) => {
 					rate: rate,
 					chainId: chainId
 				}
-			});
-		})
-		.catch((err: unknown) => {
-			if ("code" in (err as { [key: string]: any })) {
-			  if ((err as ErrorWithCode).code === ERROR_CODE_REQUEST_PENDING)
-			    return;
+			})
+		}
+	} catch (err) {
+		console.log(err);
+		if (!chainId) {
+			chainId = 1;
+		}
+		dispatch({
+			type: "accountNotConnected",
+			payload: {
+				chainId
 			}
-			dispatch({ type: "providerPermissionRejected" });
 		});
+	}
 };
 
 export default function AccountProvider(props: any) {
-	const { ethereum } = window;
 	const [state, dispatch] = useReducer(AccountReducer, initialState);
+	let { account, chainId, provider, isActivating, isActive } = useWeb3React();
+	let chainIdRef = useRef(!chainId ? 1 : chainId);
+
+	let providerParams = useMemo(
+		() => {
+			if (chainId && (chainIdRef.current !== chainId)) {
+				chainIdRef.current = chainId;
+			}
+			let params: ProviderParams = { account, chainId: chainIdRef.current, provider, dispatch };
+			return params;
+			},
+		[account, provider, dispatch, chainId]
+	);
 
 	const { status } = state;
 
-	const isInitializing = status === "initializing";
 	useEffect(() => {
-		if (isInitializing) {
-			synchronize(dispatch);
+		const syncAccount = async () => {
+			if (isActive && (chainId === chainIdRef.current)) {
+				await synchronize(providerParams);
+			}
 		}
-	}, [dispatch, isInitializing]);
-
-	ethereum?.on("accountsChanged", (_accounts) => window.location.reload());
-	ethereum?.on("chainChanged", (_accounts) => window.location.reload());
+		syncAccount();		
+	}, [providerParams, isActivating, isActive, chainId]);
 
 	const isAvailable = status !== "unavailable" && status !== "initializing";
-
-	const connect = useCallback(() => {
-	  if (!isAvailable) {
-	    console.warn(
-	      "`enable` method has been called while MetaMask is not available or synchronising. Nothing will be done in this case."
-	    );
-	  }
-	  requestAccounts(dispatch);
-	}, [dispatch, isAvailable]);
 
 	const update = useCallback(() => {
 		if (!isAvailable) {
@@ -159,16 +113,15 @@ export default function AccountProvider(props: any) {
 		    "`enable` method has been called while MetaMask is not available or synchronising. Nothing will be done in this case."
 		  );
 		}
-		synchronize(dispatch);
-	}, [dispatch, isAvailable]);
+		synchronize(providerParams);
+	}, [isAvailable, providerParams]);
 
 	const value: IAccountContext = useMemo(
 		() => ({
 			...state,
-			connect,
 			update,
 		}),
-		[connect, update, state]
+		[update, state]
 	);
 	return <AccountContext.Provider value={value} {...props} />
 }

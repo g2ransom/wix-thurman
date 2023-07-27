@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import AccountProvider from "./providers/AccountProvider";
+import { Web3ContextProvider } from "./providers/Web3ContextProvider";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -46,17 +47,19 @@ theme = responsiveFontSizes(theme);
 function App() {  
   return (
     <ThemeProvider theme={theme}>
-      <AccountProvider>
-        <div className="App">
-          <Header />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Home />} />
-            </Routes>
-          </BrowserRouter>
-          <Footer />
-        </div>
-      </AccountProvider>
+      <Web3ContextProvider>
+        <AccountProvider>
+          <div className="App">
+            <Header />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Home />} />
+              </Routes>
+            </BrowserRouter>
+            <Footer />
+          </div>      
+        </AccountProvider>
+      </Web3ContextProvider>
     </ThemeProvider>
   );
 }

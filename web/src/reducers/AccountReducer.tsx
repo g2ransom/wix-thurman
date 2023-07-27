@@ -10,7 +10,7 @@ type ProviderUnavailable = {
 type AccountNotConnected = {
 	type: "accountNotConnected";
 	payload: {
-		chainId: string;
+		chainId: number;
 	}
 };
 
@@ -26,14 +26,14 @@ type AccountConnected = {
 		approvedUsdcBalance: string;
 		lineOfCredit: LineOfCredit;
 		rate: string;
-		chainId: string;
+		chainId: number;
 	}
 };
 
 type AccountConnecting = {
 	type: "accountConnecting";
 	payload: {
-		chainId: string;
+		chainId: number;
 	}
 };
 
@@ -68,7 +68,7 @@ type ChainChanged = {
 		approvedUsdcBalance: string;
 		lineOfCredit: LineOfCredit;
 		rate: string;
-		chainId: string;
+		chainId: number;
 	}
 };
 

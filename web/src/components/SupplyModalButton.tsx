@@ -1,4 +1,5 @@
 import React, { useState, useReducer } from "react";
+import { useWeb3React } from "@web3-react/core";
 import { 
 	ethers,
 	parseUnits,
@@ -76,11 +77,12 @@ type IFormInput = {
 const infoPopoverContent = "When you supply funds to Thurman, you receive an interest accruing token (sUSDC) that can be withdrawn in exchange for your supplied asset (USDC) at a later date.";
 
 export default function SupplyModalButton() {
-	let { approvedUsdcBalance, usdcBalance, chainId, update } = useWallet();
+	let { chainId } = useWeb3React();
+	let { approvedUsdcBalance, usdcBalance, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
 	const handleOpen = () => setOpen(true);
-	const networkChainId = !chainId ? "0x1" : chainId;
+	const networkChainId = !chainId ? 1 : chainId;
 	approvedUsdcBalance = !approvedUsdcBalance ? "0.0" : approvedUsdcBalance;
 	usdcBalance = !usdcBalance ? "0.0" : usdcBalance;
 

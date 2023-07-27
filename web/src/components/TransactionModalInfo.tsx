@@ -6,11 +6,11 @@ import {
 	Typography
 } from "@mui/material";
 import { TransactionState } from "../reducers/TransactionReducer";
-import { chainMap } from "../constants/constants";
+import { networkMap } from "../constants/constants";
 
 type TransactionModalInfoProps = {
 	state: TransactionState;
-	networkChainId: string;
+	networkChainId: number;
 }
 
 const styles = {
@@ -44,7 +44,7 @@ export default function TransactionModalInfo({
 				</Typography>
 				<Typography variant="body2" sx={styles.typography}>
 					<Link
-					  href={`${chainMap[networkChainId].etherscanUrl}/tx/${state.txHash}`}
+					  href={`${networkMap[networkChainId].etherscanUrl}/tx/${state.txHash}`}
 					  target="_blank"
 					>
 					  Check out your transaction on Etherscan.

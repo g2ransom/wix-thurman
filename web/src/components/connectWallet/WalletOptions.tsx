@@ -33,7 +33,7 @@ const styles = {
 		},
 		color: "#3B3B3B",
 		fontWeight: "600",
-		width: "20em",
+		width: {xs: "20em"},
 	},
 	icon: {
 	  width: "1em",

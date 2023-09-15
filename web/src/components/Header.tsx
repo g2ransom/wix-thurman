@@ -3,11 +3,12 @@ import {
 	AppBar,
 	Avatar,
 	Box,
+	Link,
 	Toolbar
 } from "@mui/material";
-import GitHubIcon from '@mui/icons-material/GitHub';
-// import ConnectWalletButton from "./ConnectWalletButton";
+import { useWeb3React } from "@web3-react/core";
 import ConnectWallet from "./connectWallet/ConnectWallet";
+import { govChainUrlMap } from "../constants/constants";
 import thurmanLogo from "../images/thurman-logo.png";
 
 const styles = {
@@ -40,19 +41,27 @@ const styles = {
 	}
 }
 
-const handleGithubClick = () => {
-	window.open("https://github.com/thurmanlabs/thurman-v1", "_blank");
-}
-
 export default function Header() {
-
+	const { chainId } = useWeb3React();
+	const govUrl = chainId ? govChainUrlMap[chainId].url : govChainUrlMap[1].url;
 	return (
 		<AppBar position="static" elevation={0} sx={styles.appBar}>
 			<Toolbar variant="dense">
 				<Box display="flex" flexGrow={1}>
 					<Avatar src={thurmanLogo} sx={styles.thurmanIcon} />
 				</Box>
-				<GitHubIcon onClick={handleGithubClick} sx={styles.githubIcon} />
+				<Box display="flex" justifyContent="center">
+					<Link
+						variant="body2"
+						underline="none"
+						target="_blank"
+						rel="noopener"
+						href={govUrl}
+						sx={{...styles.typography, marginLeft: "1em", fontWeight: "bolder"}}
+					>
+						Governance
+					</Link>
+				</Box>		  
 				<ConnectWallet />
 			</Toolbar>
 		</AppBar>

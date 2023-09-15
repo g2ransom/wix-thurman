@@ -35,7 +35,11 @@ const styles = {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "50%",
+    width: {
+    	xs: "75%", 
+    	sm: "75%", 
+    	md: "50%"
+    },
     padding: "1em 1em 1.85em 1.85em",
 	},
 	typography: {

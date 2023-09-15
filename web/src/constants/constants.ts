@@ -41,16 +41,16 @@ export const networkMap: INetworkMap = {
 }
 
 interface IGovChainUrlMap {
-  [key: string]: {
+  [key: number]: {
     url: string;
   }
 }
 
 export const govChainUrlMap: IGovChainUrlMap = {
-  "0x1": {
+  1: {
     url: "https://www.tally.xyz/gov/thurman"
   },
-  "0x5": {
+  5: {
     url: "https://www.tally.xyz/gov/goerli-thurmandao"
   }
 };

@@ -19,14 +19,15 @@ import {
   OpenInNew
 } from "@mui/icons-material";
 import { useWeb3React } from "@web3-react/core";
-import { 
+import axios from "axios";
+import {
 	ConnectionType,
 	getConnection,
 	tryDeactivateConnector
 } from "./connections";
 import WalletOptions from "./WalletOptions";
 import useWallet from "../../hooks/useWallet";
-import { networkMap } from "../../constants/constants";
+import { apiUrl, networkMap } from "../../constants/constants";
 
 
 import ConnectWalletModal from "./ConnectWalletModal";
@@ -61,7 +62,11 @@ const styles = {
 	typography: {
 	  margin: "0em 0em 0.4em 0em",
 	},
+}
 
+type DisconnectWalletMPEvent = {
+	account: string;
+	chainId: string;
 }
 
 type WalletDropdownProps = {
@@ -148,6 +153,11 @@ export default function ConnectWallet() {
 			return;
 		}
 		setAnchorEl(anchorEl ? null : event.currentTarget);
+		const { data } = await axios.post<DisconnectWalletMPEvent>(
+			`${apiUrl}/api/mixpanel-analytics/disconnect-wallet`,
+			{ account: account, chainId: chainId }
+		)
+		console.log(data);
 		update();
 		setConnectionType(deactivation);
 

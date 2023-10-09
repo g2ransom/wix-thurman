@@ -6,6 +6,7 @@ import React, {
 	useMemo 
 } from "react";
 import { useWeb3React } from "@web3-react/core";
+import axios from "axios";
 import {
 	IAccountContext,
 	AccountContext,
@@ -16,6 +17,12 @@ import {
 	AccountReducer 
 } from "../reducers/AccountReducer";
 import { getAccountState } from "../utils/ethersUtils";
+import { apiUrl } from "../constants/constants";
+
+type SynchronizeWalletMPEvent = {
+	account: string;
+	chainId: string;
+}
 
 type ProviderParams = {
 	account: string | undefined;
@@ -107,14 +114,19 @@ export default function AccountProvider(props: any) {
 
 	const isAvailable = status !== "unavailable" && status !== "initializing";
 
-	const update = useCallback(() => {
+	const update = useCallback( async () => {
 		if (!isAvailable) {
 		  console.warn(
 		    "`enable` method has been called while MetaMask is not available or synchronising. Nothing will be done in this case."
 		  );
 		}
 		synchronize(providerParams);
-	}, [isAvailable, providerParams]);
+		const { data } = await axios.post<SynchronizeWalletMPEvent>(
+			`${apiUrl}/api/mixpanel-analytics/synchronize-wallet`,
+			{ account: account, chainId: chainId }
+		)
+		console.log(data);
+	}, [isAvailable, providerParams, account, chainId]);
 
 	const value: IAccountContext = useMemo(
 		() => ({

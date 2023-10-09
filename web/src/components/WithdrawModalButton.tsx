@@ -10,18 +10,25 @@ import {
 	Grid,
 } from "@mui/material";
 import { useForm, SubmitHandler } from "react-hook-form";
+import axios from "axios";
 import { TransactionReducer, initialTransactionState } from "../reducers/TransactionReducer";
 import TransactionModal from "./TransactionModal";
 import ErrorMessage, { ErrorMessageProps } from "./ErrorMessage";
 import NumberInputField from "./NumberInputField";
 import TransactionModalInfo from "./TransactionModalInfo";
 import useWallet from "../hooks/useWallet";
-import { NetworkContractMap } from "../constants/constants";
+import { apiUrl, NetworkContractMap } from "../constants/constants";
 import { 
 	ErrorWithCode, 
 	ERROR_CODE_TX_REQUEST_REJECTED
 } from "../utils/ethersUtils";
 import usdcIcon from "../images/usd-coin-usdc-logo.png";
+
+type WithdrawMPEvent = {
+	account: string;
+	chainId: string;
+	withdrawValue: string;
+}
 
 type IFormInput = {
 	withdrawValue: string;
@@ -40,7 +47,7 @@ const styles = {
 const infoPopoverContent = "When you withdraw funds, you burn a specific amount of interest accruing token (sUSDC) and receive an equivalent amount of the underlying asset (USDC) in return.";
 
 export default function WithdrawModalButton() {
-	let { chainId } = useWeb3React();
+	let { account, chainId } = useWeb3React();
 	let { sUsdcBalance, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
@@ -114,6 +121,10 @@ export default function WithdrawModalButton() {
 				}
 			});
 			await tx.wait();
+			await axios.post<WithdrawMPEvent>(
+				`${apiUrl}/api/mixpanel-analytics/withdraw`,
+				{ account: account, chainId: chainId, withdrawValue: data.withdrawValue }
+			)
 			dispatch({
 				type: "finalSuccess",
 				payload: {

@@ -14,6 +14,7 @@ import {
 	useForm,
 	SubmitHandler
 } from "react-hook-form";
+import axios from "axios";
 import useWallet from "../hooks/useWallet";
 import {
 	initialTransactionState,
@@ -25,7 +26,7 @@ import NumberInputField from "./NumberInputField";
 import PostApprovalButton from "./PostApprovalButton";
 import TransactionModal from "./TransactionModal";
 import TransactionModalInfo from "./TransactionModalInfo";
-import { NetworkContractMap } from "../constants/constants";
+import { apiUrl, NetworkContractMap } from "../constants/constants";
 import { 
 	handleApproval, 
 	ApprovalFuncParams,
@@ -70,6 +71,12 @@ const styles = {
 	},
 };
 
+type SupplyMPEvent = {
+	account: string;
+	chainId: string;
+	supplyValue: string;
+}
+
 type IFormInput = {
 	supplyValue: string;
 };
@@ -77,7 +84,7 @@ type IFormInput = {
 const infoPopoverContent = "When you supply funds to Thurman, you receive an interest accruing token (sUSDC) that can be withdrawn in exchange for your supplied asset (USDC) at a later date.";
 
 export default function SupplyModalButton() {
-	let { chainId } = useWeb3React();
+	let { account, chainId } = useWeb3React();
 	let { approvedUsdcBalance, usdcBalance, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
@@ -160,6 +167,10 @@ export default function SupplyModalButton() {
 				}
 			});
 			await tx.wait();
+			await axios.post<SupplyMPEvent>(
+				`${apiUrl}/api/mixpanel-analytics/supply`,
+				{ account: account, chainId: chainId, supplyValue: data.supplyValue }
+			)
 			dispatch({
 				type: "finalSuccess",
 				payload: {

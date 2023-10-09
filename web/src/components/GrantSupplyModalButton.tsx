@@ -14,6 +14,7 @@ import {
 	useForm,
 	SubmitHandler
 } from "react-hook-form";
+import axios from "axios";
 import useWallet from "../hooks/useWallet";
 import {
 	initialTransactionState,
@@ -25,7 +26,7 @@ import NumberInputField from "./NumberInputField";
 import PostApprovalButton from "./PostApprovalButton";
 import TransactionModal from "./TransactionModal";
 import TransactionModalInfo from "./TransactionModalInfo";
-import { NetworkContractMap } from "../constants/constants";
+import { apiUrl, NetworkContractMap } from "../constants/constants";
 import { 
 	handleApproval, 
 	ApprovalFuncParams,
@@ -70,6 +71,12 @@ const styles = {
 	},
 };
 
+type GrantSupplyMPEvent = {
+	account: string;
+	chainId: string;
+	grantSupplyValue: string;
+}
+
 type IFormInput = {
 	grantSupplyValue: string;
 };
@@ -77,7 +84,7 @@ type IFormInput = {
 const infoPopoverContent = "When you supply grant funds to Thurman, you receive gUSDC that can be used to access rewards later.";
 
 export default function GrantSupplyModalButton() {
-	let { chainId } = useWeb3React();
+	let { account, chainId } = useWeb3React();
 	let { usdcBalance, approvedUsdcBalance, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
@@ -162,6 +169,10 @@ export default function GrantSupplyModalButton() {
 				}
 			});
 			await tx.wait();
+			await axios.post<GrantSupplyMPEvent>(
+				`${apiUrl}/api/mixpanel-analytics/grant-supply`,
+				{ account: account, chainId: chainId, supplyValue: data.grantSupplyValue }
+			)
 			dispatch({
 				type: "finalSuccess",
 				payload: {

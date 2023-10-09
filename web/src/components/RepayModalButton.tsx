@@ -14,6 +14,7 @@ import {
 	useForm,
 	SubmitHandler
 } from "react-hook-form";
+import axios from "axios";
 import useWallet from "../hooks/useWallet";
 import {
 	initialTransactionState,
@@ -31,7 +32,7 @@ import {
 	ErrorWithCode,
 	ERROR_CODE_TX_REQUEST_REJECTED 
 } from "../utils/ethersUtils";
-import { NetworkContractMap } from "../constants/constants";
+import { apiUrl, NetworkContractMap } from "../constants/constants";
 import usdcIcon from "../images/usd-coin-usdc-logo.png"
 
 const styles = {
@@ -69,6 +70,11 @@ const styles = {
 	},
 };
 
+type RepayMPEvent = {
+	account: string;
+	chainId: string;
+	repayValue: string;
+}
 
 type IFormInput = {
 	repayValue: string;
@@ -76,7 +82,7 @@ type IFormInput = {
 
 const infoPopoverContent = "When you repay USDC to Thurman, you burn an interest accruing token (dUSDC), which must have a zero balance by the maturity date.";
 export default function RepayModalButton() {
-	let { chainId } = useWeb3React();
+	let { account, chainId } = useWeb3React();
 	let { approvedUsdcBalance, usdcBalance, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
@@ -159,6 +165,10 @@ export default function RepayModalButton() {
 				}
 			});
 			await tx.wait();
+			await axios.post<RepayMPEvent>(
+				`${apiUrl}/api/mixpanel-analytics/repay`,
+				{ account: account, chainId: chainId, repayValue: data.repayValue }
+			)
 			dispatch({
 				type: "finalSuccess",
 				payload: {

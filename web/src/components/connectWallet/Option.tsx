@@ -4,6 +4,7 @@ import {
 	Box,
 	Button
 } from "@mui/material";
+import axios from "axios";
 import { 
 	ConnectionType,
 	getConnection,
@@ -11,6 +12,11 @@ import {
 	tryDeactivateConnector
 } from "./connections";
 import useWallet from "../../hooks/useWallet";
+import { apiUrl } from "../../constants/constants";
+
+type WalletActivationMPEvent = {
+	walletName: string;
+}
 
 type OptionProps = {
 	name: string;
@@ -56,7 +62,7 @@ export default function Option({
 			if (deactivation === undefined) {
 				return;
 			}
-			onDeactivate(deactivation);
+			onDeactivate(deactivation);			
 			update();
 			return;
 		} catch (err) {
@@ -71,6 +77,10 @@ export default function Option({
 				return;
 			}
 			onActivate(activation);
+			await axios.post<WalletActivationMPEvent>(
+				`${apiUrl}/api/mixpanel-analytics/activate-wallet`,
+				{ walletName: name }
+			)
 			update();
 			return;
 		} catch (err) {

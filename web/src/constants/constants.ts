@@ -4,6 +4,8 @@ import SToken from "./SToken.json";
 import GToken from "./GToken.json";
 import DToken from "./DToken.json"
 
+export const apiUrl = "https://api.thurman.io";
+
 interface IChainMap {
   [key: string]: {
     name: string;

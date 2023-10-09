@@ -14,13 +14,14 @@ import {
 	useForm,
 	SubmitHandler
 } from "react-hook-form";
+import axios from "axios";
 import { TransactionReducer, initialTransactionState } from "../reducers/TransactionReducer";
 import TransactionModal from "./TransactionModal";
 import TransactionModalInfo from "./TransactionModalInfo";
 import useWallet from "../hooks/useWallet";
 import ErrorMessage, { ErrorMessageProps } from "./ErrorMessage";
 import NumberInputField from "./NumberInputField";
-import { NetworkContractMap } from "../constants/constants";
+import { apiUrl, NetworkContractMap } from "../constants/constants";
 import usdcIcon from "../images/usd-coin-usdc-logo.png";
 
 const styles = {
@@ -58,6 +59,13 @@ const styles = {
 	},
 };
 
+type BorrowMPEvent = {
+	account: string;
+	chainId: string;
+	borrowValue: string;
+}
+
+
 type IFormInput = {
 	borrowValue: string;
 };
@@ -71,7 +79,7 @@ const ERROR_CODE_TX_REQUEST_REJECTED = 4001;
 const infoPopoverContent = "When you supply funds to Thurman, you receive an interest accruing token (dUSDC) must be repayed using (USDC) at by your debt's maturity date.";
 
 export default function BorrowModalButton() {
-	let { chainId } = useWeb3React();
+	let { account, chainId } = useWeb3React();
 	let { approvedUsdcBalance, dUsdcBalance, lineOfCredit, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
@@ -146,6 +154,10 @@ export default function BorrowModalButton() {
 				}
 			});
 			await tx.wait();
+			await axios.post<BorrowMPEvent>(
+				`${apiUrl}/api/mixpanel-analytics/borrow`,
+				{ account: account, chainId: chainId, borrowValue: data.borrowValue }
+			)
 			dispatch({
 				type: "finalSuccess",
 				payload: {

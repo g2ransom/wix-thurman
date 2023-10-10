@@ -11,6 +11,7 @@ import { Web3ContextProvider } from "./providers/Web3ContextProvider";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
+import Onboarding from "./pages/Onboarding";
 
 let theme = createTheme({
   typography: {
@@ -54,6 +55,7 @@ function App() {
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/onboarding" element={<Onboarding />} />
               </Routes>
             </BrowserRouter>
             <Footer />

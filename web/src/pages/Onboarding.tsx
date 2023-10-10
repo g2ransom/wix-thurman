@@ -5,9 +5,13 @@ import {
 } from "@mui/material";
 import MultiStep from "../components/multistep/MultiStep";
 import Welcome from "../components/onboarding/Welcome";
+import Overview from "../components/onboarding/Overview";
+import WalletInstall from "../components/onboarding/WalletInstall";
+import Connect from "../components/onboarding/Connect";
+import FundWallet from "../components/onboarding/FundWallet"
 
-const steps = ["one", "two", "three"];
-const conditions = [true, true, true];
+const steps = ["Welcome", "Overview", "Install Wallet", "Connect Wallet", "Fund Wallet"];
+const conditions = [true, true, true, true, true];
 
 export default function Onboarding() {
 		const [activeStep, setActiveStep] = useState<number>(0);
@@ -21,14 +25,10 @@ export default function Onboarding() {
 		>
 			<Box>
 			{activeStep === 0 && <Welcome />}
-			{activeStep === 1 && <Typography>
-				Step Two Content
-			</Typography>
-			}
-			{activeStep === 2 && <Typography>
-				Step Three Content
-			</Typography>
-			}
+			{activeStep === 1 && <Overview />}
+			{activeStep === 2 && <WalletInstall />}
+			{activeStep === 3 && <Connect />}
+			{activeStep === 4 && <FundWallet />}
 			</Box>
 		</MultiStep>
 	);

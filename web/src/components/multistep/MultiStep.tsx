@@ -18,7 +18,7 @@ const styles = {
 	},
 	paper: {
     position: "absolute",
-    maxWidth: 325,
+    maxWidth: 525,
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",

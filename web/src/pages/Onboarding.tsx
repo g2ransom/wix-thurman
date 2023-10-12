@@ -8,10 +8,12 @@ import Welcome from "../components/onboarding/Welcome";
 import Overview from "../components/onboarding/Overview";
 import WalletInstall from "../components/onboarding/WalletInstall";
 import Connect from "../components/onboarding/Connect";
-import FundWallet from "../components/onboarding/FundWallet"
+import FundWallet from "../components/onboarding/FundWallet";
+import Supply from "../components/onboarding/Supply";
+import Delegate from "../components/onboarding/Delegate";
 
-const steps = ["Welcome", "Overview", "Install Wallet", "Connect Wallet", "Fund Wallet"];
-const conditions = [true, true, true, true, true];
+const steps = ["Welcome", "Overview", "Install Wallet", "Connect Wallet", "Fund Wallet", "Supply", "Delegate"];
+const conditions = [true, true, true, true, true, true, true];
 
 export default function Onboarding() {
 		const [activeStep, setActiveStep] = useState<number>(0);
@@ -29,6 +31,8 @@ export default function Onboarding() {
 			{activeStep === 2 && <WalletInstall />}
 			{activeStep === 3 && <Connect />}
 			{activeStep === 4 && <FundWallet />}
+			{activeStep === 5 && <Supply />}
+			{activeStep === 6 && <Delegate />}
 			</Box>
 		</MultiStep>
 	);

@@ -1,4 +1,4 @@
-type TransactionType = "approval" | "supply" | "withdraw" | "borrow" | "repay" | undefined;
+type TransactionType = "approval" | "supply" | "withdraw" | "borrow" | "repay" | "delegate" | undefined;
 
 type TransactionUninitiated = {
 	transactionType: undefined;

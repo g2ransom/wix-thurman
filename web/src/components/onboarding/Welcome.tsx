@@ -22,7 +22,7 @@ export default function Welcome() {
 				Welcome to Thurman!
 			</Typography>
 			<Typography variant="body2" sx={styles.bodyText}>
-				 we help small business communities democratically lend to their members.
+				 We help small business communities lend to their peers.
 			</Typography>
 			<Typography variant="body2" sx={styles.bodyText}>
 				 Members pool together funds and approved business owners can borrow funds at an interest rate determined by the community. 

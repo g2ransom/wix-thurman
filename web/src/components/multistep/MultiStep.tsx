@@ -18,7 +18,7 @@ const styles = {
 	},
 	paper: {
     position: "absolute",
-    maxWidth: 525,
+    maxWidth: 700,
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
@@ -42,7 +42,6 @@ type MultiStepProps = {
 }
 
 export default function MultiStep({ steps, activeStep, setActiveStep, conditions, children }: MultiStepProps) {
-	// const [activeStep, setActiveStep] = useState<number>(0);
 
 	const handleNext = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);

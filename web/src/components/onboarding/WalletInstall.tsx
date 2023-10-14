@@ -19,9 +19,14 @@ const styles = {
 	},
 };
 
-export default function WalletInstall() {
-	const metamask = getIsMetaMaskInstalled();
-	const coinbaseWallet = getIsCoinbaseWalletInstalled();
+type WalletInstallProps = {
+	metamask: boolean;
+	coinbaseWallet: boolean;
+}
+
+export default function WalletInstall({ metamask, coinbaseWallet }: WalletInstallProps) {
+	// const metamask = getIsMetaMaskInstalled();
+	// const coinbaseWallet = getIsCoinbaseWalletInstalled();
 
 	return (
 		<Box>

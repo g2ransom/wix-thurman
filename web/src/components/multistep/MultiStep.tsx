@@ -2,6 +2,8 @@ import React, { Dispatch, SetStateAction } from "react";
 import { 
 	Box,
 	Button,
+	Grid,
+	Hidden,
 	Paper, 
 	Step, 
 	StepLabel, 
@@ -16,19 +18,23 @@ const styles = {
 		flexDirection: 'row', 
 		pt: 2
 	},
-	paper: {
-    position: "absolute",
-    maxWidth: 700,
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: {
-    	xs: "75%", 
-    	sm: "75%", 
-    	md: "50%"
-    },
+	formPaper: {
+    // position: "absolute",
+    // maxWidth: 1000,
+    // top: "50%",
+    // left: "50%",
+    // transform: "translate(-50%, -50%)",
+    // width: {
+    // 	xs: "75%", 
+    // 	sm: "75%", 
+    // 	md: "75%"
+    // },
     padding: "1em 1em 1.85em 1.85em",
 	},
+	multistepPaper: {
+		padding: "1em 1em 1.85em 1.85em"
+	},
+
 }
 
 type MultiStepProps = {
@@ -52,21 +58,13 @@ export default function MultiStep({ steps, activeStep, setActiveStep, conditions
 	};
 
 	return (
-		<Box>
-			<Paper elevation={1} sx={styles.paper}>
-				<Stepper activeStep={activeStep}>
-					{steps.map((label, index) => {
-						return (
-							<Step key={index}>
-								<StepLabel>{label}</StepLabel>
-							</Step>
-						);
-					})}
-				</Stepper>
+		<>
+		<Grid item xs={12} sm={12} md={8} lg={8}>
+			<Paper elevation={0} sx={styles.formPaper}>
 				{children}
 				{activeStep === steps.length ? (
 					<>
-						<Typography>You're done!</Typography>
+						<Typography variant="h4" sx={{fontWeight: "bolder"}}>You're done 🎉!</Typography>
 					</>
 				): (
 					<Box sx={styles.buttonBox}>
@@ -85,6 +83,26 @@ export default function MultiStep({ steps, activeStep, setActiveStep, conditions
 					</Box>
 				)}
 			</Paper>
-		</Box>
+		</Grid>
+		<Hidden smDown>
+		<Grid item md={4}>
+			<Paper elevation={0}>
+				<Stepper 
+					activeStep={activeStep} 
+					orientation="vertical"
+					sx={styles.multistepPaper}
+				>
+					{steps.map((label, index) => {
+						return (
+							<Step key={index}>
+								<StepLabel>{label}</StepLabel>
+							</Step>
+						);
+					})}
+				</Stepper>
+			</Paper>
+		</Grid>
+		</Hidden>
+		</>
 	);
 }

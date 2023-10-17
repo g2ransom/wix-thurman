@@ -2,23 +2,16 @@ import React, { useReducer } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { 
 	ethers,
-	parseUnits,
 	Contract,
 } from "ethers";
 import {
 	Button,
 	Box,
-	Grid,
 } from "@mui/material";
-// import { useForm, SubmitHandler } from "react-hook-form";
-// import axios from "axios";
 import { TransactionReducer, initialTransactionState } from "../reducers/TransactionReducer";
-// import TransactionModal from "./TransactionModal";
-import ErrorMessage, { ErrorMessageProps } from "./ErrorMessage";
-// import NumberInputField from "./NumberInputField";
 import TransactionModalInfo from "./TransactionModalInfo";
 import useWallet from "../hooks/useWallet";
-import { apiUrl, NetworkContractMap } from "../constants/constants";
+import { NetworkContractMap } from "../constants/constants";
 import { 
 	ErrorWithCode, 
 	ERROR_CODE_TX_REQUEST_REJECTED
@@ -26,12 +19,13 @@ import {
 
 const styles = {
 	button: {
-		backgroundColor: "black",
-		"&:hover": {
-			backgroundColor: "#525252",
+			backgroundColor: "#36454F",
+			"&:hover": {
+				backgroundColor: "#495D6A",
+			},
+			fontWeight: "800",
+			marginLeft: "1.5em",
 		},
-		fontWeight: "600"
-	},
 };
 
 export default function DelegateButton() {
@@ -97,7 +91,11 @@ export default function DelegateButton() {
 
 	return (
 		<Box>
-			<Button onClick={onSubmit} sx={styles.button} disabled={!account}>
+			<Button variant="contained"
+				onClick={onSubmit} 
+				sx={styles.button} 
+				disabled={!account}
+			>
 				Delegate
 			</Button>
 			<TransactionModalInfo 

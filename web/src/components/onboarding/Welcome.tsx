@@ -34,7 +34,7 @@ export default function Welcome() {
 				 For our inaugural community, the criteria for borrowing funds is earning a majority vote through a blockchain-based governance process.
 			</Typography>
 			<Typography variant="body1" sx={styles.bodyText}>
-				 We use blockchain technology to make the community-led process for approving borrowers more democratic and transparent.
+				 During the onboarding process, we'll walk you through each step to make you into a voting member of Thurman's inaugural community.
 			</Typography>
 		</Box>
 	);

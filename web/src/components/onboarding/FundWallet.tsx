@@ -1,57 +1,66 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
+import { useWeb3React } from "@web3-react/core";
 import {
 	Box,
 	Button,
-	Modal,
 	Typography
 } from "@mui/material";
 import useWallet from "../../hooks/useWallet";
 
+const styles = {
+	button: {
+		backgroundColor: "#36454F",
+		"&:hover": {
+			backgroundColor: "#495D6A",
+		},
+		fontWeight: "800",
+		marginLeft: "1.5em",
+	},
+}
+
 export default function FundWallet() {
-	const { usdcBalance, ethBalance} = useWallet();
-	const [open, setOpen] = useState<boolean>(false);
+	let { account } = useWeb3React();
+	const { usdcBalance, ethBalance } = useWallet();
 
 	const moonpaySdk = window.MoonPayWebSdk.init({
 	  flow: "buy", // buy, sell, nft
 	  environment: "sandbox", // production, sandbox
-	  // containerNodeSelector: "#moonpay-widget",
+	  currencyCode: "USDC",
+	  walletAddress: account,
+	  // containerNodeSelector: "div",
 	  variant: "overlay", // drawer, embedded, overlay, newTab, newWindow
 	  params: {
 	    apiKey: process.env.REACT_APP_MOONPAY
 	  }
 	});
 
-	const moonpayWidget = useRef(moonpaySdk.show());
+	const moonpayWidget = useRef(null);
 	
-	const handleOpen = () => {
-		setOpen(true);
+	const handleClick = () => {
+		moonpayWidget.current = moonpaySdk.show();
 	}
-	const handleClose = () => setOpen(false);
 
 	return (
 		<Box>
-			<Typography variant="h4">
+			<Typography variant="h4" sx={{fontWeight: "bolder"}}>
 				Fund your wallet
+			</Typography>
+			<Typography variant="body2" sx={{fontWeight: "bolder"}}>
+				MoonPay makes it simple to use your debit card to purchase crypto. You'll need USDC and around $30 worth of ETH to pay for transaction fees. If your bank rejects your first MoonPay transaction, give them a call. Once resolved, you should be in the clear for future crypto purchases.
 			</Typography>
 			<Typography variant="body1">
 				Current USDC Balance: {usdcBalance}
 			</Typography>
-			<Typography variant="body2">
+			<Typography variant="body1">
 				Current ETH Balance: {ethBalance}
 			</Typography>
-			<Button onClick={handleOpen}>
+			<Button 
+				variant="contained"
+				onClick={handleClick}
+				sx={styles.button}
+			>
 				Buy Crypto
 			</Button>
-			<Modal
-				open={open}
-				onClose={handleClose}
-			>
-				<Box ref={moonpayWidget} />	
-			</Modal>
-			<Typography variant="h5">
-				Buy Crypto Here!
-			</Typography>
-			
 		</Box>
 	);
 }

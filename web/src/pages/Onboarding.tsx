@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import {
 	Box,
-	Typography
+	Container,
+	Grid,
 } from "@mui/material";
 import { 
 	ethers, 
@@ -15,15 +16,27 @@ import {
 } from "../components/connectWallet/connections";
 import MultiStep from "../components/multistep/MultiStep";
 import Welcome from "../components/onboarding/Welcome";
-import Overview from "../components/onboarding/Overview";
-import WalletInstall from "../components/onboarding/WalletInstall";
 import Connect from "../components/onboarding/Connect";
 import FundWallet from "../components/onboarding/FundWallet";
 import Supply from "../components/onboarding/Supply";
 import Delegate from "../components/onboarding/Delegate";
 import { NetworkContractMap } from "../constants/constants";
 
-const steps = ["Welcome", "Overview", "Install Wallet", "Connect Wallet", "Fund Wallet", "Supply", "Delegate"];
+const styles = {
+	container: {
+		backgroundColor: "#E8E8E8",
+		minHeight: "100vh",
+		paddingBottom: "5em",
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center"
+	},
+	box: {
+		width: "65%"
+	},
+}
+
+const steps = ["Welcome", "Connect Wallet", "Fund Wallet", "Supply", "Delegate Voting"];
 const AddressZero = "0x0000000000000000000000000000000000000000";
 
 export default function Onboarding() {
@@ -70,31 +83,36 @@ export default function Onboarding() {
 				setDelegatedVoting(false);
 			}
 		}
-		getVotingStatus();
+		if (account) {
+			getVotingStatus();
+		}
 	}, [delegatedVoting, account, networkChainId]);
 
-	const walletInstalled = coinbaseWallet || metamask ? true : false;
 	const accountConnected = account ? true : false;
 	const suppliedUsdc = parseFloat(sUsdcBalance) > 0 ? true : false;
 	const votingDelegated = delegatedVoting ? true : false;
 
-	let conditions = [true, true, walletInstalled, accountConnected, suppliedUsdc, true, votingDelegated];
+	let conditions = [true, accountConnected, true, suppliedUsdc, votingDelegated];
 	return (
-		<MultiStep 
-			steps={steps} 
-			activeStep={activeStep}
-			setActiveStep={setActiveStep}
-			conditions={conditions}
-		>
-			<Box>
-			{activeStep === 0 && <Welcome />}
-			{activeStep === 1 && <Overview />}
-			{activeStep === 2 && <WalletInstall metamask={metamask} coinbaseWallet={coinbaseWallet} />}
-			{activeStep === 3 && <Connect />}
-			{activeStep === 4 && <FundWallet />}
-			{activeStep === 5 && <Supply />}
-			{activeStep === 6 && <Delegate />}
+		<Container maxWidth={false} sx={styles.container}>
+			<Box display="flex" alignItems="center" justifyContent="center" sx={styles.box}>
+				<Grid container spacing={2}>
+					<MultiStep 
+						steps={steps} 
+						activeStep={activeStep}
+						setActiveStep={setActiveStep}
+						conditions={conditions}
+					>
+						<Box>
+						{activeStep === 0 && <Welcome />}
+						{activeStep === 1 && <Connect metamask={metamask} coinbaseWallet={coinbaseWallet} />}
+						{activeStep === 2 && <FundWallet />}
+						{activeStep === 3 && <Supply />}
+						{activeStep === 4 && <Delegate />}
+						</Box>
+					</MultiStep>
+				</Grid>
 			</Box>
-		</MultiStep>
+		</Container>
 	);
 }

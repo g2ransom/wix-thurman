@@ -89,7 +89,7 @@ export default function AssetBalances({ assetBalances }: AssetBalancesProps) {
 								align="left"
 								sx={styles.typography}
 							>
-								{assetBalance.balance}
+								{parseFloat(assetBalance.balance).toFixed(5)}
 							</Typography>
 						</Paper>
 					</Grid>

@@ -12,6 +12,14 @@ import {
 } from "@mui/material";
 
 const styles = {
+	button: {
+		backgroundColor: "#36454F",
+		"&:hover": {
+			backgroundColor: "#495D6A",
+		},
+		fontWeight: "800",
+		marginLeft: "1.5em",
+	},
 	buttonBox: {
 		display: "flex",
 		justifyContent: "space-between", 
@@ -19,16 +27,6 @@ const styles = {
 		pt: 2
 	},
 	formPaper: {
-    // position: "absolute",
-    // maxWidth: 1000,
-    // top: "50%",
-    // left: "50%",
-    // transform: "translate(-50%, -50%)",
-    // width: {
-    // 	xs: "75%", 
-    // 	sm: "75%", 
-    // 	md: "75%"
-    // },
     padding: "1em 1em 1.85em 1.85em",
 	},
 	multistepPaper: {
@@ -64,7 +62,19 @@ export default function MultiStep({ steps, activeStep, setActiveStep, conditions
 				{children}
 				{activeStep === steps.length ? (
 					<>
-						<Typography variant="h4" sx={{fontWeight: "bolder"}}>You're done 🎉!</Typography>
+						<Typography 
+							variant="h4" 
+							sx={{fontWeight: "bolder"}}
+						>
+							You're done 🎉!
+						</Typography>
+						<Button
+							href="/"
+							variant="contained"
+							sx={styles.button}
+						>
+							Dashboard Home
+						</Button>
 					</>
 				): (
 					<Box sx={styles.buttonBox}>

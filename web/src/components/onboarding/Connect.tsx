@@ -5,13 +5,20 @@ import {
 } from "@mui/material";
 import { useWeb3React } from "@web3-react/core";
 import ConnectWallet from "../connectWallet/ConnectWallet";
+import AssetBalances from "../AssetBalances";
 import useWallet from "../../hooks/useWallet";
+import usdcIcon from "../../images/usd-coin-usdc-logo.png";
+import ethIcon from "../../images/ethereum_icon.png";
 
 const styles = {
 	bodyText: {
 		fontWeight: "bold",
 		margin: "0.25em 0em 0.25em 0em",
 	},
+	box: {
+		alignItems: "center",
+		justifyContent: "center"
+	}
 }
 
 type ConnectProps = {
@@ -20,9 +27,24 @@ type ConnectProps = {
 }
 
 export default function Connect({ metamask, coinbaseWallet }: ConnectProps) {
-	const { account } = useWeb3React();
-	const { usdcBalance, ethBalance} = useWallet();
-	const walletInstalled = metamask || coinbaseWallet;
+	let { account } = useWeb3React();
+	let { usdcBalance, ethBalance} = useWallet();
+	let walletInstalled = metamask || coinbaseWallet;
+	usdcBalance = !usdcBalance ? "0.00" : usdcBalance;
+	ethBalance = !ethBalance ? "0.00" : ethBalance;
+	let balances = 
+	[
+		{	
+			name: "USDC",
+			icon: usdcIcon,
+			balance: usdcBalance
+		},
+		{
+			name: "ETH",
+			icon: ethIcon,
+			balance: ethBalance
+		}
+	];
 
 	return (
 		<Box>
@@ -39,17 +61,12 @@ export default function Connect({ metamask, coinbaseWallet }: ConnectProps) {
 			)}
 			<ConnectWallet />
 			{account && (
-				<Box>
-					<Typography variant="body1">
-						Current USDC Balance: {usdcBalance}
-					</Typography>
-					<Typography variant="body1">
-						Current ETH Balance: {ethBalance}
-					</Typography>
+				<Box display="flex" sx={styles.box}>
+					<AssetBalances assetBalances={balances} />
 				</Box>
 			)}
 			<Typography variant="body2" sx={styles.bodyText}>
-				You'll need both USDC and Ether (ETH) to become a voting member of our community. The next step will give you the option to purchase crypto using MoonPay!
+				You'll need both USDC and Ether (ETH) to become a voting member of our community. The next step will give you the option to purchase crypto using Coinbase!
 			</Typography>
 		</Box>
 	);

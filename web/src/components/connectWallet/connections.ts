@@ -25,6 +25,10 @@ export const getIsMetaMaskInstalled = (): boolean => {
   return (window.ethereum?.isMetaMask ?? false) && !getIsBraveWallet();
 }
 
+export const getIsCoinbaseWalletInstalled = (): boolean => {
+  return (window.ethereum?.isCoinbaseWallet ?? false);
+}
+
 export const onConnectionError = (err: Error) => {
   console.debug(`web3-react error: ${err}`);
 }

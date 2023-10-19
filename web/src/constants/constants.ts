@@ -3,6 +3,7 @@ import Polemarch from "./Polemarch.json";
 import SToken from "./SToken.json";
 import GToken from "./GToken.json";
 import DToken from "./DToken.json"
+import ThurmanToken from "./ThurmanToken.json";
 
 export const apiUrl = "https://api.thurman.io";
 
@@ -67,6 +68,8 @@ export const GUSDC_ADDRESS_GOERLI = "0x23C6f81b54143660e73f3eE5A39d7E7A06E45d15"
 export const GUSDC_ADDRESS_MAINNET = "0xc6aA41FC6e27fF39CC3F12dE4844a585d8b10cF0";
 export const DUSDC_ADDRESS_GOERLI = "0x48EE7Ca951D1B13d0F4077790C8350F004b35d46";
 export const DUSDC_ADDRESS_MAINNET = "0x0360fDD5550C2831097B674eC15B003D4621ed11";
+export const THURMAN_TOKEN_GOERLI = "0x1ecc1Cf55E17e5442b59F6493736043C0bFBBD3d";
+export const THURMAN_TOKEN_MAINNET = "0xA92FC16902a12876e0C6C2eC23502d1BfC35E96F";
 
 export const USDC_DECIMALS = 6;
 export const DECIMALS = 18;
@@ -109,6 +112,11 @@ export const NetworkContractMap: INetworkContractMap = {
       address: DUSDC_ADDRESS_MAINNET,
       abi: DToken.abi,
       decimals: USDC_DECIMALS,
+    },
+    "ThurmanToken": {
+      address: THURMAN_TOKEN_MAINNET,
+      abi: ThurmanToken.abi,
+      decimals: USDC_DECIMALS
     }
   },
   5: {
@@ -136,6 +144,11 @@ export const NetworkContractMap: INetworkContractMap = {
       address: DUSDC_ADDRESS_GOERLI,
       abi: DToken.abi,
       decimals: USDC_DECIMALS,
-    }
+    },
+    "ThurmanToken": {
+      address: THURMAN_TOKEN_GOERLI,
+      abi: ThurmanToken.abi,
+      decimals: USDC_DECIMALS
+    }   
   }
 }

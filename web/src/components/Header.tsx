@@ -48,7 +48,9 @@ export default function Header() {
 		<AppBar position="static" elevation={0} sx={styles.appBar}>
 			<Toolbar variant="dense">
 				<Box display="flex" flexGrow={1}>
-					<Avatar src={thurmanLogo} sx={styles.thurmanIcon} />
+					<Link href="/">
+						<Avatar src={thurmanLogo} sx={styles.thurmanIcon} />
+					</Link>
 				</Box>
 				<Box display="flex" justifyContent="center">
 					<Link

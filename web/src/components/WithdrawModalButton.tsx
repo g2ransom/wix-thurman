@@ -52,9 +52,7 @@ export default function WithdrawModalButton() {
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
 	const handleOpen = () => setOpen(true);
-	const networkChainId = !chainId ? 1 : chainId;
-	// const borrowMax = !lineOfCredit?.borrowMax ? "0.0" : lineOfCredit?.borrowMax;
-	// const hasLineOfCredit: boolean = parseFloat(borrowMax) > 0 ? true : false; 
+	const networkChainId = !chainId ? 1 : chainId; 
 
 	const { 
 		watch,

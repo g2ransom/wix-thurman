@@ -30,6 +30,10 @@ export interface AccountState {
   rate: string;
 }
 
+export interface CommunityState {
+  tvl: string;
+}
+
 export type ApprovalFuncParams = {
   // provider: any;
   dispatch: (action: ACTION_TYPE) => void;
@@ -190,4 +194,28 @@ export async function getAccountState(
     lineOfCredit,
     rate
   };
+}
+
+export async function getCommunityState(chainId: number, provider: any ): Promise<CommunityState> {
+  let tvl: string = "0.00";
+  let sUsdcBalance: string = "0.00";
+  let gUsdcBalance: string = "0.00";
+
+  const usdc: Contract = new ethers.Contract(
+    NetworkContractMap[chainId]["USDC"].address,
+    NetworkContractMap[chainId]["USDC"].abi,
+    provider,
+  );
+  
+  sUsdcBalance = await usdc.balanceOf(NetworkContractMap[chainId]["sUSDC"].address)
+    .then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+
+  gUsdcBalance = await usdc.balanceOf(NetworkContractMap[chainId]["gUSDC"].address)
+    .then((num: BigNumberish) => formatUnits(num, USDC_DECIMALS));
+
+  tvl = (parseFloat(sUsdcBalance) + parseFloat(gUsdcBalance)).toString();
+
+  return {
+    tvl,
+  }
 }

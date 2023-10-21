@@ -32,6 +32,10 @@ export interface AccountState {
 
 export interface CommunityState {
   tvl: string;
+  members: number;
+  createdLines: number;
+  proposals: number;
+  repayments: number;
 }
 
 export type ApprovalFuncParams = {
@@ -198,6 +202,10 @@ export async function getAccountState(
 
 export async function getCommunityState(chainId: number, provider: any ): Promise<CommunityState> {
   let tvl: string = "0.00";
+  let members: number = 0;
+  let createdLines: number = 0;
+  let proposals: number = 0;
+  let repayments: number = 0;
   let sUsdcBalance: string = "0.00";
   let gUsdcBalance: string = "0.00";
 
@@ -215,7 +223,49 @@ export async function getCommunityState(chainId: number, provider: any ): Promis
 
   tvl = (parseFloat(sUsdcBalance) + parseFloat(gUsdcBalance)).toString();
 
+  const polemarch: Contract = new ethers.Contract(
+    NetworkContractMap[chainId]["Polemarch"].address,
+    NetworkContractMap[chainId]["Polemarch"].abi,
+    provider,
+  );
+  const supplyFilter = await polemarch.filters.Supply();
+  const supplyEvents = await polemarch.queryFilter(supplyFilter, 16872847, "latest");
+
+  const repayFilter = await polemarch.filters.Repay();
+  const repayEvents = await polemarch.queryFilter(repayFilter, 16872847, "latest");
+  repayments = repayEvents.length;
+  // let { data } = supplyEvents[0];
+
+  // console.log(data);
+  members = supplyEvents.length;
+
+  const locFilter = await polemarch.filters.CreateLineOfCredit();
+  const locEvents = await polemarch.queryFilter(locFilter, 16872847, "latest");
+  createdLines = locEvents.length;
+
+  const thurmanGov: Contract = new ethers.Contract(
+    NetworkContractMap[chainId]["ThurmanGovernor"].address,
+    NetworkContractMap[chainId]["ThurmanGovernor"].abi,
+    provider,
+  );
+
+  const proposalFilter = await thurmanGov.filters.ProposalCreated();
+  const proposalEvents = await thurmanGov.queryFilter(proposalFilter, 16872847, "latest");
+  console.log(proposalEvents[0]);
+  proposals = proposalEvents.length;
+
+  // let addresses: string[] = [];
+  // for (let i = 0; i < supplyEvents.length; i++) {
+  //   addresses.push(supplyEvents[i].args[1]);
+  // }
+
+  // members = new Set(addresses).size;
+
   return {
     tvl,
+    members,
+    createdLines,
+    proposals,
+    repayments
   }
 }

@@ -32,7 +32,7 @@ export interface AccountState {
 
 export interface CommunityState {
   tvl: string;
-  members: number;
+  supplyTxs: number;
   createdLines: number;
   proposals: number;
   repayments: number;
@@ -202,7 +202,7 @@ export async function getAccountState(
 
 export async function getCommunityState(chainId: number, provider: any ): Promise<CommunityState> {
   let tvl: string = "0.00";
-  let members: number = 0;
+  let supplyTxs: number = 0;
   let createdLines: number = 0;
   let proposals: number = 0;
   let repayments: number = 0;
@@ -237,7 +237,7 @@ export async function getCommunityState(chainId: number, provider: any ): Promis
   // let { data } = supplyEvents[0];
 
   // console.log(data);
-  members = supplyEvents.length;
+  supplyTxs = supplyEvents.length;
 
   const locFilter = await polemarch.filters.CreateLineOfCredit();
   const locEvents = await polemarch.queryFilter(locFilter, 16872847, "latest");
@@ -263,7 +263,7 @@ export async function getCommunityState(chainId: number, provider: any ): Promis
 
   return {
     tvl,
-    members,
+    supplyTxs,
     createdLines,
     proposals,
     repayments

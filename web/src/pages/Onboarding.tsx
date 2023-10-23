@@ -32,6 +32,7 @@ const styles = {
 		alignItems: "center"
 	},
 	box: {
+		marginTop: "1.5em",
 		width: "65%"
 	},
 }

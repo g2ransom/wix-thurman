@@ -230,14 +230,13 @@ export async function getCommunityState(chainId: number, provider: any ): Promis
   );
   const supplyFilter = await polemarch.filters.Supply();
   const supplyEvents = await polemarch.queryFilter(supplyFilter, 16872847, "latest");
+  supplyTxs = supplyEvents.length;
 
   const repayFilter = await polemarch.filters.Repay();
   const repayEvents = await polemarch.queryFilter(repayFilter, 16872847, "latest");
   repayments = repayEvents.length;
-  // let { data } = supplyEvents[0];
 
-  // console.log(data);
-  supplyTxs = supplyEvents.length;
+  
 
   const locFilter = await polemarch.filters.CreateLineOfCredit();
   const locEvents = await polemarch.queryFilter(locFilter, 16872847, "latest");
@@ -253,13 +252,6 @@ export async function getCommunityState(chainId: number, provider: any ): Promis
   const proposalEvents = await thurmanGov.queryFilter(proposalFilter, 16872847, "latest");
   console.log(proposalEvents[0]);
   proposals = proposalEvents.length;
-
-  // let addresses: string[] = [];
-  // for (let i = 0; i < supplyEvents.length; i++) {
-  //   addresses.push(supplyEvents[i].args[1]);
-  // }
-
-  // members = new Set(addresses).size;
 
   return {
     tvl,

@@ -4,6 +4,7 @@ import {
 	Container,
 	Grid,
 } from "@mui/material";
+import CommunityDashboardSection from "../components/CommunityDashboardSection";
 import BorrowDashboardContent from "../components/BorrowDashboardContent";
 import DashboardSection from "../components/DashboardSection";
 import SimpleDashboardContent from "../components/SimpleDashboardContent";
@@ -77,6 +78,7 @@ export default function Home() {
 			<Box>
 				<Grid container spacing={2}>
 					<>
+					<CommunityDashboardSection />
 					{dashboardProps.map((section, i) => {
 						return (
 							<DashboardSection title={section.title} key={i}>

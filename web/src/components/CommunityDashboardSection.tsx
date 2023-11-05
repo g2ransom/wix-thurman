@@ -83,7 +83,8 @@ export default function CommunityDashboardSection() {
 		const getState = async () => {
 			const { ethereum } = window;
 			const provider = new ethers.BrowserProvider(ethereum as any);
-			let communityState = await getCommunityState(networkChainId, provider);
+			const signer = await provider.getSigner();
+			let communityState = await getCommunityState(networkChainId, signer);
 			setCommunityState(communityState);
 		}
 		getState();

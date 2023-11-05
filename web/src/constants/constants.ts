@@ -6,7 +6,8 @@ import DToken from "./DToken.json"
 import ThurmanToken from "./ThurmanToken.json";
 import ThurmanGovernor2 from "./ThurmanGovernor2.json";
 
-export const apiUrl = "https://api.thurman.io";
+// export const apiUrl = "https://api.thurman.io";
+export const apiUrl = "http://localhost:80";
 
 interface IChainMap {
   [key: string]: {

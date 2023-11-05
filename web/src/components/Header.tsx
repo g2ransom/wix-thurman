@@ -4,10 +4,12 @@ import {
 	Avatar,
 	Box,
 	Link,
+	Stack,
 	Toolbar
 } from "@mui/material";
 import { useWeb3React } from "@web3-react/core";
 import ConnectWallet from "./connectWallet/ConnectWallet";
+import SignIn from "./SignIn";
 import { govChainUrlMap } from "../constants/constants";
 import thurmanLogo from "../images/thurman-logo.png";
 
@@ -63,8 +65,11 @@ export default function Header() {
 					>
 						Governance
 					</Link>
-				</Box>		  
-				<ConnectWallet />
+				</Box>
+				<Stack direction="row" spacing={0}>	  
+					<ConnectWallet />
+					<SignIn />
+				</Stack>
 			</Toolbar>
 		</AppBar>
 	);

@@ -125,7 +125,6 @@ export default function AccountProvider(props: any) {
 			`${apiUrl}/api/mixpanel-analytics/synchronize-wallet`,
 			{ account: account, chainId: chainId }
 		)
-		console.log(data);
 	}, [isAvailable, providerParams, account, chainId]);
 
 	const value: IAccountContext = useMemo(

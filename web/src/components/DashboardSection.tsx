@@ -19,7 +19,6 @@ const styles = {
 	paper: {
 		margin: "1em 1em 1em 1em",
 		padding: "1em 1em 1em 1em",
-		borderColor: "#B0B0B0",
 	},
   sectionTypography: {
   	fontWeight: "600",

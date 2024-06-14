@@ -30,9 +30,10 @@ const styles = {
 
 export default function DelegateButton() {
 	let { account, chainId } = useWeb3React();
-	let { update } = useWallet();
+	let { update, delegate } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
-	const networkChainId = !chainId ? 1 : chainId; 
+	const networkChainId = !chainId ? 1 : chainId;
+	let hasDelegate = delegate ? true : false;
 
 	const onSubmit = async () => {
 		const { ethereum } = window;
@@ -50,7 +51,7 @@ export default function DelegateButton() {
 			dispatch({
 				type: "inProgress",
 				payload: {
-					transactionType: "withdraw",
+					transactionType: "delegate",
 				}
 			});
 			await tx.wait();
@@ -82,7 +83,7 @@ export default function DelegateButton() {
 			dispatch({
 				type: "failed",
 				payload: {
-					transactionType: "withdraw",
+					transactionType: "delegate",
 					error: "The transaction failed 🤦🏿‍♂️",
 				}
 			});
@@ -94,7 +95,7 @@ export default function DelegateButton() {
 			<Button variant="contained"
 				onClick={onSubmit} 
 				sx={styles.button} 
-				disabled={!account}
+				disabled={!account || hasDelegate}
 			>
 				Delegate
 			</Button>

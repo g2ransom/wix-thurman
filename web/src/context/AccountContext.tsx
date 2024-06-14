@@ -17,6 +17,7 @@ type AccountInitializing = {
 	dUsdcBalance: undefined;
 	approvedUsdcBalance: undefined;
 	lineOfCredit: undefined;
+	delegate: undefined;
 	rate: undefined;
 	chainId: undefined;
 	status: "initializing";
@@ -31,6 +32,7 @@ type ProviderUnavailable = {
 	dUsdcBalance: undefined;
 	approvedUsdcBalance: undefined;
 	lineOfCredit: undefined;
+	delegate: undefined;
 	rate: undefined;
 	chainId: undefined;
 	status: "unavailable";
@@ -45,6 +47,7 @@ type AccountNotConnected = {
 	dUsdcBalance: undefined;
 	approvedUsdcBalance: undefined;
 	lineOfCredit: undefined;
+	delegate: undefined;
 	rate: undefined;
 	chainId: number;
 	status: "notConnected";
@@ -59,6 +62,7 @@ type AccountConnected = {
 	dUsdcBalance: string;
 	approvedUsdcBalance: string;
 	lineOfCredit: LineOfCredit;
+	delegate: string;
 	rate: string;
 	chainId: number;
 	status: "connected";
@@ -73,6 +77,7 @@ type AccountConnecting = {
 	dUsdcBalance: undefined;
 	approvedUsdcBalance: undefined;
 	lineOfCredit: undefined;
+	delegate: undefined;
 	rate: undefined;
 	chainId: number;
 	status: "connecting";
@@ -94,6 +99,7 @@ export const initialState: AccountState = {
 	dUsdcBalance: undefined,
 	approvedUsdcBalance: undefined,
 	lineOfCredit: undefined,
+	delegate: undefined,
 	rate: undefined,
 	chainId: undefined,
 	status: "initializing",

@@ -25,6 +25,7 @@ type AccountConnected = {
 		dUsdcBalance: string;
 		approvedUsdcBalance: string;
 		lineOfCredit: LineOfCredit;
+		delegate: string;
 		rate: string;
 		chainId: number;
 	}
@@ -52,6 +53,7 @@ type AccountChanged = {
 		dUsdcBalance: string;
 		approvedUsdcBalance: string;
 		lineOfCredit: LineOfCredit;
+		delegate: string;
 		rate: string;
 	}
 };
@@ -67,6 +69,7 @@ type ChainChanged = {
 		dUsdcBalance: string;
 		approvedUsdcBalance: string;
 		lineOfCredit: LineOfCredit;
+		delegate: string;
 		rate: string;
 		chainId: number;
 	}
@@ -93,6 +96,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				dUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
 				lineOfCredit: undefined,
+				delegate: undefined,
 				rate: undefined,
 				chainId: undefined,
 				status: "unavailable",
@@ -108,6 +112,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				dUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
 				lineOfCredit: undefined,
+				delegate: undefined,
 				rate: undefined,
 				chainId: action.payload.chainId,
 				status: "notConnected",
@@ -123,6 +128,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				dUsdcBalance: action.payload.dUsdcBalance,
 				approvedUsdcBalance: action.payload.approvedUsdcBalance,
 				lineOfCredit: action.payload.lineOfCredit,
+				delegate: action.payload.delegate,
 				rate: action.payload.rate,
 				chainId: action.payload.chainId,
 				status: "connected"
@@ -144,6 +150,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				dUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
 				lineOfCredit: undefined,
+				delegate: undefined,
 				rate: undefined,
 				chainId: action.payload.chainId,
 				status: "connecting",
@@ -166,6 +173,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				dUsdcBalance: undefined,
 				approvedUsdcBalance: undefined,
 				lineOfCredit: undefined,
+				delegate: undefined,
 				rate: undefined,
 				status: "notConnected",
 			};
@@ -188,6 +196,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 					dUsdcBalance: undefined,
 					approvedUsdcBalance: undefined,
 					lineOfCredit: undefined,
+					delegate: undefined,
 					rate: undefined,
 					status: "notConnected",
 				}
@@ -202,6 +211,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				dUsdcBalance: action.payload.dUsdcBalance,
 				approvedUsdcBalance: action.payload.approvedUsdcBalance,
 				lineOfCredit: action.payload.lineOfCredit,
+				delegate: action.payload.delegate,
 				rate: action.payload.rate,
 				status: "connected",
 			};
@@ -223,6 +233,7 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				dUsdcBalance: action.payload.dUsdcBalance,
 				approvedUsdcBalance: action.payload.approvedUsdcBalance,
 				lineOfCredit: action.payload.lineOfCredit,
+				delegate: action.payload.delegate,
 				rate: action.payload.rate,
 				chainId: action.payload.chainId,
 				status: "connected",

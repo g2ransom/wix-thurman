@@ -8,7 +8,6 @@ import CommunityDashboardSection from "../components/CommunityDashboardSection";
 import BorrowDashboardContent from "../components/BorrowDashboardContent";
 import DashboardSection from "../components/DashboardSection";
 import SimpleDashboardContent from "../components/SimpleDashboardContent";
-import BorrowersSection from "../components/BorrowersSection";
 import GrantSupplyModalButton from "../components/GrantSupplyModalButton";
 import RepayModalButton from "../components/RepayModalButton";
 import SupplyModalButton from "../components/SupplyModalButton";
@@ -94,8 +93,7 @@ export default function Home() {
 					</>
 					<DashboardSection title="Assets to Borrow">
 						<BorrowDashboardContent />
-					</DashboardSection>
-					<BorrowersSection />				
+					</DashboardSection>			
 				</Grid>
 			</Box>
 		</Container>

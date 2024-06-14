@@ -5,7 +5,6 @@ import {
 	Paper,
 	Typography,
 } from "@mui/material";
-// import useWallet from "../hooks/useWallet";
 import { useWeb3React } from "@web3-react/core";
 
 type DashboardSectionProps = {

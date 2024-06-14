@@ -21,6 +21,8 @@ const styles = {
 	},
 }
 
+const VERSION = "1";
+
 type SiweMessageParams = {
 	domain: string;
 	address: string;
@@ -46,7 +48,6 @@ const createSiweMessage = async ({
 	chainId,
 	nonce
 }: SiweMessageParams): Promise<string> => {
-	// ADD API NONCE GENERATION
 	const message = new SiweMessage({
 		domain,
 		address,
@@ -61,8 +62,9 @@ const createSiweMessage = async ({
 
 export default function SignIn() {
 	let { account, chainId } = useWeb3React();
-	// const [signed, setSigned] = useState<boolean>(false);
+	const [signed, setSigned] = useState<boolean>(false);
 	let networkChainId = !chainId ? 1 : chainId;
+	console.log("signed: ", signed);
 
 	const handleSignature = async () => {
 		const { ethereum } = window;
@@ -72,20 +74,19 @@ export default function SignIn() {
 
 		const domain = window.location.host;
 		const origin = window.location.origin;
-		const version = "1";
-		// const nonce = "32891757";
-		const { data } = await axios.get(
-			`${apiUrl}/api/auth/nonce`,
-		)
 
 		try {
 				if (account) {
+					const { data } = await axios.get(
+						`${apiUrl}/api/auth/nonce`,
+					)
+
 					const params: SiweMessageParams = {
 			    	domain, 
 			    	address: account,
 			    	statement,
 			    	origin,
-			    	version,
+			    	version: VERSION,
 			    	chainId: networkChainId,
 			    	nonce: data.nonce
 			    };
@@ -97,11 +98,17 @@ export default function SignIn() {
 			    	`${apiUrl}/api/auth/verify`,
 			    	{ message: message, signature: signature, nonce: data.nonce }
 			    )
-
-			    console.log(response.data);
+			    let success = response.data;
+			    if (success) {
+			    	setSigned(true);
+			    } else {
+			    	setSigned(false);
+			    }
+			    // setSigned(success);
 				}
 		  } catch (e) {
 		    console.error(e);
+		    setSigned(false);
 		  }
 	};
 
@@ -112,8 +119,9 @@ export default function SignIn() {
 					variant="contained"
 					onClick={handleSignature}
 					sx={styles.button}
+					disabled={signed}
 				>
-					Sign in
+					{signed ? "Signed in" : "Sign in"}
 				</Button>
 			}
 		</Box>

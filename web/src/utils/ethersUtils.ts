@@ -27,6 +27,7 @@ export interface AccountState {
   dUsdcBalance: string;
   approvedUsdcBalance: string;
   lineOfCredit: LineOfCredit;
+  delegate: string;
   rate: string;
 }
 
@@ -115,6 +116,7 @@ export async function getAccountState(
   let gUsdcBalance: string = "0.00";
   let dUsdcBalance: string = "0.00";
   let lineOfCredit: LineOfCredit = undefined;
+  let delegate: string = "";
   let rate: string = "0.00";
 
   const etherBalance = (await provider.getBalance(account)).toString();
@@ -188,6 +190,16 @@ export async function getAccountState(
       });
   }
 
+  if (NetworkContractMap[chainId]["ThurmanToken"]?.address) {
+    const thurmanToken: Contract = new ethers.Contract(
+      NetworkContractMap[chainId]["ThurmanToken"].address,
+      NetworkContractMap[chainId]["ThurmanToken"].abi,
+      provider,
+    );
+
+    delegate = await thurmanToken.delegates(account);
+  }
+
   return {
     ethBalance,
     usdcBalance,
@@ -196,6 +208,7 @@ export async function getAccountState(
     dUsdcBalance,
     approvedUsdcBalance,
     lineOfCredit,
+    delegate,
     rate
   };
 }

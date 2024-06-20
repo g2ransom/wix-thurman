@@ -24,7 +24,7 @@ export default function Footer() {
 			sx={styles.box}
 		>
 			<Typography variant="body1" align="center" sx={styles.typography}>
-				© 2023 Thurman Labs
+				© 2024 Thurman Labs
 			</Typography>
 		</Box>
 	);

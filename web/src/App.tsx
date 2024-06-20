@@ -16,7 +16,7 @@ import Onboarding from "./pages/Onboarding";
 let theme = createTheme({
   typography: {
     fontFamily: [
-      "Space Grotesk", 
+      "Libre Franklin", 
       "sans-serif",
     ].join(","),
   },

@@ -52,6 +52,7 @@ const synchronize = async ({ account, chainId, provider, dispatch }: ProviderPar
 				gUsdcBalance, 
 				dUsdcBalance, 
 				lineOfCredit,
+				delegate,
 				rate
 			} = await getAccountState(account, chainId, provider);
 
@@ -66,6 +67,7 @@ const synchronize = async ({ account, chainId, provider, dispatch }: ProviderPar
 					dUsdcBalance: dUsdcBalance,
 					approvedUsdcBalance: approvedUsdcBalance,
 					lineOfCredit: lineOfCredit,
+					delegate: delegate,
 					rate: rate,
 					chainId: chainId
 				}

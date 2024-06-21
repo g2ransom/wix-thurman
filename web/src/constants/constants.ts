@@ -66,7 +66,7 @@ export const govChainUrlMap: IGovChainUrlMap = {
     url: "https://www.tally.xyz/gov/goerli-thurmandao"
   },
   11155111: {
-    url: "",
+    url: "https://www.tally.xyz/gov/thurmandao-sepolia",
   },
 };
 

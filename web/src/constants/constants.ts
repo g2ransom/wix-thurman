@@ -96,6 +96,7 @@ export const USDC_DECIMALS = 6;
 export const DECIMALS = 18;
 export const WAD = 18;
 export const RAY = 27;
+export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 interface INetworkContractMap {
   [key: number]: {

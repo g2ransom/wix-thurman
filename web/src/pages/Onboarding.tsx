@@ -6,6 +6,7 @@ import {
 } from "@mui/material";
 import { useWeb3React } from "@web3-react/core";
 import useWallet from "../hooks/useWallet";
+import { ZERO_ADDRESS } from "../constants/constants";
 import { 
 	getIsMetaMaskInstalled,
 	getIsCoinbaseWalletInstalled
@@ -41,7 +42,7 @@ export default function Onboarding() {
 	const [metamask, setMetaMask] = useState<boolean>(false);
 	const [coinbaseWallet, setCoinbaseWallet] = useState<boolean>(false);
 	sUsdcBalance = !sUsdcBalance ? "0.0" : sUsdcBalance;
-	let hasDelegate = delegate ? true : false;
+	let hasDelegate = delegate !== ZERO_ADDRESS ? true : false;
 	
 	
 	useEffect(() => {

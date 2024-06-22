@@ -11,7 +11,10 @@ import {
 import { TransactionReducer, initialTransactionState } from "../reducers/TransactionReducer";
 import TransactionModalInfo from "./TransactionModalInfo";
 import useWallet from "../hooks/useWallet";
-import { NetworkContractMap } from "../constants/constants";
+import { 
+	NetworkContractMap, 
+	ZERO_ADDRESS 
+} from "../constants/constants";
 import { 
 	ErrorWithCode, 
 	ERROR_CODE_TX_REQUEST_REJECTED
@@ -33,7 +36,7 @@ export default function DelegateButton() {
 	let { update, delegate } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const networkChainId = !chainId ? 1 : chainId;
-	let hasDelegate = delegate ? true : false;
+	let hasDelegate = delegate !== ZERO_ADDRESS ? true : false;
 
 	const onSubmit = async () => {
 		const { ethereum } = window;

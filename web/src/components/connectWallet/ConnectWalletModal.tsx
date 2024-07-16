@@ -23,6 +23,7 @@ const styles = {
 		},
 		fontWeight: "800",
 		marginLeft: "1.5em",
+		width: "15em",
 	},
 	modal: {
 		display: "flex",

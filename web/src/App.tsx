@@ -12,6 +12,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Onboarding from "./pages/Onboarding";
+import SignUp from "./pages/SignUp";
 
 let theme = createTheme({
   typography: {
@@ -56,6 +57,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/onboarding" element={<Onboarding />} />
+                <Route path="/signup" element={<SignUp />} />
               </Routes>
             </BrowserRouter>
             <Footer />

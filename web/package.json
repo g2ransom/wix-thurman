@@ -1,6 +1,7 @@
 {
   "name": "web",
   "version": "0.1.0",
+  "proxy": "http://localhost:80",
   "private": true,
   "dependencies": {
     "@coinbase/wallet-sdk": "^3.7.1",

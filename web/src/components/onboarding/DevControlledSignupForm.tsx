@@ -32,6 +32,7 @@ type IFormInput = {
 
 export default function DevControlledSignupForm() {
 	const [continueSignUp, setContinueSignUp] = useState<boolean>(false);
+	const [userId, setUserId] = useState<Number>(0);
 	const handleClick = () => setContinueSignUp(true);
 
 	const { 
@@ -75,8 +76,17 @@ export default function DevControlledSignupForm() {
 
 	const onSubmit: SubmitHandler<IFormInput> = async (data) => {
 		try {
-			let res = await axios.post("/api/user/create", { email: data.emailValue, password: data.passwordValue });
-			console.log(res);
+			await axios.post(
+				"/api/user/create", 
+				{ email: data.emailValue, password: data.passwordValue }
+			).then(async (res) => {
+				console.log(res.data);
+				let walletRes = await axios.post("/api/wallet/create",
+					{name: res.data.email, id: res.data.id}
+				);
+				console.log(walletRes.data);
+				console.log("WALLET CREATED!");
+			}).catch((error) => console.log(error))
 		} catch (e) {
 			console.error(e);
 		}
@@ -92,6 +102,7 @@ export default function DevControlledSignupForm() {
 				pattern: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
 			}}
 			label="Email"
+			type="email"
 		/>
 		<Grid item xs={12}>
 			{emailFormErrors.map((formError, i) => (
@@ -124,6 +135,7 @@ export default function DevControlledSignupForm() {
 							pattern: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/,
 						}}
 						label="Password"
+						type="password"
 					/>
 				</Grid>
 				<Grid item xs={12}>
@@ -148,9 +160,6 @@ export default function DevControlledSignupForm() {
 						Create an account
 					</Button>
 				</Grid>
-				{isValid && (
-					<DevControlledWalletButton name={watch("emailValue")} id="1921" />
-				)}
 				</>
 			)
 		}

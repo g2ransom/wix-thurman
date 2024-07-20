@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import {
 	Grid,
+	IconButton,
+	InputAdornment,
 	TextField
 } from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { 
 	Control,
 	Controller,
@@ -14,9 +18,38 @@ export type TextInputFieldProps = {
 	name: string;
 	rules: RegisterOptions;
 	label: string;
+	type: string;
 }
 
-export default function TextInputField({ control, name, rules, label }: TextInputFieldProps) {
+type PasswordAdornmentProps = {
+	handleClickShowPassword: () => void;
+	showPassword: boolean;
+}
+
+function PasswordAdornment({ handleClickShowPassword, showPassword }: PasswordAdornmentProps) {
+	return (
+		<InputAdornment position="end">
+		    <IconButton
+		        onClick={
+		            handleClickShowPassword
+		        }
+		    >
+		        {showPassword ? (
+		            <Visibility />
+		        ) : (
+		            <VisibilityOff />
+		        )}
+		    </IconButton>
+		</InputAdornment>
+	);
+}
+
+export default function TextInputField({ control, name, rules, label, type }: TextInputFieldProps) {
+	const [showPassword, setShowPassword] = useState<boolean>(false);
+
+	const handleClickShowPassword = () => setShowPassword(showPassword => !showPassword);
+
+
 	return (
 		<Grid item xs={12}>
 			<Controller
@@ -29,7 +62,18 @@ export default function TextInputField({ control, name, rules, label }: TextInpu
 						label={label}
 						variant="outlined"
 						size="small"
+						type={showPassword ? "text" : type}
 						inputProps={{style: { color: "darkGray" }}}
+						InputProps={{endAdornment:	
+							<>
+							{type === "password" && (
+								<PasswordAdornment 
+									handleClickShowPassword={handleClickShowPassword}
+									showPassword={showPassword}
+								/>
+							)}
+							</>
+						}}
 						InputLabelProps={{style: { color: "darkGray" }}}
 							{...field}
 					/>

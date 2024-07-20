@@ -76,6 +76,7 @@ export default function EmailSignUpButton() {
 								}
 							}}
 							label="Password"
+							type="password"
 						/>
 					</Grid>
 					<Grid item xs={12}>

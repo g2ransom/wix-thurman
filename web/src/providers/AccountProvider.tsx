@@ -60,6 +60,10 @@ const synchronize = async ({ account, chainId, provider, dispatch }: ProviderPar
 				type: "accountConnected",
 				payload: {
 					account: account,
+					walletId: undefined,
+					custodyType: "ENDUSER",
+					userId: undefined,
+					email: undefined,
 					ethBalance: ethBalance,
 					usdcBalance: usdcBalance,
 					sUsdcBalance: sUsdcBalance,

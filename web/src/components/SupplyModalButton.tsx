@@ -84,8 +84,8 @@ type IFormInput = {
 const infoPopoverContent = "When you supply funds to Thurman, you receive an interest accruing token (sUSDC) that can be withdrawn in exchange for your supplied asset (USDC) at a later date.";
 
 export default function SupplyModalButton() {
-	let { account, chainId } = useWeb3React();
-	let { approvedUsdcBalance, usdcBalance, update } = useWallet();
+	let { chainId } = useWeb3React();
+	let { account, approvedUsdcBalance, usdcBalance, update } = useWallet();
 	const [state, dispatch] = useReducer(TransactionReducer, initialTransactionState);
 	const [open, setOpen] = useState<boolean>(false);
 	const handleOpen = () => setOpen(true);

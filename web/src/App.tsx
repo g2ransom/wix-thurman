@@ -8,11 +8,13 @@ import {
 import "./App.css";
 import AccountProvider from "./providers/AccountProvider";
 import { Web3ContextProvider } from "./providers/Web3ContextProvider";
+import DeveloperWalletProvider from "./providers/DeveloperWalletProvider";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Onboarding from "./pages/Onboarding";
 import SignUp from "./pages/SignUp";
+import Login from "./pages/Login";
 
 let theme = createTheme({
   typography: {
@@ -48,22 +50,25 @@ theme = responsiveFontSizes(theme);
 
 function App() {  
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>      
       <Web3ContextProvider>
         <AccountProvider>
-          <div className="App">
-            <Header />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/onboarding" element={<Onboarding />} />
-                <Route path="/signup" element={<SignUp />} />
-              </Routes>
-            </BrowserRouter>
-            <Footer />
-          </div>      
+          <DeveloperWalletProvider>
+            <div className="App">
+              <Header />
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/onboarding" element={<Onboarding />} />
+                  <Route path="/signup" element={<SignUp />} />
+                  <Route path="/login" element={<Login />} />
+                </Routes>
+              </BrowserRouter>
+              <Footer />
+            </div>
+          </DeveloperWalletProvider>      
         </AccountProvider>
-      </Web3ContextProvider>
+      </Web3ContextProvider>     
     </ThemeProvider>
   );
 }

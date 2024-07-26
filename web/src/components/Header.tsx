@@ -7,8 +7,11 @@ import {
 	Toolbar
 } from "@mui/material";
 import { useWeb3React } from "@web3-react/core";
+import useWallet from "../hooks/useWallet";
 import ConnectWallet from "./connectWallet/ConnectWallet";
 import SignUpButton from "./onboarding/SignUpButton";
+import LoginButton from "./onboarding/LoginButton";
+import LogoutButton from "./onboarding/LogoutButton";
 import { govChainUrlMap } from "../constants/constants";
 import thurmanLogo from "../images/thurman-logo.png";
 
@@ -44,6 +47,9 @@ const styles = {
 
 export default function Header() {
 	const { chainId } = useWeb3React();
+	const { account, delegate, custodyType } = useWallet();
+
+	console.log(account, delegate, custodyType);
 	const govUrl = chainId ? govChainUrlMap[chainId].url : govChainUrlMap[1].url;
 	return (
 		<AppBar position="static" elevation={0} sx={styles.appBar}>
@@ -65,8 +71,14 @@ export default function Header() {
 						Governance
 					</Link>
 				</Box>
-				<SignUpButton />		  
-				<ConnectWallet />
+				<SignUpButton />
+				{!account ? (
+					<LoginButton />
+					) : (
+					<LogoutButton />
+				)
+				}	  
+				
 			</Toolbar>
 		</AppBar>
 	);

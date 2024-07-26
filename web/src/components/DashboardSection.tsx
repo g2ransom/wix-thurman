@@ -5,7 +5,7 @@ import {
 	Paper,
 	Typography,
 } from "@mui/material";
-// import useWallet from "../hooks/useWallet";
+import useWallet from "../hooks/useWallet";
 import { useWeb3React } from "@web3-react/core";
 
 type DashboardSectionProps = {
@@ -29,7 +29,9 @@ export default function DashboardSection({
 	title,
 	children
 }: DashboardSectionProps) {
-	const { account } = useWeb3React();
+	// const { account } = useWeb3React();
+	const { account } = useWallet();
+	console.log(account);
 
 	return (
 		<Grid item xs={12} sm={6}>

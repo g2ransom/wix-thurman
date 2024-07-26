@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
 	Button,
@@ -8,6 +9,7 @@ import {
 	useForm,
 	SubmitHandler
 } from "react-hook-form";
+import useWallet from "../../hooks/useWallet";
 import TextInputField from "../TextInputField";
 import PasswordStatus from "../PasswordValidationStatus";
 import ErrorMessage, { ErrorMessageProps } from "../ErrorMessage";
@@ -30,8 +32,15 @@ type IFormInput = {
 	passwordValue: string;
 };
 
-export default function DevControlledSignupForm() {
+type DevControlledAuthProps = {
+	routeUrl: string;
+	submitButtonName: string;
+};
+
+export default function DevControlledAuthForm({ routeUrl, submitButtonName }: DevControlledAuthProps) {
 	const [continueSignUp, setContinueSignUp] = useState<boolean>(false);
+	const { update } = useWallet()
+	const navigate = useNavigate();
 	const [userId, setUserId] = useState<Number>(0);
 	const handleClick = () => setContinueSignUp(true);
 
@@ -76,17 +85,24 @@ export default function DevControlledSignupForm() {
 
 	const onSubmit: SubmitHandler<IFormInput> = async (data) => {
 		try {
-			await axios.post(
-				"/api/user/create", 
-				{ email: data.emailValue, password: data.passwordValue }
-			).then(async (res) => {
-				console.log(res.data);
-				let walletRes = await axios.post("/api/wallet/create",
-					{name: res.data.email, id: res.data.id}
-				);
-				console.log(walletRes.data);
-				console.log("WALLET CREATED!");
-			}).catch((error) => console.log(error))
+			let res = await axios.post(
+				routeUrl,
+				{ email: data.emailValue, password: data.passwordValue },
+				{ withCredentials: true }
+			);
+			console.log(res.data);
+			update();
+			navigate("/");
+
+		} catch (e) {
+			console.error(e);
+		}
+	}
+
+	const handleTokenBalances = async () => {
+		try {
+			let res = await axios.get("/api/user", { withCredentials: true });
+			console.log(res.data);
 		} catch (e) {
 			console.error(e);
 		}
@@ -114,6 +130,7 @@ export default function DevControlledSignupForm() {
 			))}
 		</Grid>
 		{!continueSignUp ? (
+			<>
 			<Grid item xs={12}>
 				<Button
 					variant="contained"
@@ -124,6 +141,16 @@ export default function DevControlledSignupForm() {
 					Continue with email
 				</Button>
 			</Grid>
+			<Grid item xs={12}>
+				<Button
+					variant="contained"
+					onClick={handleTokenBalances}
+					sx={styles.button}
+				>
+					Token Balances
+				</Button>
+			</Grid>
+			</>
 			) : (
 				<>
 				<Grid item xs={12}>
@@ -157,7 +184,16 @@ export default function DevControlledSignupForm() {
 						onClick={handleSubmit(onSubmit)}
 						sx={styles.button}
 					>
-						Create an account
+						{submitButtonName}
+					</Button>
+				</Grid>
+				<Grid item xs={12}>
+					<Button
+						variant="contained"
+						onClick={handleTokenBalances}
+						sx={styles.button}
+					>
+						Token Balances
 					</Button>
 				</Grid>
 				</>

@@ -40,7 +40,6 @@ export interface CommunityState {
 }
 
 export type ApprovalFuncParams = {
-  // provider: any;
   dispatch: (action: ACTION_TYPE) => void;
   update: () => void;
   value: string;

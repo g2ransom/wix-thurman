@@ -1,5 +1,6 @@
 import { 
 	AccountState,
+	CustodyType,
 	LineOfCredit
  } from "../context/AccountContext";
 
@@ -18,6 +19,10 @@ type AccountConnected = {
 	type: "accountConnected";
 	payload: {
 		account: string;
+		walletId: string | undefined;
+		custodyType: CustodyType;
+		userId: number | undefined;
+		email: string | undefined;
 		ethBalance: string;
 		usdcBalance: string;
 		sUsdcBalance: string;
@@ -46,6 +51,10 @@ type AccountChanged = {
 	type: "accountChanged";
 	payload: {
 		account: string;
+		walletId: string | undefined;
+		custodyType: CustodyType;
+		userId: number | undefined;
+		email: string | undefined;
 		ethBalance: string;
 		usdcBalance: string;
 		sUsdcBalance: string;
@@ -62,6 +71,10 @@ type ChainChanged = {
 	type: "chainChanged";
 	payload: {
 		account: string;
+		walletId: string | undefined;
+		custodyType: CustodyType;
+		userId: number | undefined;
+		email: string | undefined;
 		ethBalance: string;
 		usdcBalance: string;
 		sUsdcBalance: string;
@@ -89,6 +102,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 		case "providerUnavailable": {
 			return {
 				account: undefined,
+				walletId: undefined,
+				custodyType: undefined,
+				userId: undefined,
+				email: undefined,
 				ethBalance: undefined,
 				usdcBalance: undefined,
 				sUsdcBalance: undefined,
@@ -105,6 +122,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 		case "accountNotConnected": {
 			return {
 				account: undefined,
+				walletId: undefined,
+				custodyType: undefined,
+				userId: undefined,
+				email: undefined,
 				ethBalance: undefined,
 				usdcBalance: undefined,
 				sUsdcBalance: undefined,
@@ -121,6 +142,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 		case "accountConnected": {
 			return {
 				account: action.payload.account,
+				walletId: action.payload.walletId,
+				custodyType: action.payload.custodyType,
+				userId: action.payload.userId,
+				email: action.payload.email,
 				ethBalance: action.payload.ethBalance,
 				usdcBalance: action.payload.usdcBalance,
 				sUsdcBalance: action.payload.sUsdcBalance,
@@ -143,6 +168,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 			}
 			return {
 				account: undefined,
+				walletId: undefined,
+				custodyType: undefined,
+				userId: undefined,
+				email: undefined,
 				ethBalance: undefined,
 				usdcBalance: undefined,
 				sUsdcBalance: undefined,
@@ -166,6 +195,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 			return {
 				...state,
 				account: undefined,
+				walletId: undefined,
+				custodyType: undefined,
+				userId: undefined,
+				email: undefined,
 				ethBalance: undefined,
 				usdcBalance: undefined,
 				sUsdcBalance: undefined,
@@ -189,6 +222,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 				return {
 					...state,
 					account: undefined,
+					walletId: undefined,
+					custodyType: undefined,
+					userId: undefined,
+					email: undefined,
 					ethBalance: undefined,
 					usdcBalance: undefined,
 					sUsdcBalance: undefined,
@@ -204,6 +241,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 			return {
 				...state,
 				account: action.payload.account,
+				walletId: action.payload.walletId,
+				custodyType: action.payload.custodyType,
+				userId: action.payload.userId,
+				email: action.payload.email,
 				ethBalance: action.payload.ethBalance,
 				usdcBalance: action.payload.usdcBalance,
 				sUsdcBalance: action.payload.sUsdcBalance,
@@ -226,6 +267,10 @@ export function AccountReducer(state: AccountState, action: ACTION_TYPE): Accoun
 			return {
 				...state,
 				account: action.payload.account,
+				walletId: action.payload.walletId,
+				custodyType: action.payload.custodyType,
+				userId: action.payload.userId,
+				email: action.payload.email,
 				ethBalance: action.payload.ethBalance,
 				usdcBalance: action.payload.usdcBalance,
 				sUsdcBalance: action.payload.sUsdcBalance,

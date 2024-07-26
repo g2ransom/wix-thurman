@@ -47,14 +47,14 @@ const styles = {
 	},
 }
 
-export default function SignUp() {
+export default function Login() {
 
 	return (
 		<Container maxWidth={false} sx={styles.container}>
 			<Box display="flex" alignItems="center" justifyContent="center" sx={styles.box}>
 				<Paper elevation={0} sx={styles.formPaper}>
 					<Grid container spacing={1}>
-						<DevControlledAuthForm routeUrl="api/auth/signup" submitButtonName="Create an account" />
+						<DevControlledAuthForm routeUrl="api/auth/login" submitButtonName="Login" />
 						<Grid item xs={12}>
 							<Box display="flex" alignItems="center" justifyContent="center">
 								<Divider

@@ -70,8 +70,8 @@ export default function TransactionModal({
 	infoPopoverContent,
 	children
 }: TransactionModalProps) {
-	let { account, chainId } = useWeb3React();
-	const { lineOfCredit } = useWallet();
+	let { chainId } = useWeb3React();
+	const { account, lineOfCredit } = useWallet();
 	chainId = !chainId ? 1 : chainId;
 	const borrowMax = !lineOfCredit?.borrowMax ? "0.0" : lineOfCredit?.borrowMax;
 	const hasLineOfCredit: boolean = parseFloat(borrowMax) > 0 ? true : false;
